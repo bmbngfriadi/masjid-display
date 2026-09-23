@@ -146,6 +146,7 @@ model DisplaySetting {
   runningTextSholatEnabled Boolean @default(false)
   runningTextSpeed        Int      @default(25)
   runningTextSize         Int      @default(60)
+  showDebugTools          Boolean  @default(true)
 }
 
 model RunningText {

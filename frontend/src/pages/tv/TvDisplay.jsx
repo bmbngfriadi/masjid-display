@@ -665,17 +665,19 @@ export default function TvDisplay() {
               <ActiveLayout {...commonProps} fridayInfo={fridayInfo} />
             )}
             
-            <div className="absolute bottom-4 left-4 text-xs text-white opacity-30 flex gap-4 z-50 mix-blend-difference">
-              <span>WakeLock: {isSupported ? (isActive ? 'Active' : 'Released') : 'Unsupported'}</span>
-              <button onClick={() => {
-                setDisplayMode('ADHAN');
-                setCurrentPrayer('ASHAR');
-                setTimeout(() => {
-                  setDisplayMode('IQAMAH_COUNTDOWN');
-                  setIqamahTimeRemaining(10);
-                }, 5000);
-              }} className="underline">Simulate Flow</button>
-            </div>
+            {displaySetting?.showDebugTools && (
+              <div className="absolute bottom-4 left-4 text-xs text-white opacity-30 flex gap-4 z-50 mix-blend-difference">
+                <span>WakeLock: {isSupported ? (isActive ? 'Active' : 'Released') : 'Unsupported'}</span>
+                <button onClick={() => {
+                  setDisplayMode('ADHAN');
+                  setCurrentPrayer('ASHAR');
+                  setTimeout(() => {
+                    setDisplayMode('IQAMAH_COUNTDOWN');
+                    setIqamahTimeRemaining(10);
+                  }, 5000);
+                }} className="underline">Simulate Flow</button>
+              </div>
+            )}
           </main>
         );
     }

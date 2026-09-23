@@ -23,6 +23,7 @@ export default function LayoutConfig() {
   const [infoSlideDuration, setInfoSlideDuration] = useState(10);
   const [infoSlideItems, setInfoSlideItems] = useState([]);
   const [layoutDuration, setLayoutDuration] = useState(30);
+  const [showDebugTools, setShowDebugTools] = useState(true);
 
   const layouts = [
     {
@@ -76,6 +77,7 @@ export default function LayoutConfig() {
         if (res.data.infoSlideDuration) setInfoSlideDuration(res.data.infoSlideDuration);
         if (res.data.infoSlideItems) setInfoSlideItems(res.data.infoSlideItems);
         if (res.data.layoutDuration) setLayoutDuration(res.data.layoutDuration);
+        if (res.data.showDebugTools !== undefined) setShowDebugTools(res.data.showDebugTools);
       }
     } catch (err) {
       console.error('Failed to fetch display setting', err);
@@ -357,6 +359,34 @@ export default function LayoutConfig() {
             <p className="text-sm text-[var(--text-secondary)]">{layout.desc}</p>
           </div>
         ))}
+      </div>
+      
+      {/* Pengaturan Debug Tools */}
+      <div className="mt-8 glass-card p-6 border-l-4 border-l-orange-500">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-xl font-bold text-[var(--text-primary)]">Tampilkan Debug Tools (Layar TV)</h3>
+            <p className="text-sm text-[var(--text-secondary)]">Menampilkan informasi status Wakelock dan tombol Simulate Flow di layar utama TV.</p>
+          </div>
+          <button 
+            onClick={async () => {
+              try {
+                const token = localStorage.getItem('admin_token');
+                await axios.put(`${API_BASE_URL}/display-setting`, { showDebugTools: !showDebugTools }, {
+                  headers: { Authorization: `Bearer ${token}` }
+                });
+                setShowDebugTools(!showDebugTools);
+                setSuccess('Pengaturan Debug Tools berhasil disimpan!');
+              } catch (err) {
+                console.error('Failed to update debug tools', err);
+                showAlert({ title: 'Gagal', message: 'Gagal mengubah pengaturan debug', type: 'error' });
+              }
+            }}
+            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--primary-500)] focus:ring-offset-2 ${showDebugTools ? 'bg-orange-500' : 'bg-slate-300 dark:bg-slate-700'}`}
+          >
+            <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${showDebugTools ? 'translate-x-6' : 'translate-x-1'}`} />
+          </button>
+        </div>
       </div>
 
       {/* Custom Background Section */}

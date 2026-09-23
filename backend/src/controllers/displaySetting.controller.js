@@ -40,7 +40,8 @@ exports.updateDisplaySetting = async (req, res) => {
       runningTextIqomahEnabled,
       runningTextSholatEnabled,
       runningTextSpeed,
-      runningTextSize
+      runningTextSize,
+      showDebugTools
     } = req.body;
     let setting = await prisma.displaySetting.findFirst();
     let oldData = null;
@@ -64,7 +65,8 @@ exports.updateDisplaySetting = async (req, res) => {
           runningTextIqomahEnabled: runningTextIqomahEnabled !== undefined ? runningTextIqomahEnabled : true,
           runningTextSholatEnabled: runningTextSholatEnabled !== undefined ? runningTextSholatEnabled : false,
           runningTextSpeed: runningTextSpeed || 25,
-          runningTextSize: runningTextSize || 64
+          runningTextSize: runningTextSize || 64,
+          showDebugTools: showDebugTools !== undefined ? showDebugTools : true
         }
       });
     } else {
@@ -88,7 +90,8 @@ exports.updateDisplaySetting = async (req, res) => {
           runningTextIqomahEnabled: runningTextIqomahEnabled !== undefined ? runningTextIqomahEnabled : setting.runningTextIqomahEnabled,
           runningTextSholatEnabled: runningTextSholatEnabled !== undefined ? runningTextSholatEnabled : setting.runningTextSholatEnabled,
           runningTextSpeed: runningTextSpeed !== undefined ? parseInt(runningTextSpeed) : setting.runningTextSpeed,
-          runningTextSize: runningTextSize !== undefined ? parseInt(runningTextSize) : setting.runningTextSize
+          runningTextSize: runningTextSize !== undefined ? parseInt(runningTextSize) : setting.runningTextSize,
+          showDebugTools: showDebugTools !== undefined ? showDebugTools : setting.showDebugTools
         }
       });
     }
