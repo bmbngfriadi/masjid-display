@@ -17,8 +17,9 @@ async function padIcon(filename, size) {
   const canvas = createCanvas(size, size);
   const ctx = canvas.getContext('2d');
   
-  // Clear transparent
-  ctx.clearRect(0, 0, size, size);
+  // Fill background with white
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, size, size);
   
   // Calculate new size (40% of original)
   const newSize = Math.floor(size * 0.4);
