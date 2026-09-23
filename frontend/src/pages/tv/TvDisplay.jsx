@@ -76,7 +76,7 @@ export default function TvDisplay() {
       const data = await res.json();
       const activeTexts = data.filter(t => t.isActive).map(t => t.text);
       if (activeTexts.length > 0) {
-        setRunningText(activeTexts.join(' *** '));
+        setRunningText(activeTexts.join('      ۞      '));
       } else {
         setRunningText('Selamat datang di Masjid Baitul Jannah.');
       }
@@ -690,7 +690,7 @@ export default function TvDisplay() {
       {shouldShowRunningText && (
         <footer className="w-full bg-black/90 text-white py-4 flex items-center z-50 border-t border-white/20 shadow-[0_-5px_15px_rgba(0,0,0,0.8)] relative overflow-hidden">
           <div 
-            className="whitespace-nowrap animate-marquee font-extrabold tracking-wide text-yellow-400" 
+            className="whitespace-pre animate-marquee font-extrabold tracking-wide text-yellow-400" 
             style={{ 
               animationDuration: `${displaySetting?.runningTextSpeed || 25}s`,
               fontSize: `${displaySetting?.runningTextSize || 64}px` 
@@ -701,7 +701,7 @@ export default function TvDisplay() {
                 (() => {
                   try {
                     const texts = JSON.parse(fridayInfo.runningText);
-                    return texts.length > 0 ? texts.join(' *** ') : runningText;
+                    return texts.length > 0 ? texts.join('      ۞      ') : runningText;
                   } catch(e) {
                     return runningText;
                   }

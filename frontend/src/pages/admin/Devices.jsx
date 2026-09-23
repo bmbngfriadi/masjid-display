@@ -35,7 +35,7 @@ export default function Devices() {
       confirmText: 'Hapus'
     });
     if (!isConfirmed) return;
-    
+
     try {
       const token = localStorage.getItem('admin_token');
       await axios.delete(`${API_BASE_URL}/devices/${id}`, {
@@ -51,7 +51,7 @@ export default function Devices() {
     fetchDevices();
     const interval = setInterval(() => {
       fetchDevices();
-    }, 10000); 
+    }, 10000);
     return () => clearInterval(interval);
   }, []);
 
@@ -63,14 +63,14 @@ export default function Devices() {
           <p className="text-[var(--text-secondary)]">Kelola perangkat TV yang terhubung ke jaringan.</p>
         </div>
         <div className="flex flex-col sm:flex-row gap-3 mt-4 md:mt-0">
-          <button 
+          <button
             onClick={() => setShowScanner(true)}
             className="btn-primary"
           >
             <Camera size={18} />
             Scan QR
           </button>
-          <button 
+          <button
             onClick={async () => {
               const code = await showPrompt({
                 title: 'Pairing TV',
@@ -87,7 +87,7 @@ export default function Devices() {
           </button>
         </div>
       </div>
-      
+
       <div className="glass-card data-table-container">
         <table className="data-table">
           <thead>
@@ -115,11 +115,10 @@ export default function Devices() {
                   </div>
                 </td>
                 <td data-label="Status">
-                  <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold border ${
-                    device.status === 'ONLINE' 
-                      ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800/50' 
-                      : 'bg-red-50 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800/50'
-                  }`}>
+                  <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold border ${device.status === 'ONLINE'
+                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800/50'
+                    : 'bg-red-50 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800/50'
+                    }`}>
                     {device.status === 'ONLINE' ? <CheckCircle className="w-3.5 h-3.5 mr-1" /> : <XCircle className="w-3.5 h-3.5 mr-1" />}
                     {device.status}
                   </span>
@@ -132,7 +131,7 @@ export default function Devices() {
                 </td>
                 <td data-label="Aksi" className="md:text-right">
                   <div className="flex items-center md:justify-end gap-3 mt-2 md:mt-0">
-                    <button 
+                    <button
                       onClick={async () => {
                         const newName = await showPrompt({
                           title: 'Ganti Nama TV',
@@ -156,8 +155,8 @@ export default function Devices() {
                     >
                       <Edit2 size={18} />
                     </button>
-                    <button 
-                      onClick={() => handleDelete(device.id)} 
+                    <button
+                      onClick={() => handleDelete(device.id)}
                       className="p-3 md:p-2 text-[var(--text-secondary)] hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
                       title="Hapus"
                     >
@@ -176,7 +175,7 @@ export default function Devices() {
           <div className="bg-[var(--bg-card)] w-full max-w-full sm:max-w-md max-h-[100vh] sm:max-h-[calc(100vh-2rem)] flex flex-col rounded-t-[32px] sm:rounded-2xl overflow-hidden shadow-2xl relative mt-auto sm:my-auto animate-drawer-up pb-[env(safe-area-inset-bottom)] sm:pb-0">
             {/* Handle bar for mobile bottom sheet */}
             <div className="w-12 h-1 bg-gray-300 dark:bg-gray-600 rounded-full mx-auto mt-4 mb-2 sm:hidden shrink-0"></div>
-            
+
             <div className="p-4 pt-2 sm:pt-4 flex justify-between items-center border-b border-[var(--border-color)] shrink-0">
               <h3 className="font-bold text-lg text-[var(--text-primary)]">Scan QR Code TV</h3>
               <button onClick={() => setShowScanner(false)} className="text-[var(--text-secondary)] hover:text-red-500 transition-colors">
@@ -193,7 +192,7 @@ export default function Devices() {
                     if (match && match[1]) {
                       window.location.href = `/masjid/pair/${match[1]}`;
                     } else if (/^\d{6}$/.test(text)) {
-                       window.location.href = `/masjid/pair/${text}`;
+                      window.location.href = `/masjid/pair/${text}`;
                     }
                   }
                 }}
@@ -201,7 +200,7 @@ export default function Devices() {
                 onError={(error) => {
                   console.log(error?.message);
                   if (error?.message?.includes('Permission denied')) {
-                     alert('Izin kamera ditolak. Izinkan akses kamera di browser Anda.');
+                    alert('Izin kamera ditolak. Izinkan akses kamera di browser Anda.');
                   }
                 }}
                 styles={{
@@ -214,8 +213,8 @@ export default function Devices() {
               <p className="text-center text-sm text-[var(--text-secondary)] mb-4">
                 Arahkan kamera ke QR Code yang muncul di layar TV Anda.
               </p>
-              <button 
-                onClick={() => setShowScanner(false)} 
+              <button
+                onClick={() => setShowScanner(false)}
                 className="btn-secondary w-full"
               >
                 Batal
