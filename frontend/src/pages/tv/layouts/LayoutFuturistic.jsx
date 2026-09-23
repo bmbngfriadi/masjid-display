@@ -117,7 +117,7 @@ export default function LayoutFuturistic({ time, mosqueProfile, prayerTimes, nex
           </div>
 
           {prayers.map((prayer) => {
-            const isNext = nextPrayer?.name.toUpperCase() === prayer.name;
+            const isNext = nextPrayer?.name?.toUpperCase() === prayer.name;
             return (
               <div 
                 key={prayer.name} 
