@@ -1,0 +1,213 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String @id @default(uuid())
+  email    String @unique
+  username String @unique
+  password String
+  role     Role   @default(ADMIN)
+
+  // Permissions
+  canManageProfile        Boolean @default(true)
+  canManagePrayerTimes    Boolean @default(true)
+  canManageFridaySchedule Boolean @default(true)
+  canManageAdzanScreen    Boolean @default(true)
+  canManageIqomahScreen   Boolean @default(true)
+  canManageSholatScreen   Boolean @default(true)
+  canManageLayout         Boolean @default(true)
+  canManageDevices        Boolean @default(true)
+  canManageText           Boolean @default(true)
+  canManageUsers          Boolean @default(false)
+  canManageLogs           Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  resetPasswordToken  String?
+  resetPasswordExpire DateTime?
+
+  isVerified        Boolean   @default(false)
+  verifyEmailToken  String?
+  verifyEmailExpire DateTime?
+}
+
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+}
+
+model Mosque {
+  id        String   @id @default(uuid())
+  name      String
+  address   String?
+  logoUrl   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  devices Device[]
+}
+
+model Device {
+  id                   String    @id @default(uuid())
+  name                 String
+  pairingCode          String?   @unique
+  pairingCodeExpiresAt DateTime?
+  token                String?   @unique
+  mosqueId             String?
+  mosque               Mosque?   @relation(fields: [mosqueId], references: [id])
+
+  fullscreenEnabled   Boolean @default(true)
+  alwaysOnEnabled     Boolean @default(true)
+  preventSleepEnabled Boolean @default(true)
+
+  lastFullscreenStatus Boolean   @default(false)
+  lastWakeLockStatus   Boolean   @default(false)
+  lastConnectionStatus Boolean   @default(false)
+  lastSeen             DateTime?
+  lastSync             DateTime?
+  ip                   String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PrayerTimeConfig {
+  id                String  @id @default(uuid())
+  latitude          Float   @default(1.1301)
+  longitude         Float   @default(104.0529)
+  cityId            String? @default("0506") // Kota Batam by default
+  calculationMethod String  @default("Singapore") // E.g. Kemenag, Singapore, MWL
+
+  fajrOffset    Int @default(0)
+  dhuhrOffset   Int @default(0)
+  asrOffset     Int @default(0)
+  maghribOffset Int @default(0)
+  ishaOffset    Int @default(0)
+
+  fajrIqamah    Int @default(10)
+  dhuhrIqamah   Int @default(10)
+  asrIqamah     Int @default(10)
+  maghribIqamah Int @default(5)
+  ishaIqamah    Int @default(10)
+
+  jumatMode             Boolean @default(true)
+  jumatDisplayStart     Int     @default(6) // Jam mulai tampil (0-23)
+  jumatDisplayEnd       Int     @default(14) // Jam selesai tampil (0-23)
+  jumatRunningTextEnabled Boolean @default(true)
+  ramadanMode           Boolean @default(false)
+  alarmSound  String  @default("beep")
+
+  adzanDuration      Int     @default(4)
+  adzanBackground    String  @default("black")
+  adzanBackgroundUrl String?
+  adzanAudio         String? @default("adzan-makkah.mp3")
+
+  iqomahBackground    String  @default("1")
+  iqomahBackgroundUrl String?
+  iqomahMessage       String  @default("Luruskan dan rapatkan shaf untuk kesempurnaan shalat")
+
+  sholatDuration      Int     @default(10)
+  sholatScreenMessage String  @default("Luruskan dan Rapatkan Shaf")
+  sholatBackgroundUrl String?
+}
+
+model DisplaySetting {
+  id                      String   @id @default(uuid())
+  backgroundUrl           String?
+  backgroundUrls          String[] @default([])
+  backgroundSlideInterval Int      @default(10)
+  backgroundSliderEnabled Boolean  @default(true)
+  layoutDuration          Int      @default(30)
+  infoSlideEnabled        Boolean  @default(false)
+  infoSlideVisibleItems   Int      @default(5)
+  infoSlideScrollSpeed    Int      @default(3)
+  infoSlideDuration       Int      @default(10)
+  infoSlideItems          Json?
+  theme                   String   @default("dark-green")
+  layoutStyle             String   @default("signature")
+  clockFormat             String   @default("24h")
+  tvFullscreenMode        Boolean  @default(true)
+  alwaysOnDisplay         Boolean  @default(true)
+  preventScreenSleep      Boolean  @default(true)
+  autoResume              Boolean  @default(true)
+  autoReconnect           Boolean  @default(true)
+  offlineMode             Boolean  @default(true)
+  displayRecovery         Boolean  @default(true)
+  runningTextEnabled      Boolean  @default(true)
+  runningTextAdzanEnabled Boolean  @default(true)
+  runningTextIqomahEnabled Boolean @default(true)
+  runningTextSholatEnabled Boolean @default(false)
+  runningTextSpeed        Int      @default(25)
+  runningTextSize         Int      @default(60)
+}
+
+model RunningText {
+  id        String    @id @default(uuid())
+  text      String
+  speed     Int       @default(50)
+  priority  Int       @default(0)
+  startDate DateTime?
+  endDate   DateTime?
+  isActive  Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Announcement {
+  id              String    @id @default(uuid())
+  title           String
+  content         String
+  startTime       DateTime?
+  endTime         DateTime?
+  priority        Int       @default(0)
+  isActive        Boolean   @default(true)
+  displayDuration Int       @default(10) // seconds
+  isOverlay       Boolean   @default(false)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model Media {
+  id        String   @id @default(uuid())
+  filename  String
+  url       String
+  type      String
+  createdAt DateTime @default(now())
+}
+
+model FridayInfo {
+  id           String   @id @default(uuid())
+  khatib       String?
+  imam         String?
+  muadzin      String?
+  theme        String?
+  
+  saldoAwal    Float    @default(0)
+  pemasukan    Float    @default(0)
+  pengeluaran  Float    @default(0)
+  saldoAkhir   Float    @default(0)
+  
+  runningText  String?  @default("[]") // Array of messages in JSON
+  
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String?
+  action    String
+  entity    String
+  entityId  String?
+  oldValue  String?
+  newValue  String?
+  ip        String?
+  createdAt DateTime @default(now())
+}
