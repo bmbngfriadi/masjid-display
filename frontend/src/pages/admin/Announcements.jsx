@@ -253,7 +253,7 @@ export default function Announcements() {
             <p className="text-xs text-[var(--text-secondary)] mb-4">Ubah ukuran tulisan running text pada layar TV.</p>
             <input 
               type="range" 
-              min="32" 
+              min="10" 
               max="120" 
               value={displaySetting.runningTextSize || 64} 
               onChange={(e) => updateSize(parseInt(e.target.value))}
