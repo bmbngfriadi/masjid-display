@@ -13,8 +13,8 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,ico,png,svg,webp}']
       },
       manifest: {
-        name: 'Admin Masjid Baitul Jannah',
-        short_name: 'Masjid Admin',
+        name: 'Panel Admin Masjid',
+        short_name: 'Panel Admin',
         description: 'Sistem Informasi Masjid Baitul Jannah',
         theme_color: '#047857',
         background_color: '#ffffff',
