@@ -14,6 +14,7 @@ async function main() {
       username: 'admin',
       password: password,
       role: 'SUPER_ADMIN',
+      isVerified: true,
     },
   });
 
