@@ -15,6 +15,27 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 
+// Keamanan Tambahan (Security Hardening)
+const xss = require('xss-clean');
+const hpp = require('hpp');
+const rateLimit = require('express-rate-limit');
+
+// Mencegah serangan XSS dengan membersihkan data masuk
+app.use(xss());
+
+// Mencegah HTTP Parameter Pollution
+app.use(hpp());
+
+// Global Rate Limiter: Maksimal 1000 request per 15 menit per IP
+const globalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, 
+  max: 1000,
+  message: 'Terlalu banyak permintaan dari IP ini, silakan coba lagi setelah 15 menit',
+  standardHeaders: true, 
+  legacyHeaders: false,
+});
+app.use(globalLimiter);
+
 // Socket.IO configuration
 const io = new Server(server, {
   path: process.env.SOCKET_PATH || '/masjid/socket.io',

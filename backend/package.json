@@ -19,11 +19,15 @@
     "cors": "^2.8.5",
     "dotenv": "^16.x",
     "express": "^4.19.x",
+    "express-rate-limit": "^8.7.0",
+    "express-validator": "^7.3.2",
     "helmet": "^7.x",
+    "hpp": "^0.2.3",
     "jsonwebtoken": "^9.x",
     "nodemailer": "^10.0.10",
     "pg": "^8.x",
-    "socket.io": "^4.x"
+    "socket.io": "^4.x",
+    "xss-clean": "^0.1.4"
   },
   "devDependencies": {
     "nodemon": "^3.x",
