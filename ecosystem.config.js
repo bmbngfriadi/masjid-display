@@ -17,10 +17,7 @@ module.exports = {
       },
       env_production: {
         NODE_ENV: 'production',
-        PORT: 4001,
-        DATABASE_URL: 'postgresql://masjid_app:PASSWORD@127.0.0.1:5432/masjid_db',
-        APP_BASE_PATH: '/masjid',
-        SOCKET_PATH: '/masjid/socket.io'
+        PORT: 4001
       }
     }
   ]
