@@ -19,6 +19,8 @@ export default defineConfig({
         theme_color: '#047857',
         background_color: '#ffffff',
         display: 'standalone',
+        start_url: '/masjid/admin/',
+        scope: '/masjid/',
         icons: [
           {
             src: 'pwa-192x192.png',
