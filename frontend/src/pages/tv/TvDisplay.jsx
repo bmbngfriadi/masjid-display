@@ -466,11 +466,11 @@ export default function TvDisplay() {
               <div className="absolute right-[-10%] w-[80vw] h-[80vw] max-h-[120vh] max-w-[120vh] rounded-full bg-blue-900/20 border border-blue-400/20 shadow-[0_0_100px_rgba(59,130,246,0.2)] animate-pulse"></div>
               
               <div className="absolute bottom-16 left-16 flex flex-col items-start z-10">
-                <span className="text-gray-400 text-3xl tracking-[0.3em] uppercase mb-2 font-medium">WAKTU ADZAN</span>
-                <span className="text-transparent bg-clip-text bg-gradient-to-b from-[#f3e7b1] via-[#d6a94f] to-[#aa771c] text-[10rem] font-extrabold tracking-widest leading-none mb-4 drop-shadow-lg">
+                <span className="text-gray-400 text-[2.5vw] tracking-[0.4em] uppercase mb-[1vh] font-medium">WAKTU ADZAN</span>
+                <span className="text-transparent bg-clip-text bg-gradient-to-b from-[#f3e7b1] via-[#d6a94f] to-[#aa771c] text-[12vw] font-extrabold tracking-[0.15em] leading-none mb-[2vh] drop-shadow-lg pl-[0.15em]">
                   {currentPrayer || 'ADZAN'}
                 </span>
-                <span className="text-white text-7xl font-bold font-mono tracking-wider drop-shadow-md">
+                <span className="text-white text-[6vw] font-bold font-mono tracking-[0.15em] drop-shadow-md pl-[0.15em]">
                   {getPrayerTimeByName(currentPrayer) || currentTime}
                 </span>
               </div>
@@ -502,13 +502,13 @@ export default function TvDisplay() {
               }
             `}</style>
             <div className="relative z-10 flex flex-col items-center">
-              <h2 className="text-5xl text-white mb-2 font-medium tracking-wide">WAKTU ADZAN</h2>
-              <h1 className="text-[12rem] font-extrabold uppercase tracking-widest text-transparent bg-clip-text bg-gradient-to-b from-[#f3e7b1] via-[#d6a94f] to-[#aa771c] drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)] leading-none mb-12">
+              <h2 className="text-[3vw] text-white mb-[1vh] font-medium tracking-[0.4em]">WAKTU ADZAN</h2>
+              <h1 className="text-[14vw] font-extrabold uppercase tracking-[0.15em] text-transparent bg-clip-text bg-gradient-to-b from-[#f3e7b1] via-[#d6a94f] to-[#aa771c] drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)] leading-none mb-[4vh] pl-[0.15em]">
                 {currentPrayer || 'ADZAN'}
               </h1>
               
               {/* Golden Pill */}
-              <div className="relative w-[32rem] h-28 rounded-full overflow-hidden bg-gradient-to-b from-[#e6c97a] to-[#b38531] border-[4px] border-[#f0d892] shadow-[0_10px_30px_rgba(0,0,0,0.8)] flex items-center justify-center">
+              <div className="relative w-[35vw] h-[10vh] rounded-full overflow-hidden bg-gradient-to-b from-[#e6c97a] to-[#b38531] border-[4px] border-[#f0d892] shadow-[0_10px_30px_rgba(0,0,0,0.8)] flex items-center justify-center">
                 {/* Progress bar */}
                 <div 
                   className="absolute left-0 top-0 bottom-0 bg-gradient-to-r from-blue-600 to-blue-400 shadow-[0_0_15px_rgba(59,130,246,0.8)]" 
@@ -518,7 +518,7 @@ export default function TvDisplay() {
                 ></div>
                 
                 {/* Time Text */}
-                <div className="relative z-10 text-7xl font-bold font-mono tracking-widest text-[#fff19a]" style={{ textShadow: '3px 3px 6px rgba(0,0,0,0.8), -1px -1px 2px rgba(255,255,255,0.4)' }}>
+                <div className="relative z-10 text-[5.5vw] font-bold font-mono tracking-[0.2em] text-[#fff19a] pl-[0.2em]" style={{ textShadow: '3px 3px 6px rgba(0,0,0,0.8), -1px -1px 2px rgba(255,255,255,0.4)' }}>
                   {getPrayerTimeByName(currentPrayer) || currentTime}
                 </div>
               </div>
@@ -535,14 +535,14 @@ export default function TvDisplay() {
             <div className="flex-1 w-full h-full flex flex-col items-center justify-center text-center border-[12px] border-[#c5a059] bg-black relative overflow-hidden">
               <img src="/masjid/adzan_bg_dark.png" className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-luminosity" alt="Background" />
               <div className="relative z-10 flex flex-col items-center">
-                <h2 className="text-5xl text-white mb-2 font-medium tracking-wide">IQAMAH</h2>
-                <div className="relative w-[32rem] h-28 rounded-full overflow-hidden bg-gradient-to-b from-[#e6c97a] to-[#b38531] border-[4px] border-[#f0d892] shadow-[0_10px_30px_rgba(0,0,0,0.8)] flex items-center justify-center mb-8">
+                <h2 className="text-[4vw] text-white mb-[2vh] font-medium tracking-[0.4em]">IQAMAH</h2>
+                <div className="relative w-[40vw] h-[12vh] rounded-full overflow-hidden bg-gradient-to-b from-[#e6c97a] to-[#b38531] border-[4px] border-[#f0d892] shadow-[0_10px_30px_rgba(0,0,0,0.8)] flex items-center justify-center mb-[4vh]">
                   <div className="absolute left-0 top-0 bottom-0 bg-gradient-to-r from-blue-600 to-blue-400 shadow-[0_0_15px_rgba(59,130,246,0.8)]" style={{ width: `${(iqamahTimeRemaining / (getIqamahDuration(currentPrayer) * 60)) * 100}%` }}></div>
-                  <div className="relative z-10 text-7xl font-bold font-mono tracking-widest text-[#fff19a]" style={{ textShadow: '3px 3px 6px rgba(0,0,0,0.8), -1px -1px 2px rgba(255,255,255,0.4)' }}>
+                  <div className="relative z-10 text-[7vw] font-bold font-mono tracking-[0.1em] text-[#fff19a] pl-[0.1em]" style={{ textShadow: '3px 3px 6px rgba(0,0,0,0.8), -1px -1px 2px rgba(255,255,255,0.4)' }}>
                     {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
                   </div>
                 </div>
-                <div className="bg-[#fcf8e3] text-[#785b28] border-4 border-[#d4b97a] px-12 py-3 rounded-full text-2xl font-bold shadow-[0_10px_25px_rgba(0,0,0,0.3)] max-w-4xl truncate">
+                <div className="bg-[#fcf8e3] text-[#785b28] border-4 border-[#d4b97a] px-[4vw] py-[1.5vh] rounded-full text-[2.5vw] font-bold shadow-[0_10px_25px_rgba(0,0,0,0.3)] max-w-[85vw] truncate tracking-wide">
                   {prayerConfig?.iqomahMessage || "Luruskan dan rapatkan shaf untuk kesempurnaan shalat"}
                 </div>
               </div>
@@ -554,13 +554,13 @@ export default function TvDisplay() {
           <div className="flex-1 flex flex-col items-center justify-center text-center relative w-full h-full overflow-hidden bg-black">
             <img src={iqomahBgImg} className="absolute inset-0 w-full h-full object-cover" alt="Background" />
             <div className="relative z-10 w-full h-full flex flex-col items-center justify-center text-center">
-              <h3 className="text-[#967d3e] text-4xl font-bold tracking-[0.2em] uppercase mb-4 drop-shadow-md" style={{ textShadow: bgOption === '3' ? '2px 2px 5px rgba(0,0,0,0.8)' : '2px 2px 8px rgba(255,255,255,0.8)' }}>
+              <h3 className="text-[#967d3e] text-[3.5vw] font-bold tracking-[0.4em] uppercase mb-[2vh] drop-shadow-md" style={{ textShadow: bgOption === '3' ? '2px 2px 5px rgba(0,0,0,0.8)' : '2px 2px 8px rgba(255,255,255,0.8)' }}>
                 IQAMAH
               </h3>
-              <div className={`text-[18rem] font-extrabold tracking-tighter leading-none mb-12 font-mono ${bgOption === '3' ? 'text-white drop-shadow-[0_0_40px_rgba(255,255,255,0.3)]' : 'text-[#102a43] drop-shadow-2xl'}`} style={{ textShadow: bgOption === '3' ? '3px 3px 15px rgba(0,0,0,0.8)' : '4px 4px 15px rgba(255,255,255,0.9), -2px -2px 10px rgba(0,0,0,0.2)' }}>
+              <div className={`text-[24vw] font-extrabold tracking-widest leading-none mb-[6vh] pl-[0.1em] font-mono ${bgOption === '3' ? 'text-white drop-shadow-[0_0_40px_rgba(255,255,255,0.3)]' : 'text-[#102a43] drop-shadow-2xl'}`} style={{ textShadow: bgOption === '3' ? '3px 3px 15px rgba(0,0,0,0.8)' : '4px 4px 15px rgba(255,255,255,0.9), -2px -2px 10px rgba(0,0,0,0.2)' }}>
                 {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
               </div>
-              <div className="bg-[#fcf8e3] text-[#785b28] border-4 border-[#d4b97a] px-12 py-3 rounded-full text-2xl font-bold shadow-[0_10px_25px_rgba(0,0,0,0.3)] max-w-4xl truncate">
+              <div className="bg-[#fcf8e3] text-[#785b28] border-4 border-[#d4b97a] px-[4vw] py-[1.5vh] rounded-full text-[2.5vw] font-bold shadow-[0_10px_25px_rgba(0,0,0,0.3)] max-w-[85vw] truncate tracking-wide">
                 {prayerConfig?.iqomahMessage || "Luruskan dan rapatkan shaf untuk kesempurnaan shalat"}
               </div>
             </div>
@@ -582,13 +582,13 @@ export default function TvDisplay() {
               <img src={bgImg} className="absolute inset-0 w-full h-full object-cover opacity-20 mix-blend-luminosity grayscale" alt="Background" />
             )}
             
-            <div className="relative z-10 flex flex-col items-center max-w-6xl px-8">
-              <h2 className="text-4xl text-gray-500 mb-4 font-medium tracking-[0.3em] uppercase drop-shadow-md">SHOLAT SEDANG BERLANGSUNG</h2>
-              <h1 className="text-[10rem] font-extrabold uppercase tracking-widest text-transparent bg-clip-text bg-gradient-to-b from-[#f3e7b1] via-[#d6a94f] to-[#aa771c] drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)] opacity-90 leading-none mb-12">
+            <div className="relative z-10 flex flex-col items-center max-w-[90vw] px-8">
+              <h2 className="text-[3vw] text-gray-500 mb-[2vh] font-medium tracking-[0.4em] uppercase drop-shadow-md">SHOLAT SEDANG BERLANGSUNG</h2>
+              <h1 className="text-[14vw] font-extrabold uppercase tracking-[0.2em] text-transparent bg-clip-text bg-gradient-to-b from-[#f3e7b1] via-[#d6a94f] to-[#aa771c] drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)] opacity-90 leading-none mb-[6vh] pl-[0.2em]">
                 {currentPrayer || 'SHOLAT'}
               </h1>
               
-              <div className="relative w-[32rem] h-4 rounded-full overflow-hidden bg-gray-800/80 border border-gray-600/50 shadow-[0_5px_15px_rgba(0,0,0,0.5)] mb-8">
+              <div className="relative w-[45vw] h-[2vh] rounded-full overflow-hidden bg-gray-800/80 border border-gray-600/50 shadow-[0_5px_15px_rgba(0,0,0,0.5)] mb-[6vh]">
                 <style>{`
                   @keyframes sholatProgress {
                     0% { width: 0%; }
@@ -603,7 +603,7 @@ export default function TvDisplay() {
                 ></div>
               </div>
               
-              <div className="text-3xl text-gray-500 font-medium tracking-[0.2em] uppercase drop-shadow-md">
+              <div className="text-[3vw] text-gray-500 font-medium tracking-[0.3em] uppercase drop-shadow-md">
                 {prayerConfig?.sholatScreenMessage || 'Luruskan dan Rapatkan Shaf'}
               </div>
             </div>
