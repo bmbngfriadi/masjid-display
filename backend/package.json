@@ -17,6 +17,7 @@
     "adhan": "^4.4.6",
     "bcrypt": "^5.x",
     "cors": "^2.8.5",
+    "date-fns": "^4.4.0",
     "dotenv": "^16.x",
     "express": "^4.19.x",
     "express-rate-limit": "^8.7.0",
