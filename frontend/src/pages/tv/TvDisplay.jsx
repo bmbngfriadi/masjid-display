@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { format } from 'date-fns';
 import { id } from 'date-fns/locale';
 import useFullscreen from '../../hooks/useFullscreen';
@@ -208,10 +208,14 @@ export default function TvDisplay() {
   }, [socket]);
 
   // Handle automatic prayer time trigger
+  const lastTriggeredPrayer = useRef({ name: null, date: null });
+
   useEffect(() => {
     if (displayMode !== 'NORMAL' || !prayerTimes) return;
     
-    const currentFormattedTime = format(time, 'HH:mm:ss');
+    const currentDateStr = format(time, 'yyyy-MM-dd');
+    const currentHourMin = format(time, 'HH:mm');
+
     const prayers = [
       { id: 'fajr', name: 'SUBUH', time: prayerTimes.fajr },
       { id: 'dhuhr', name: 'DZUHUR', time: prayerTimes.dhuhr },
@@ -221,10 +225,13 @@ export default function TvDisplay() {
     ];
 
     for (let prayer of prayers) {
-      if (prayer.time && currentFormattedTime === `${prayer.time}:00`) {
-        setDisplayMode('ADHAN');
-        setCurrentPrayer(prayer.name);
-        break;
+      if (prayer.time && currentHourMin === prayer.time) {
+        if (lastTriggeredPrayer.current.name !== prayer.name || lastTriggeredPrayer.current.date !== currentDateStr) {
+          lastTriggeredPrayer.current = { name: prayer.name, date: currentDateStr };
+          setDisplayMode('ADHAN');
+          setCurrentPrayer(prayer.name);
+          break;
+        }
       }
     }
   }, [time, displayMode, prayerTimes]);
