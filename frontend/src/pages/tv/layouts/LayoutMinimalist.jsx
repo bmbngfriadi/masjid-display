@@ -31,16 +31,16 @@ export default function LayoutMinimalist({ time, mosqueProfile, prayerTimes, nex
       }}
     >
       {/* Top Gradient for Clock Visibility */}
-      <div className="w-full h-48 bg-gradient-to-b from-black/70 to-transparent absolute top-0 left-0"></div>
+      <div className="w-full h-[15vh] bg-gradient-to-b from-black/70 to-transparent absolute top-0 left-0"></div>
 
       {/* Top Bar: Mosque Name and Clock */}
-      <div className="relative z-10 w-full p-8 flex justify-between items-start">
+      <div className="relative z-10 w-full p-[2vw] flex justify-between items-start">
         <div className="flex flex-col">
-          <h1 className="text-5xl font-bold tracking-wide drop-shadow-lg text-white mb-2">{mosqueProfile?.name || 'Masjid Baitul Jannah'}</h1>
-          <h2 className="text-xl text-emerald-300 font-medium tracking-wider drop-shadow-md">{currentDate} | {currentHijri}</h2>
+          <h1 className="text-[3vw] font-bold tracking-wide drop-shadow-lg text-white mb-[1vh]">{mosqueProfile?.name || 'Masjid Baitul Jannah'}</h1>
+          <h2 className="text-[1vw] text-emerald-300 font-medium tracking-wider drop-shadow-md">{currentDate} | {currentHijri}</h2>
         </div>
         <div className="text-right">
-          <h1 className="text-8xl font-bold font-mono tracking-tighter leading-none drop-shadow-xl text-white">
+          <h1 className="text-[6vw] font-bold font-mono tracking-tighter leading-none drop-shadow-xl text-white">
             {format(time, 'HH:mm')}
           </h1>
         </div>
@@ -50,7 +50,7 @@ export default function LayoutMinimalist({ time, mosqueProfile, prayerTimes, nex
 
       {/* Bottom Minimalist Bar */}
       <div className="relative z-10 w-full bg-white/95 text-slate-900 shadow-[0_-10px_40px_rgba(0,0,0,0.5)] border-t border-white flex flex-col">
-        <div className="flex justify-between items-stretch h-36">
+        <div className="flex justify-between items-stretch h-[18vh]">
           {prayers.map((prayer, index) => {
             const isNext = nextPrayer?.name.toLowerCase() === prayer.name.toLowerCase();
             return (
@@ -61,16 +61,16 @@ export default function LayoutMinimalist({ time, mosqueProfile, prayerTimes, nex
                 }`}
               >
                 {/* Active Indicator Top Border */}
-                {isNext && <div className="absolute top-0 w-full h-2 bg-emerald-400"></div>}
+                {isNext && <div className="absolute top-0 w-full h-[0.8vh] bg-emerald-400"></div>}
                 
-                <h4 className={`text-xl font-bold uppercase tracking-widest mb-1 ${isNext ? 'text-emerald-100' : 'text-slate-500'}`}>
+                <h4 className={`text-[1.2vw] font-bold uppercase tracking-widest mb-[0.5vh] ${isNext ? 'text-emerald-100' : 'text-slate-500'}`}>
                   {prayer.name}
                 </h4>
-                <div className={`text-5xl font-mono font-bold tracking-tighter mb-1 ${isNext ? 'text-white' : 'text-slate-800'}`}>
+                <div className={`text-[3vw] font-mono font-bold tracking-tighter mb-[0.5vh] ${isNext ? 'text-white' : 'text-slate-800'}`}>
                   {prayer.time}
                 </div>
                 {prayer.iqamah && (
-                  <div className={`text-sm font-medium ${isNext ? 'text-emerald-200' : 'text-slate-400'}`}>
+                  <div className={`text-[0.8vw] font-medium ${isNext ? 'text-emerald-200' : 'text-slate-400'}`}>
                     Iqamah: {prayer.iqamah}
                   </div>
                 )}

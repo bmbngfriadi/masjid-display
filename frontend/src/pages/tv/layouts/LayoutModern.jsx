@@ -36,48 +36,48 @@ export default function LayoutModern({ time, mosqueProfile, prayerTimes, nextPra
       <div className="flex-1"></div>
 
       {/* Right side modern panel */}
-      <div className="w-[600px] h-full relative z-10 flex flex-col justify-center items-end pr-12 gap-2 py-6">
+      <div className="w-[35vw] h-full relative z-10 flex flex-col justify-center items-end pr-[4vw] gap-[1vh] py-[2vh]">
         
         {/* Clock Card */}
-        <div className="w-full bg-white/10 backdrop-blur-xl rounded-3xl border border-white/20 p-6 shadow-2xl mb-2 flex flex-col items-center">
-          <h1 className="text-[6rem] font-bold font-mono tracking-tighter leading-none mb-1 text-white">
+        <div className="w-full bg-white/10 backdrop-blur-xl rounded-[2vw] border border-white/20 p-[1.5vw] shadow-2xl mb-[1vh] flex flex-col items-center">
+          <h1 className="text-[7vw] font-bold font-mono tracking-tighter leading-none mb-[0.5vh] text-white">
             {format(time, 'HH:mm')}
           </h1>
-          <div className="w-full border-t border-white/20 my-3"></div>
-          <div className="flex w-full justify-between items-center px-4">
-            <h2 className="text-lg text-emerald-300 font-semibold tracking-wide">{currentDate}</h2>
-            <div className="w-1.5 h-1.5 rounded-full bg-yellow-400"></div>
-            <h3 className="text-lg text-yellow-300 font-medium">{currentHijri}</h3>
+          <div className="w-full border-t border-white/20 my-[1vh]"></div>
+          <div className="flex w-full justify-between items-center px-[1vw]">
+            <h2 className="text-[1vw] text-emerald-300 font-semibold tracking-wide">{currentDate}</h2>
+            <div className="w-[0.5vw] h-[0.5vw] rounded-full bg-yellow-400"></div>
+            <h3 className="text-[1vw] text-yellow-300 font-medium">{currentHijri}</h3>
           </div>
         </div>
 
         {/* Prayer Cards */}
-        <div className="w-full flex flex-col gap-2">
+        <div className="w-full flex flex-col gap-[1vh]">
           {prayers.map((prayer) => {
             const isNext = nextPrayer?.name.toLowerCase() === prayer.name.toLowerCase();
             return (
               <div 
                 key={prayer.name} 
-                className={`w-full flex items-center justify-between p-4 rounded-2xl border transition-all duration-500 backdrop-blur-md shadow-lg ${
+                className={`w-full flex items-center justify-between p-[1.2vw] rounded-[1vw] border transition-all duration-500 backdrop-blur-md shadow-lg ${
                   isNext 
-                    ? 'border-emerald-400 bg-emerald-600/30 shadow-[0_0_20px_rgba(52,211,153,0.3)] scale-[1.02] ml-[-1rem]' 
+                    ? 'border-emerald-400 bg-emerald-600/30 shadow-[0_0_20px_rgba(52,211,153,0.3)] scale-[1.02] ml-[-1.5vw]' 
                     : 'border-white/10 bg-white/5 hover:bg-white/10'
                 }`}
               >
-                <div className="flex items-center gap-5">
-                  {isNext && <div className="w-1.5 h-10 bg-emerald-400 rounded-full shadow-[0_0_10px_rgba(52,211,153,0.8)]"></div>}
+                <div className="flex items-center gap-[1.5vw]">
+                  {isNext && <div className="w-[0.4vw] h-[5vh] bg-emerald-400 rounded-full shadow-[0_0_10px_rgba(52,211,153,0.8)]"></div>}
                   <div className="flex flex-col">
-                    <h4 className={`text-lg font-bold uppercase tracking-wider ${isNext ? 'text-emerald-300' : 'text-gray-300'}`}>
+                    <h4 className={`text-[1.2vw] font-bold uppercase tracking-wider ${isNext ? 'text-emerald-300' : 'text-gray-300'}`}>
                       {prayer.name}
                     </h4>
                     {prayer.iqamah && (
-                      <span className="text-xs font-medium text-gray-400 mt-1">
+                      <span className="text-[0.7vw] font-medium text-gray-400 mt-[0.5vh]">
                         Iqamah: {prayer.iqamah}
                       </span>
                     )}
                   </div>
                 </div>
-                <div className={`text-4xl font-mono font-bold tracking-tight ${isNext ? 'text-white' : 'text-gray-100'}`}>
+                <div className={`text-[2.2vw] font-mono font-bold tracking-tight ${isNext ? 'text-white' : 'text-gray-100'}`}>
                   {prayer.time}
                 </div>
               </div>
