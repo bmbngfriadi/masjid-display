@@ -2,7 +2,8 @@ module.exports = {
   apps: [
     {
       name: 'masjid-backend',
-      script: './backend/server.js',
+      script: 'server.js',
+      cwd: './backend',
       instances: 1,
       autorestart: true,
       watch: false,
