@@ -470,9 +470,11 @@ export default function TvDisplay() {
                 <span className="text-transparent bg-clip-text bg-gradient-to-b from-[#f3e7b1] via-[#d6a94f] to-[#aa771c] text-[12vw] font-extrabold tracking-[0.15em] leading-none mb-[2vh] drop-shadow-lg pl-[0.15em]">
                   {currentPrayer || 'ADZAN'}
                 </span>
-                <span className="text-white text-[6vw] font-bold font-mono tracking-[0.15em] drop-shadow-md pl-[0.15em]">
-                  {getPrayerTimeByName(currentPrayer) || currentTime}
-                </span>
+                <div className="flex items-center justify-center gap-[1vw] text-white text-[6vw] font-bold font-mono drop-shadow-md">
+                  {(getPrayerTimeByName(currentPrayer) || currentTime).split('').map((c, i) => (
+                    <span key={i} className={c === ':' ? 'mb-[0.5vw]' : 'min-w-[4vw] text-center'}>{c}</span>
+                  ))}
+                </div>
               </div>
               
               <div className="absolute bottom-24 right-16 w-[35vw] h-2.5 bg-gray-700/80 rounded-full overflow-hidden z-10">
@@ -518,8 +520,10 @@ export default function TvDisplay() {
                 ></div>
                 
                 {/* Time Text */}
-                <div className="relative z-10 text-[5.5vw] font-bold font-mono tracking-[0.2em] text-[#fff19a] pl-[0.2em]" style={{ textShadow: '3px 3px 6px rgba(0,0,0,0.8), -1px -1px 2px rgba(255,255,255,0.4)' }}>
-                  {getPrayerTimeByName(currentPrayer) || currentTime}
+                <div className="relative z-10 flex items-center justify-center gap-[1vw] text-[5.5vw] font-bold font-mono text-[#fff19a]" style={{ textShadow: '3px 3px 6px rgba(0,0,0,0.8), -1px -1px 2px rgba(255,255,255,0.4)' }}>
+                  {(getPrayerTimeByName(currentPrayer) || currentTime).split('').map((c, i) => (
+                    <span key={i} className={c === ':' ? 'mb-[0.5vw]' : 'min-w-[3.5vw] text-center'}>{c}</span>
+                  ))}
                 </div>
               </div>
             </div>
@@ -538,8 +542,10 @@ export default function TvDisplay() {
                 <h2 className="text-[4vw] text-white mb-[2vh] font-medium tracking-[0.4em]">IQAMAH</h2>
                 <div className="relative w-[40vw] h-[12vh] rounded-full overflow-hidden bg-gradient-to-b from-[#e6c97a] to-[#b38531] border-[4px] border-[#f0d892] shadow-[0_10px_30px_rgba(0,0,0,0.8)] flex items-center justify-center mb-[4vh]">
                   <div className="absolute left-0 top-0 bottom-0 bg-gradient-to-r from-blue-600 to-blue-400 shadow-[0_0_15px_rgba(59,130,246,0.8)]" style={{ width: `${(iqamahTimeRemaining / (getIqamahDuration(currentPrayer) * 60)) * 100}%` }}></div>
-                  <div className="relative z-10 text-[6vw] font-bold text-[#fff19a] pl-[0.3em]" style={{ letterSpacing: '0.3em', textShadow: '3px 3px 6px rgba(0,0,0,0.8), -1px -1px 2px rgba(255,255,255,0.4)' }}>
-                    {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
+                  <div className="relative z-10 flex items-center justify-center gap-[1vw] text-[6vw] font-bold text-[#fff19a]" style={{ textShadow: '3px 3px 6px rgba(0,0,0,0.8), -1px -1px 2px rgba(255,255,255,0.4)' }}>
+                    {`${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`.split('').map((c, i) => (
+                      <span key={i} className={c === ':' ? 'mb-[0.5vw]' : 'min-w-[4vw] text-center'}>{c}</span>
+                    ))}
                   </div>
                 </div>
                 <div className="bg-[#fcf8e3] text-[#785b28] border-4 border-[#d4b97a] px-[4vw] py-[1.5vh] rounded-full text-[2.5vw] font-bold shadow-[0_10px_25px_rgba(0,0,0,0.3)] max-w-[85vw] truncate tracking-wide">
@@ -557,8 +563,10 @@ export default function TvDisplay() {
               <h3 className="text-[#967d3e] text-[3.5vw] font-bold tracking-[0.4em] uppercase mb-[2vh] drop-shadow-md" style={{ textShadow: bgOption === '3' ? '2px 2px 5px rgba(0,0,0,0.8)' : '2px 2px 8px rgba(255,255,255,0.8)' }}>
                 IQAMAH
               </h3>
-              <div className={`text-[16vw] font-extrabold leading-none mb-[6vh] pl-[0.4em] ${bgOption === '3' ? 'text-white drop-shadow-[0_0_40px_rgba(255,255,255,0.3)]' : 'text-[#102a43] drop-shadow-2xl'}`} style={{ letterSpacing: '0.4em', textShadow: bgOption === '3' ? '3px 3px 15px rgba(0,0,0,0.8)' : '4px 4px 15px rgba(255,255,255,0.9), -2px -2px 10px rgba(0,0,0,0.2)' }}>
-                {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
+              <div className={`flex items-center justify-center gap-[2vw] text-[16vw] font-extrabold leading-none mb-[6vh] ${bgOption === '3' ? 'text-white drop-shadow-[0_0_40px_rgba(255,255,255,0.3)]' : 'text-[#102a43] drop-shadow-2xl'}`} style={{ textShadow: bgOption === '3' ? '3px 3px 15px rgba(0,0,0,0.8)' : '4px 4px 15px rgba(255,255,255,0.9), -2px -2px 10px rgba(0,0,0,0.2)' }}>
+                {`${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`.split('').map((c, i) => (
+                  <span key={i} className={c === ':' ? 'px-[0.5vw] mb-[1.5vw]' : 'min-w-[10vw] text-center'}>{c}</span>
+                ))}
               </div>
               <div className="bg-[#fcf8e3] text-[#785b28] border-4 border-[#d4b97a] px-[4vw] py-[1.5vh] rounded-full text-[2.5vw] font-bold shadow-[0_10px_25px_rgba(0,0,0,0.3)] max-w-[85vw] truncate tracking-wide">
                 {prayerConfig?.iqomahMessage || "Luruskan dan rapatkan shaf untuk kesempurnaan shalat"}
