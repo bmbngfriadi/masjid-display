@@ -55,6 +55,21 @@ export default function LayoutConfig() {
       id: 'minimalist',
       name: 'Minimalist (Theme 6)',
       desc: 'Jadwal di satu baris paling bawah, memaksimalkan keindahan gambar masjid.'
+    },
+    {
+      id: 'glassmorphism',
+      name: 'Glassmorphism (Theme 7)',
+      desc: 'Desain ultra modern dengan panel kaca buram (frosted glass) dan jam digital berdenyut.'
+    },
+    {
+      id: 'dynamic',
+      name: 'Dynamic Motion (Theme 8)',
+      desc: 'Gaya visual dinamis, animasi lingkaran waktu, dan indikator aktif bercahaya.'
+    },
+    {
+      id: 'futuristic',
+      name: 'Futuristic Sci-Fi (Theme 9)',
+      desc: 'Tema masa depan beraksen garis neon cybernetic dan cincin radar abstrak.'
     }
   ];
 
@@ -345,6 +360,83 @@ export default function LayoutConfig() {
                         <div className="w-5 h-2 bg-emerald-700 rounded"></div>
                       </div>
                     ))}
+                  </div>
+                </div>
+              )}
+
+              {layout.id === 'glassmorphism' && (
+                <div className="w-full h-full relative flex flex-col justify-between p-2 text-[8px]">
+                  <img src="/masjid/mosque_bg.png" className="absolute inset-0 w-full h-full object-cover" alt="bg" />
+                  <div className="absolute inset-0 bg-black/40"></div>
+                  <div className="w-full relative z-10 flex justify-between">
+                    <div className="w-16 h-6 bg-white/10 backdrop-blur-md rounded-lg border border-white/20"></div>
+                    <div className="w-12 h-6 bg-white/10 backdrop-blur-md rounded-lg border border-white/20"></div>
+                  </div>
+                  <div className="flex-1 flex items-center justify-center relative z-10">
+                    <div className="w-24 h-10 bg-white/5 backdrop-blur-lg rounded-xl border border-white/10 flex items-center justify-center gap-1">
+                      <div className="w-6 h-4 bg-white/90 rounded-sm"></div>
+                      <div className="w-1 h-3 bg-yellow-400 rounded-sm"></div>
+                      <div className="w-6 h-4 bg-white/90 rounded-sm"></div>
+                    </div>
+                  </div>
+                  <div className="w-full relative z-10 flex justify-between gap-1">
+                    {[...Array(6)].map((_, i) => (
+                      <div key={i} className={`flex-1 h-6 rounded-md border flex flex-col items-center justify-center ${i === 2 ? 'bg-yellow-400/30 border-yellow-300' : 'bg-black/40 border-white/10'}`}>
+                        <div className={`w-3 h-1 rounded-sm mb-1 ${i === 2 ? 'bg-yellow-300' : 'bg-white/50'}`}></div>
+                        <div className={`w-4 h-2 rounded-sm ${i === 2 ? 'bg-white' : 'bg-white/80'}`}></div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {layout.id === 'dynamic' && (
+                <div className="w-full h-full relative flex text-[8px]">
+                  <img src="/masjid/mosque_bg.png" className="absolute inset-0 w-full h-full object-cover" alt="bg" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-900/80 to-indigo-900/80 mix-blend-multiply"></div>
+                  <div className="w-[35%] h-full bg-black/50 backdrop-blur-sm border-r border-white/10 relative z-10 flex flex-col px-2 py-2">
+                    <div className="w-8 h-8 rounded-lg bg-blue-500 mb-2"></div>
+                    <div className="flex-1 flex flex-col justify-between gap-1">
+                      {[...Array(6)].map((_, i) => (
+                        <div key={i} className={`w-full h-3 rounded flex justify-between items-center px-1 ${i === 3 ? 'bg-gradient-to-r from-blue-600 to-cyan-500' : 'bg-white/10'}`}>
+                           <div className="w-4 h-1 bg-white/70 rounded-sm"></div>
+                           <div className="w-6 h-1.5 bg-white rounded-sm"></div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="flex-1 relative z-10 flex flex-col items-center justify-center">
+                    <div className="w-12 h-12 rounded-full border-2 border-cyan-400/50 mb-2 flex items-center justify-center">
+                      <div className="w-8 h-8 rounded-full border border-white/20"></div>
+                    </div>
+                    <div className="w-16 h-4 bg-white/20 rounded-md"></div>
+                  </div>
+                </div>
+              )}
+
+              {layout.id === 'futuristic' && (
+                <div className="w-full h-full relative flex flex-col bg-black text-[8px]">
+                  <div className="absolute inset-0 border-[0.5px] border-[#00ffcc]/10 bg-[size:10px_10px]" style={{ backgroundImage: 'linear-gradient(rgba(0,255,204,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,204,0.1) 1px, transparent 1px)' }}></div>
+                  <div className="w-full h-[15%] border-b border-[#00ffcc]/30 bg-black/80 relative z-10 flex items-center justify-between px-2">
+                    <div className="w-4 h-4 rounded-full border border-[#00ffcc]"></div>
+                    <div className="w-10 h-2 bg-[#00ffcc]/50 rounded-sm"></div>
+                  </div>
+                  <div className="flex-1 relative z-10 flex">
+                    <div className="flex-1 flex items-center justify-center">
+                       <div className="w-20 h-10 border border-[#00ffcc]/40 bg-black/60 rounded-xl flex items-center justify-center gap-1">
+                          <div className="w-5 h-4 bg-white rounded-sm"></div>
+                          <div className="w-1 h-3 bg-[#00ffcc] rounded-sm"></div>
+                          <div className="w-5 h-4 bg-white rounded-sm"></div>
+                       </div>
+                    </div>
+                    <div className="w-[30%] h-full bg-gradient-to-l from-black to-transparent border-l border-[#00ffcc]/20 flex flex-col justify-center gap-1 px-1">
+                      {[...Array(6)].map((_, i) => (
+                        <div key={i} className={`w-full h-4 border-l-2 flex justify-between items-center px-1 bg-black/50 ${i === 4 ? 'border-[#00ffcc] bg-[#00ffcc]/20' : 'border-[#00ffcc]/30'}`}>
+                          <div className="w-4 h-1 bg-[#00ffcc]/70 rounded-sm"></div>
+                          <div className="w-6 h-2 bg-white rounded-sm"></div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               )}

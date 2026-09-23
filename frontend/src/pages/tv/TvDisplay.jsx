@@ -12,6 +12,9 @@ import LayoutModern from './layouts/LayoutModern';
 import LayoutMinimalist from './layouts/LayoutMinimalist';
 import InfoSlideScreen from './layouts/InfoSlideScreen';
 import LayoutJumat from './layouts/LayoutJumat';
+import LayoutGlassmorphism from './layouts/LayoutGlassmorphism';
+import LayoutDynamic from './layouts/LayoutDynamic';
+import LayoutFuturistic from './layouts/LayoutFuturistic';
 
 export default function TvDisplay() {
   const [previewFridayMode, setPreviewFridayMode] = useState(false);
@@ -646,6 +649,12 @@ export default function TvDisplay() {
           ActiveLayout = LayoutModern;
         } else if (layoutStyle === 'minimalist') {
           ActiveLayout = LayoutMinimalist;
+        } else if (layoutStyle === 'glassmorphism') {
+          ActiveLayout = LayoutGlassmorphism;
+        } else if (layoutStyle === 'dynamic') {
+          ActiveLayout = LayoutDynamic;
+        } else if (layoutStyle === 'futuristic') {
+          ActiveLayout = LayoutFuturistic;
         } else {
           ActiveLayout = LayoutSignature;
         }
