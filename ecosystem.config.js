@@ -3,7 +3,6 @@ module.exports = {
     {
       name: 'masjid-backend',
       script: './backend/server.js',
-      cwd: 'd:/dev/masjid-baitul-jannah/masjid-display',
       instances: 1,
       autorestart: true,
       watch: false,
