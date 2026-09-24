@@ -81,7 +81,7 @@ export default function TvDisplay() {
       const data = await res.json();
       const activeTexts = data.filter(t => t.isActive).map(t => t.text);
       if (activeTexts.length > 0) {
-        setRunningText(activeTexts.join('      ۞      '));
+        setRunningText(activeTexts.join('               ❖               '));
       } else {
         setRunningText('Selamat datang di Masjid Baitul Jannah.');
       }
@@ -500,7 +500,7 @@ export default function TvDisplay() {
 
         return (
           <div className="flex-1 w-full h-full flex flex-col items-center justify-center text-center border-[12px] border-[#c5a059] bg-black relative overflow-hidden">
-            <img src={prayerConfig?.adzanBackgroundUrl || "/masjid/adzan_bg_dark.png"} className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-luminosity" alt="Background" />
+            <img src={prayerConfig?.adzanBackgroundUrl || "/masjid/adzan_bg_dark.png"} className="absolute inset-0 w-full h-full object-cover opacity-60" alt="Background" />
             <style>{`
               @keyframes adzanProgress {
                 0% { width: 0%; border-radius: 9999px 0 0 9999px; }
@@ -542,7 +542,7 @@ export default function TvDisplay() {
         if (bgOption === '5' && !prayerConfig?.iqomahBackgroundUrl) {
           return (
             <div className="flex-1 w-full h-full flex flex-col items-center justify-center text-center border-[12px] border-[#c5a059] bg-black relative overflow-hidden">
-              <img src="/masjid/adzan_bg_dark.png" className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-luminosity" alt="Background" />
+              <img src="/masjid/adzan_bg_dark.png" className="absolute inset-0 w-full h-full object-cover opacity-60" alt="Background" />
               <div className="relative z-10 flex flex-col items-center">
                 <h2 className="text-[4vw] text-white mb-[2vh] font-medium tracking-[0.4em]">IQAMAH</h2>
                 <div className="relative w-[40vw] h-[12vh] rounded-full overflow-hidden bg-gradient-to-b from-[#e6c97a] to-[#b38531] border-[4px] border-[#f0d892] shadow-[0_10px_30px_rgba(0,0,0,0.8)] flex items-center justify-center mb-[4vh]">
@@ -588,11 +588,11 @@ export default function TvDisplay() {
           <div className="flex-1 w-full h-full flex flex-col items-center justify-center text-center bg-black relative overflow-hidden">
             {isAnim ? (
               <>
-                <img src="/masjid/mosque_bg.png" className="absolute inset-0 w-full h-full object-cover opacity-10 mix-blend-screen blur-[2px] grayscale" alt="Background" />
+                <img src="/masjid/mosque_bg.png" className="absolute inset-0 w-full h-full object-cover opacity-10 blur-[2px] grayscale" alt="Background" />
                 <div className="absolute right-[-10%] w-[80vw] h-[80vw] max-h-[120vh] max-w-[120vh] rounded-full bg-blue-900/10 border border-blue-400/10 shadow-[0_0_100px_rgba(59,130,246,0.1)]"></div>
               </>
             ) : (
-              <img src={bgImg} className="absolute inset-0 w-full h-full object-cover opacity-20 mix-blend-luminosity grayscale" alt="Background" />
+              <img src={bgImg} className="absolute inset-0 w-full h-full object-cover opacity-20 grayscale" alt="Background" />
             )}
             
             <div className="relative z-10 flex flex-col items-center max-w-[90vw] px-8">
@@ -710,7 +710,8 @@ export default function TvDisplay() {
             className="whitespace-pre animate-marquee font-extrabold tracking-wide text-yellow-400" 
             style={{ 
               animationDuration: `${displaySetting?.runningTextSpeed || 25}s`,
-              fontSize: `${displaySetting?.runningTextSize || 64}px` 
+              fontSize: `${displaySetting?.runningTextSize || 64}px`,
+              willChange: 'transform'
             }}
           >
             {(isFridayTime && fridayInfo?.runningText) 
@@ -718,7 +719,7 @@ export default function TvDisplay() {
                 (() => {
                   try {
                     const texts = JSON.parse(fridayInfo.runningText);
-                    return texts.length > 0 ? texts.join('      ۞      ') : runningText;
+                    return texts.length > 0 ? texts.join('               ❖               ') : runningText;
                   } catch(e) {
                     return runningText;
                   }
