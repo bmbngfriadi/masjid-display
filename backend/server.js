@@ -5,6 +5,7 @@ const express = require('express');
 const http = require('http');
 const cors = require('cors');
 const helmet = require('helmet');
+const compression = require('compression');
 const { Server } = require('socket.io');
 const prisma = require('./src/config/db');
 
@@ -14,6 +15,7 @@ const server = http.createServer(app);
 // Use basic middleware
 app.use(helmet());
 app.use(cors());
+app.use(compression()); // Gzip compress all responses for faster load times
 app.use(express.json({ limit: '10mb' }));
 
 // Keamanan Tambahan (Security Hardening)

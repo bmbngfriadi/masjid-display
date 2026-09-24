@@ -1,20 +1,21 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { format } from 'date-fns';
 import { id } from 'date-fns/locale';
 import useFullscreen from '../../hooks/useFullscreen';
 import useWakeLock from '../../hooks/useWakeLock';
 import useDevice from '../../hooks/useDevice';
-import LayoutSignature from './layouts/LayoutSignature';
-import LayoutUltraWide from './layouts/LayoutUltraWide';
-import LayoutSimplicity from './layouts/LayoutSimplicity';
-import LayoutClassic from './layouts/LayoutClassic';
-import LayoutModern from './layouts/LayoutModern';
-import LayoutMinimalist from './layouts/LayoutMinimalist';
-import InfoSlideScreen from './layouts/InfoSlideScreen';
-import LayoutJumat from './layouts/LayoutJumat';
-import LayoutGlassmorphism from './layouts/LayoutGlassmorphism';
-import LayoutDynamic from './layouts/LayoutDynamic';
-import LayoutFuturistic from './layouts/LayoutFuturistic';
+
+const LayoutSignature = lazy(() => import('./layouts/LayoutSignature'));
+const LayoutUltraWide = lazy(() => import('./layouts/LayoutUltraWide'));
+const LayoutSimplicity = lazy(() => import('./layouts/LayoutSimplicity'));
+const LayoutClassic = lazy(() => import('./layouts/LayoutClassic'));
+const LayoutModern = lazy(() => import('./layouts/LayoutModern'));
+const LayoutMinimalist = lazy(() => import('./layouts/LayoutMinimalist'));
+const LayoutGlassmorphism = lazy(() => import('./layouts/LayoutGlassmorphism'));
+const LayoutDynamic = lazy(() => import('./layouts/LayoutDynamic'));
+const LayoutFuturistic = lazy(() => import('./layouts/LayoutFuturistic'));
+const InfoSlideScreen = lazy(() => import('./layouts/InfoSlideScreen'));
+const LayoutJumat = lazy(() => import('./layouts/LayoutJumat'));
 
 export default function TvDisplay() {
   const [previewFridayMode, setPreviewFridayMode] = useState(false);
@@ -669,9 +670,13 @@ export default function TvDisplay() {
                 }}>
             
             {(showInfoSlide && displaySetting?.infoSlideItems?.length > 0 && !isFridayTime) ? (
-              <InfoSlideScreen displaySetting={displaySetting} />
+              <Suspense fallback={<div className="w-full h-full bg-black flex items-center justify-center text-white/50 text-xl font-bold animate-pulse">Loading Slide...</div>}>
+                <InfoSlideScreen displaySetting={displaySetting} />
+              </Suspense>
             ) : (
-              <ActiveLayout {...commonProps} fridayInfo={fridayInfo} />
+              <Suspense fallback={<div className="w-full h-full bg-black flex items-center justify-center text-white/50 text-xl font-bold animate-pulse">Loading Layout...</div>}>
+                <ActiveLayout {...commonProps} fridayInfo={fridayInfo} />
+              </Suspense>
             )}
             
             {displaySetting?.showDebugTools && (
