@@ -329,7 +329,7 @@ export default function PrayerTimeConfig() {
             </div>
             <div className="flex items-center justify-between">
               <span className="font-semibold text-[var(--text-primary)]">Status</span>
-              <div className={`w-12 h-6 rounded-full p-1 transition-colors duration-300 ${config.ramadanMode ? 'bg-[var(--primary-500)]' : 'bg-slate-300 dark:bg-slate-700'}`}>
+              <div className={`w-12 h-6 shrink-0 rounded-full p-1 transition-colors duration-300 ${config.ramadanMode ? 'bg-[var(--primary-500)]' : 'bg-slate-300 dark:bg-slate-700'}`}>
                 <div className={`bg-white w-4 h-4 rounded-full shadow-sm transform transition-transform duration-300 ${config.ramadanMode ? 'translate-x-6' : 'translate-x-0'}`}></div>
               </div>
             </div>

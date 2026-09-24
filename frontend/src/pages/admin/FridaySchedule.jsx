@@ -238,7 +238,7 @@ export default function FridaySchedule() {
                 <h3 className="text-lg font-bold text-[var(--text-primary)] mb-1">Status Shalat Jumat</h3>
                 <p className="text-sm text-[var(--text-secondary)]">Aktifkan mode Layout Khusus Shalat Jumat.</p>
               </div>
-              <div className={`w-12 h-6 rounded-full p-1 transition-colors duration-300 ${jumatMode ? 'bg-[var(--primary-500)]' : 'bg-slate-300 dark:bg-slate-700'}`}>
+              <div className={`w-12 h-6 shrink-0 rounded-full p-1 transition-colors duration-300 ${jumatMode ? 'bg-[var(--primary-500)]' : 'bg-slate-300 dark:bg-slate-700'}`}>
                 <div className={`bg-white w-4 h-4 rounded-full shadow-sm transform transition-transform duration-300 ${jumatMode ? 'translate-x-6' : 'translate-x-0'}`}></div>
               </div>
             </div>
@@ -435,7 +435,7 @@ export default function FridaySchedule() {
                 <h3 className="text-sm font-bold text-[var(--text-primary)] mb-1">Status Teks Berjalan Khusus Jumat</h3>
                 <p className="text-xs text-[var(--text-secondary)]">Tampilkan atau sembunyikan teks berjalan di layar TV saat Shalat Jumat.</p>
               </div>
-              <div className={`w-10 h-5 rounded-full p-1 transition-colors duration-300 ${jumatRunningTextEnabled ? 'bg-[var(--primary-500)]' : 'bg-slate-300 dark:bg-slate-700'}`}>
+              <div className={`w-10 h-5 shrink-0 rounded-full p-1 transition-colors duration-300 ${jumatRunningTextEnabled ? 'bg-[var(--primary-500)]' : 'bg-slate-300 dark:bg-slate-700'}`}>
                 <div className={`bg-white w-3 h-3 rounded-full shadow-sm transform transition-transform duration-300 ${jumatRunningTextEnabled ? 'translate-x-5' : 'translate-x-0'}`}></div>
               </div>
             </div>

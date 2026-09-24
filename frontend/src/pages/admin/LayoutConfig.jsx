@@ -474,7 +474,7 @@ export default function LayoutConfig() {
                 showAlert({ title: 'Gagal', message: 'Gagal mengubah pengaturan debug', type: 'error' });
               }
             }}
-            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--primary-500)] focus:ring-offset-2 ${showDebugTools ? 'bg-orange-500' : 'bg-slate-300 dark:bg-slate-700'}`}
+            className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--primary-500)] focus:ring-offset-2 ${showDebugTools ? 'bg-orange-500' : 'bg-slate-300 dark:bg-slate-700'}`}
           >
             <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${showDebugTools ? 'translate-x-6' : 'translate-x-1'}`} />
           </button>
@@ -560,7 +560,7 @@ export default function LayoutConfig() {
             </div>
             <button 
               onClick={() => setBackgroundSliderEnabled(!backgroundSliderEnabled)}
-              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--primary-500)] focus:ring-offset-2 ${backgroundSliderEnabled ? 'bg-emerald-500' : 'bg-slate-300 dark:bg-slate-700'}`}
+              className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--primary-500)] focus:ring-offset-2 ${backgroundSliderEnabled ? 'bg-emerald-500' : 'bg-slate-300 dark:bg-slate-700'}`}
             >
               <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${backgroundSliderEnabled ? 'translate-x-6' : 'translate-x-1'}`} />
             </button>
@@ -607,7 +607,7 @@ export default function LayoutConfig() {
           </div>
           <button 
             onClick={() => setInfoSlideEnabled(!infoSlideEnabled)}
-            className={`relative inline-flex h-8 w-14 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--primary-500)] focus:ring-offset-2 ${infoSlideEnabled ? 'bg-blue-500' : 'bg-slate-300 dark:bg-slate-700'}`}
+            className={`relative inline-flex h-8 w-14 shrink-0 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--primary-500)] focus:ring-offset-2 ${infoSlideEnabled ? 'bg-blue-500' : 'bg-slate-300 dark:bg-slate-700'}`}
           >
             <span className="sr-only">Enable Info Slide</span>
             <span className={`inline-block h-6 w-6 transform rounded-full bg-white transition-transform ${infoSlideEnabled ? 'translate-x-7' : 'translate-x-1'}`} />

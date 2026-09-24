@@ -184,7 +184,7 @@ export default function Announcements() {
                   <h3 className="text-sm font-bold text-[var(--text-primary)] mb-1">Status Teks Berjalan (Layar Normal)</h3>
                   <p className="text-xs text-[var(--text-secondary)]">Tampilkan atau sembunyikan teks berjalan di layar utama TV.</p>
                 </div>
-                <div className={`w-10 h-5 rounded-full p-1 transition-colors duration-300 ${displaySetting.runningTextEnabled !== false ? 'bg-[var(--primary-500)]' : 'bg-slate-300 dark:bg-slate-700'}`}>
+                <div className={`w-10 h-5 shrink-0 rounded-full p-1 transition-colors duration-300 ${displaySetting.runningTextEnabled !== false ? 'bg-[var(--primary-500)]' : 'bg-slate-300 dark:bg-slate-700'}`}>
                   <div className={`bg-white w-3 h-3 rounded-full shadow-sm transform transition-transform duration-300 ${displaySetting.runningTextEnabled !== false ? 'translate-x-5' : 'translate-x-0'}`}></div>
                 </div>
               </div>
@@ -194,7 +194,7 @@ export default function Announcements() {
                   <h3 className="text-sm font-bold text-[var(--text-primary)] mb-1">Teks Berjalan Saat Adzan</h3>
                   <p className="text-xs text-[var(--text-secondary)]">Tampilkan atau sembunyikan saat layar waktu Adzan.</p>
                 </div>
-                <div className={`w-10 h-5 rounded-full p-1 transition-colors duration-300 ${displaySetting.runningTextAdzanEnabled !== false ? 'bg-[var(--primary-500)]' : 'bg-slate-300 dark:bg-slate-700'}`}>
+                <div className={`w-10 h-5 shrink-0 rounded-full p-1 transition-colors duration-300 ${displaySetting.runningTextAdzanEnabled !== false ? 'bg-[var(--primary-500)]' : 'bg-slate-300 dark:bg-slate-700'}`}>
                   <div className={`bg-white w-3 h-3 rounded-full shadow-sm transform transition-transform duration-300 ${displaySetting.runningTextAdzanEnabled !== false ? 'translate-x-5' : 'translate-x-0'}`}></div>
                 </div>
               </div>
@@ -204,7 +204,7 @@ export default function Announcements() {
                   <h3 className="text-sm font-bold text-[var(--text-primary)] mb-1">Teks Berjalan Saat Iqomah</h3>
                   <p className="text-xs text-[var(--text-secondary)]">Tampilkan atau sembunyikan saat hitung mundur Iqomah.</p>
                 </div>
-                <div className={`w-10 h-5 rounded-full p-1 transition-colors duration-300 ${displaySetting.runningTextIqomahEnabled !== false ? 'bg-[var(--primary-500)]' : 'bg-slate-300 dark:bg-slate-700'}`}>
+                <div className={`w-10 h-5 shrink-0 rounded-full p-1 transition-colors duration-300 ${displaySetting.runningTextIqomahEnabled !== false ? 'bg-[var(--primary-500)]' : 'bg-slate-300 dark:bg-slate-700'}`}>
                   <div className={`bg-white w-3 h-3 rounded-full shadow-sm transform transition-transform duration-300 ${displaySetting.runningTextIqomahEnabled !== false ? 'translate-x-5' : 'translate-x-0'}`}></div>
                 </div>
               </div>
@@ -214,7 +214,7 @@ export default function Announcements() {
                   <h3 className="text-sm font-bold text-[var(--text-primary)] mb-1">Teks Berjalan Saat Sholat</h3>
                   <p className="text-xs text-[var(--text-secondary)]">Tampilkan atau sembunyikan teks saat Sholat berlangsung.</p>
                 </div>
-                <div className={`w-10 h-5 rounded-full p-1 transition-colors duration-300 ${displaySetting.runningTextSholatEnabled ? 'bg-[var(--primary-500)]' : 'bg-slate-300 dark:bg-slate-700'}`}>
+                <div className={`w-10 h-5 shrink-0 rounded-full p-1 transition-colors duration-300 ${displaySetting.runningTextSholatEnabled ? 'bg-[var(--primary-500)]' : 'bg-slate-300 dark:bg-slate-700'}`}>
                   <div className={`bg-white w-3 h-3 rounded-full shadow-sm transform transition-transform duration-300 ${displaySetting.runningTextSholatEnabled ? 'translate-x-5' : 'translate-x-0'}`}></div>
                 </div>
               </div>
@@ -293,7 +293,7 @@ export default function Announcements() {
                 <div className="flex items-center gap-3 md:gap-4 pt-4 md:pt-0 border-t border-[var(--border-color)] md:border-0 justify-between md:justify-end">
                   <label className="flex items-center cursor-pointer mr-2 md:mr-4">
                     <div className="relative" onClick={() => handleToggleActive(item.id, item.text, item.isActive)}>
-                      <div className={`w-12 h-6 rounded-full transition-colors ${item.isActive ? 'bg-[var(--primary-500)] shadow-[0_0_8px_rgba(4,120,87,0.4)]' : 'bg-slate-300 dark:bg-slate-700'}`}></div>
+                      <div className={`w-12 h-6 shrink-0 rounded-full transition-colors ${item.isActive ? 'bg-[var(--primary-500)] shadow-[0_0_8px_rgba(4,120,87,0.4)]' : 'bg-slate-300 dark:bg-slate-700'}`}></div>
                       <div className={`absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform ${item.isActive ? 'transform translate-x-6' : ''} shadow-sm`}></div>
                     </div>
                     <span className="ml-3 text-sm font-semibold text-[var(--text-secondary)] hidden md:block">
