@@ -4,6 +4,7 @@ import { id } from 'date-fns/locale';
 import useFullscreen from '../../hooks/useFullscreen';
 import useWakeLock from '../../hooks/useWakeLock';
 import useDevice from '../../hooks/useDevice';
+import { QRCodeSVG } from 'qrcode.react';
 
 const LayoutSignature = lazy(() => import('./layouts/LayoutSignature'));
 const LayoutUltraWide = lazy(() => import('./layouts/LayoutUltraWide'));
@@ -368,7 +369,7 @@ export default function TvDisplay() {
             </div>
             <p className="mt-8 text-[var(--text-secondary)] font-medium">Scan QR Code atau masukkan kode ini di panel admin</p>
             <div className="bg-white p-4 rounded-xl inline-block mt-6 shadow-sm border border-slate-100">
-              <img src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(window.location.origin + '/masjid/pair/' + pairingData.code)}`} alt="QR Code" className="w-48 h-48" />
+              <QRCodeSVG value={window.location.origin + '/masjid/pair/' + pairingData.code} size={200} />
             </div>
           </div>
         </div>
