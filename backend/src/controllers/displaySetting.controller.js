@@ -40,6 +40,7 @@ exports.updateDisplaySetting = async (req, res) => {
       runningTextSholatEnabled,
       runningTextSpeed,
       runningTextSize,
+      runningTextColor,
       showDebugTools
     } = req.body;
     let setting = await prisma.displaySetting.findFirst();
@@ -65,6 +66,7 @@ exports.updateDisplaySetting = async (req, res) => {
           runningTextSholatEnabled: runningTextSholatEnabled !== undefined ? runningTextSholatEnabled : false,
           runningTextSpeed: runningTextSpeed || 25,
           runningTextSize: runningTextSize || 64,
+          runningTextColor: runningTextColor || '#FBBF24',
           showDebugTools: showDebugTools !== undefined ? showDebugTools : true
         }
       });
@@ -90,6 +92,7 @@ exports.updateDisplaySetting = async (req, res) => {
           runningTextSholatEnabled: runningTextSholatEnabled !== undefined ? runningTextSholatEnabled : setting.runningTextSholatEnabled,
           runningTextSpeed: runningTextSpeed !== undefined ? parseInt(runningTextSpeed) : setting.runningTextSpeed,
           runningTextSize: runningTextSize !== undefined ? parseInt(runningTextSize) : setting.runningTextSize,
+          runningTextColor: runningTextColor !== undefined ? runningTextColor : setting.runningTextColor,
           showDebugTools: showDebugTools !== undefined ? showDebugTools : setting.showDebugTools
         }
       });

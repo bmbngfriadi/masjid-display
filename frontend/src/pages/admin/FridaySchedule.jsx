@@ -99,6 +99,18 @@ export default function FridaySchedule() {
     }
   };
 
+  const updateColor = async (newColor) => {
+    try {
+      setDisplaySetting(prev => ({ ...prev, runningTextColor: newColor }));
+      const token = localStorage.getItem('admin_token');
+      await axios.put(`${API_BASE_URL}/display-setting`, { runningTextColor: newColor }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+    } catch (e) {
+      console.error('Failed updating color', e);
+    }
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -493,6 +505,26 @@ export default function FridaySchedule() {
               <div className="flex justify-between text-xs text-[var(--text-secondary)] mt-1">
                 <span>Kecil</span>
                 <span>Besar</span>
+              </div>
+            </div>
+
+            <div className="mt-6 pt-6 border-t border-[var(--border-color)]">
+              <div className="flex justify-between items-center mb-2">
+                <label className="text-sm font-bold text-[var(--text-primary)]">Warna Teks Berjalan</label>
+                <span 
+                  className="w-6 h-6 rounded border border-gray-300" 
+                  style={{ backgroundColor: displaySetting?.runningTextColor || '#FBBF24' }}
+                ></span>
+              </div>
+              <p className="text-xs text-[var(--text-secondary)] mb-4">Pilih warna teks berjalan khusus untuk Shalat Jumat.</p>
+              <div className="flex items-center gap-3">
+                <input 
+                  type="color" 
+                  value={displaySetting?.runningTextColor || '#FBBF24'} 
+                  onChange={(e) => updateColor(e.target.value)}
+                  className="w-12 h-10 p-1 cursor-pointer rounded bg-transparent border border-gray-600" 
+                />
+                <span className="font-mono text-sm uppercase">{displaySetting?.runningTextColor || '#FBBF24'}</span>
               </div>
             </div>
           </div>

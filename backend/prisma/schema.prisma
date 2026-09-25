@@ -148,6 +148,7 @@ model DisplaySetting {
   runningTextSholatEnabled Boolean @default(false)
   runningTextSpeed        Int      @default(25)
   runningTextSize         Int      @default(60)
+  runningTextColor        String   @default("#FBBF24")
   showDebugTools          Boolean  @default(true)
 }
 

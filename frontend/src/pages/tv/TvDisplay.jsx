@@ -711,10 +711,11 @@ export default function TvDisplay() {
       {shouldShowRunningText && (
         <footer className="w-full bg-black/90 text-white py-4 flex items-center z-50 border-t border-white/20 shadow-[0_-5px_15px_rgba(0,0,0,0.8)] relative overflow-hidden">
           <div 
-            className="whitespace-pre animate-marquee font-extrabold tracking-wide text-yellow-400" 
+            className="whitespace-pre animate-marquee font-extrabold tracking-wide" 
             style={{ 
               animationDuration: `${displaySetting?.runningTextSpeed || 25}s`,
               fontSize: `${displaySetting?.runningTextSize || 64}px`,
+              color: displaySetting?.runningTextColor || '#FBBF24',
               willChange: 'transform'
             }}
           >

@@ -47,6 +47,18 @@ export default function Announcements() {
     }
   };
 
+  const updateColor = async (newColor) => {
+    try {
+      setDisplaySetting(prev => ({ ...prev, runningTextColor: newColor }));
+      const token = localStorage.getItem('admin_token');
+      await axios.put(`${API_BASE_URL}/display-setting`, { runningTextColor: newColor }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+    } catch (e) {
+      console.error('Failed updating color', e);
+    }
+  };
+
   const fetchRunningTexts = async () => {
     try {
       const token = localStorage.getItem('admin_token');
@@ -167,10 +179,11 @@ export default function Announcements() {
             <div className="bg-[#0a0a0a] text-white p-4 rounded-xl overflow-hidden flex items-center h-20 relative">
               <div className="absolute inset-0 bg-gradient-to-r from-[var(--primary-500)]/10 to-transparent"></div>
               <div 
-                className="whitespace-nowrap animate-marquee font-bold relative z-10 text-white drop-shadow-md" 
+                className="whitespace-nowrap animate-marquee font-bold relative z-10 drop-shadow-md" 
                 style={{ 
                   animationDuration: `${displaySetting.runningTextSpeed || 25}s`,
-                  fontSize: `${(displaySetting.runningTextSize || 64) * 0.4}px` // Scale down for preview
+                  fontSize: `${(displaySetting.runningTextSize || 64) * 0.4}px`, // Scale down for preview
+                  color: displaySetting.runningTextColor || '#FBBF24'
                 }}
               >
                 {announcements.filter(a => a.isActive).map(a => a.text).join(' • ')}
@@ -262,6 +275,26 @@ export default function Announcements() {
             <div className="flex justify-between text-xs text-[var(--text-secondary)] mt-1">
               <span>Kecil</span>
               <span>Besar</span>
+            </div>
+          </div>
+          
+          <div className="mt-4 pt-4 border-t border-[var(--border-color)]">
+            <div className="flex justify-between items-center mb-2">
+              <label className="text-sm font-bold text-[var(--text-primary)]">Warna Teks Berjalan</label>
+              <span 
+                className="w-6 h-6 rounded border border-gray-300" 
+                style={{ backgroundColor: displaySetting.runningTextColor || '#FBBF24' }}
+              ></span>
+            </div>
+            <p className="text-xs text-[var(--text-secondary)] mb-4">Pilih warna teks berjalan pada layar TV.</p>
+            <div className="flex items-center gap-3">
+              <input 
+                type="color" 
+                value={displaySetting.runningTextColor || '#FBBF24'} 
+                onChange={(e) => updateColor(e.target.value)}
+                className="w-12 h-10 p-1 cursor-pointer rounded bg-transparent border border-gray-600" 
+              />
+              <span className="font-mono text-sm uppercase">{displaySetting.runningTextColor || '#FBBF24'}</span>
             </div>
           </div>
         </div>
