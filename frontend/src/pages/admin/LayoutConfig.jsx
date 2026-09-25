@@ -472,6 +472,96 @@ export default function LayoutConfig() {
                   </div>
                 </div>
               )}
+              {layout.id === 'theme_10' && (
+                <div className="w-full h-full relative flex flex-col bg-slate-900 text-[8px] justify-between p-2">
+                  <div className="w-full flex justify-between">
+                     <div className="w-8 h-3 bg-white/20 rounded"></div>
+                     <div className="w-6 h-3 bg-white/20 rounded"></div>
+                  </div>
+                  <div className="flex-1 flex items-center justify-center">
+                    <div className="w-16 h-6 bg-white/90 rounded text-center text-[10px] font-bold">12:30</div>
+                  </div>
+                  <div className="w-full h-4 bg-white/10 rounded flex justify-between px-1 items-center">
+                     {[...Array(5)].map((_, i) => <div key={i} className={`w-4 h-2 rounded ${i===2 ? 'bg-emerald-500' : 'bg-white/30'}`}></div>)}
+                  </div>
+                </div>
+              )}
+
+              {layout.id === 'theme_11' && (
+                <div className="w-full h-full relative flex bg-gradient-to-br from-black/80 to-black/40 text-[8px] p-2 gap-2">
+                  <div className="w-1/2 flex flex-col items-center justify-center border-r border-white/20">
+                    <div className="w-12 h-12 rounded-full border-2 border-amber-500 flex items-center justify-center relative">
+                       <div className="w-1 h-1 bg-white rounded-full absolute"></div>
+                       <div className="w-4 h-0.5 bg-white origin-left rotate-45"></div>
+                    </div>
+                  </div>
+                  <div className="w-1/2 flex flex-col justify-center gap-1">
+                     {[...Array(5)].map((_, i) => <div key={i} className={`w-full h-3 rounded flex items-center justify-between px-1 ${i===2 ? 'bg-amber-500/30 border border-amber-500' : 'bg-black/50'}`}><div className="w-3 h-1 bg-white/50"></div><div className="w-4 h-1.5 bg-white"></div></div>)}
+                  </div>
+                </div>
+              )}
+
+              {layout.id === 'theme_12' && (
+                <div className="w-full h-full relative flex flex-col bg-black/60 text-[8px] p-2">
+                   <div className="flex justify-between items-center mb-1">
+                     <div className="w-10 h-3 bg-white/20 rounded"></div>
+                     <div className="w-6 h-2 bg-white/20 rounded"></div>
+                   </div>
+                   <div className="flex-1 flex justify-center items-center gap-1">
+                     <div className="w-8 h-8 bg-gray-800 border border-gray-700 rounded-md"></div>
+                     <div className="flex flex-col gap-1"><div className="w-1 h-1 bg-cyan-400 rounded-full"></div><div className="w-1 h-1 bg-cyan-400 rounded-full"></div></div>
+                     <div className="w-8 h-8 bg-gray-800 border border-gray-700 rounded-md"></div>
+                   </div>
+                   <div className="w-full grid grid-cols-5 gap-1 mt-1">
+                     {[...Array(5)].map((_, i) => <div key={i} className={`h-5 rounded flex flex-col items-center justify-center ${i===2 ? 'bg-cyan-500' : 'bg-gray-800'}`}><div className="w-2 h-0.5 bg-white/50"></div><div className="w-3 h-1 bg-white mt-0.5"></div></div>)}
+                   </div>
+                </div>
+              )}
+
+              {layout.id === 'theme_13' && (
+                <div className="w-full h-full relative flex flex-col bg-black/40 text-[8px] p-2 justify-between">
+                   <div className="w-full flex justify-between">
+                     <div className="w-8 h-3 bg-indigo-500/20 rounded-br-lg"></div>
+                     <div className="w-8 h-3 bg-indigo-500/20 rounded-bl-lg"></div>
+                   </div>
+                   <div className="flex-1 flex items-center justify-center">
+                     <div className="w-16 h-6 bg-indigo-500/20 blur-sm absolute"></div>
+                     <div className="w-16 h-4 bg-white/90 rounded text-center z-10"></div>
+                   </div>
+                   <div className="w-full flex justify-center">
+                     <div className="w-[80%] h-4 bg-black/70 rounded-full flex justify-between px-1 items-center">
+                        {[...Array(5)].map((_, i) => <div key={i} className={`w-3 h-2 rounded ${i===2 ? 'bg-indigo-500' : 'bg-white/20'}`}></div>)}
+                     </div>
+                   </div>
+                </div>
+              )}
+
+              {layout.id === 'theme_14' && (
+                <div className="w-full h-full relative flex bg-black/70 text-[8px] p-2">
+                   <div className="w-[40%] flex flex-col justify-between">
+                      <div className="w-8 h-3 bg-white/20 rounded"></div>
+                      <div className="w-10 h-10 border border-rose-900/50 rounded-full"></div>
+                      <div className="w-10 h-2 bg-white/20 rounded"></div>
+                   </div>
+                   <div className="w-[60%] flex items-center justify-center">
+                      <div className="w-14 h-14 border-2 border-rose-500/50 rounded-full flex flex-wrap content-center justify-center gap-1">
+                         {[...Array(5)].map((_, i) => <div key={i} className={`w-4 h-2 rounded ${i===2 ? 'bg-rose-500' : 'bg-white/20'}`}></div>)}
+                      </div>
+                   </div>
+                </div>
+              )}
+
+              {layout.id === 'theme_15' && (
+                <div className="w-full h-full relative flex bg-black/60 text-[8px]">
+                   <div className="w-2/3 h-full p-2 flex flex-col justify-between">
+                      <div className="w-10 h-3 bg-teal-500/20 rounded"></div>
+                      <div className="w-16 h-8 bg-white/80 rounded"></div>
+                   </div>
+                   <div className="w-1/3 h-full bg-white/10 p-1 flex flex-col justify-center gap-1">
+                      {[...Array(5)].map((_, i) => <div key={i} className={`w-full h-4 rounded ${i===2 ? 'bg-teal-500' : 'bg-black/40'}`}></div>)}
+                   </div>
+                </div>
+              )}
 
             </div>
             <div className="flex items-center justify-between mb-2">
