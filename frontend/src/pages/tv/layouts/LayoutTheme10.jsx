@@ -60,7 +60,7 @@ export default function LayoutTheme10({
       {/* Bottom Horizontal Prayer Times */}
       <div className="w-full bg-black/50 backdrop-blur-xl p-[2vh] rounded-[2vw] border border-white/10 shadow-2xl z-10 flex justify-between">
         {prayers.map((prayer) => {
-          const isNext = nextPrayer?.id === prayer.id;
+          const isNext = nextPrayer?.name?.toUpperCase() === prayer.name.toUpperCase();
           return (
               <div 
               key={prayer.id} 

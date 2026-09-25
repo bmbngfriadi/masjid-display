@@ -107,7 +107,7 @@ export default function LayoutTheme14({
            
            <div className="grid grid-cols-2 gap-y-[4vh] gap-x-[6vw] p-[8vh] z-10">
              {prayers.map((prayer, index) => {
-               const isNext = nextPrayer?.id === prayer.id;
+               const isNext = nextPrayer?.name?.toUpperCase() === prayer.name.toUpperCase();
                return (
                  <div key={prayer.id} className={`flex flex-col relative ${index === 4 ? 'col-span-2 items-center' : ''} ${isNext ? 'scale-110 transition-transform duration-500' : ''}`}>
                    {isNext && <div className="absolute -top-[3vh] left-1/2 -translate-x-1/2 bg-red-500 text-white text-[1.5vh] font-bold px-[1vw] py-[0.5vh] rounded-full animate-bounce shadow-lg whitespace-nowrap">SELANJUTNYA</div>}

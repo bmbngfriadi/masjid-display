@@ -55,7 +55,7 @@ export default function LayoutTheme13({
       <div className="flex justify-center mb-[2vh]">
         <div className="flex bg-black/70 backdrop-blur-2xl rounded-[3vw] p-[1vh] border border-white/10 shadow-[0_2vh_5vh_rgba(0,0,0,0.5)]">
           {prayers.map((prayer) => {
-            const isNext = nextPrayer?.id === prayer.id;
+            const isNext = nextPrayer?.name?.toUpperCase() === prayer.name.toUpperCase();
             return (
               <div 
                 key={prayer.id}

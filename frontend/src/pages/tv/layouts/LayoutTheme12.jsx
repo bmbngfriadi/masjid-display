@@ -62,7 +62,7 @@ export default function LayoutTheme12({
       {/* Bottom Grid */}
       <div className="grid grid-cols-5 gap-[1.5vw] mt-[4vh]">
         {prayers.map((prayer) => {
-          const isNext = nextPrayer?.id === prayer.id;
+          const isNext = nextPrayer?.name?.toUpperCase() === prayer.name.toUpperCase();
           return (
             <div 
               key={prayer.id}

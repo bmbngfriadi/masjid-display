@@ -68,7 +68,7 @@ export default function LayoutTheme11({
 
         <div className="space-y-[2.5vh]">
           {prayers.map((prayer) => {
-            const isNext = nextPrayer?.id === prayer.id;
+            const isNext = nextPrayer?.name?.toUpperCase() === prayer.name.toUpperCase();
             return (
               <div 
                 key={prayer.id}

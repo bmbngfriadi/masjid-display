@@ -54,7 +54,7 @@ export default function LayoutTheme15({
       <div className="w-1/3 h-full bg-white/10 backdrop-blur-2xl border-l border-white/20 p-[4vh] flex flex-col justify-center">
         <div className="space-y-[3vh]">
           {prayers.map((prayer) => {
-            const isNext = nextPrayer?.id === prayer.id;
+            const isNext = nextPrayer?.name?.toUpperCase() === prayer.name.toUpperCase();
             return (
               <div 
                 key={prayer.id}
