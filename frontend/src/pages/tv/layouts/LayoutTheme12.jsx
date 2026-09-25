@@ -22,9 +22,14 @@ export default function LayoutTheme12({
     <div className="w-full h-full p-[4vh] text-white flex flex-col font-mono bg-black/60 relative">
       {/* Top Section */}
       <div className="flex justify-between items-center mb-[4vh]">
-        <div className="bg-white/10 backdrop-blur-md px-[3vw] py-[2vh] rounded-[1vw] border border-white/20">
-          <h1 className="text-[3.5vh] font-bold text-cyan-400 uppercase tracking-widest">{mosqueProfile.name}</h1>
-          <p className="text-[2vh] text-gray-300 mt-[0.5vh]">{mosqueProfile.address}</p>
+        <div className="bg-white/10 backdrop-blur-md px-[3vw] py-[2vh] rounded-[1vw] border border-white/20 flex items-center gap-[2vw]">
+          {mosqueProfile.logoUrl && (
+            <img src={mosqueProfile.logoUrl} alt="Logo" className="w-[8vh] h-[8vh] object-contain drop-shadow-lg" />
+          )}
+          <div>
+            <h1 className="text-[3.5vh] font-bold text-cyan-400 uppercase tracking-widest">{mosqueProfile.name}</h1>
+            <p className="text-[2vh] text-gray-300 mt-[0.5vh]">{mosqueProfile.address}</p>
+          </div>
         </div>
         <div className="text-right">
           <div className="text-[3vh] font-bold text-white">{format(currentDate, 'EEEE, dd MMM yyyy', { locale: id })}</div>
@@ -61,9 +66,10 @@ export default function LayoutTheme12({
           return (
             <div 
               key={prayer.id}
-              className={`flex flex-col items-center justify-center py-[3vh] rounded-[1vw] transition-all duration-300
-                ${isNext ? 'bg-cyan-500 text-black shadow-[0_0_3vh_rgba(34,211,238,0.6)] scale-105' : 'bg-gray-800/80 border border-gray-700 text-gray-300'}`}
+              className={`relative flex flex-col items-center justify-center py-[3vh] rounded-[1vw] transition-all duration-300
+                ${isNext ? 'bg-cyan-500 text-black shadow-[0_0_3vh_rgba(34,211,238,0.6)] scale-105 border-[0.5vh] border-white' : 'bg-gray-800/80 border border-gray-700 text-gray-300'}`}
             >
+              {isNext && <div className="absolute -top-[2vh] bg-red-500 text-white text-[1.8vh] font-bold px-[1vw] py-[0.5vh] rounded-full animate-bounce shadow-lg z-10">SELANJUTNYA</div>}
               <div className={`text-[2.5vh] font-bold tracking-widest ${isNext ? 'text-black/70' : 'text-gray-400'}`}>
                 {prayer.name}
               </div>

@@ -50,7 +50,10 @@ export default function LayoutTheme11({
           <div className="absolute w-[2vh] h-[2vh] rounded-full bg-amber-400 z-40 shadow-lg"></div>
         </div>
 
-        <div className="mt-[6vh] text-center">
+        <div className="mt-[6vh] text-center flex flex-col items-center">
+          {mosqueProfile.logoUrl && (
+            <img src={mosqueProfile.logoUrl} alt="Logo" className="w-[12vh] h-[12vh] object-contain mb-[2vh] drop-shadow-lg" />
+          )}
           <h1 className="text-[5vh] font-bold text-amber-400 drop-shadow-lg">{mosqueProfile.name}</h1>
           <p className="text-[2.5vh] text-gray-300 mt-[1vh]">{mosqueProfile.address}</p>
         </div>
@@ -69,14 +72,14 @@ export default function LayoutTheme11({
             return (
               <div 
                 key={prayer.id}
-                className={`flex justify-between items-center px-[4vw] py-[2.5vh] rounded-[1vw] backdrop-blur-md transition-all duration-500 border
-                  ${isNext ? 'bg-amber-500/20 border-amber-400 shadow-[0_0_3vh_rgba(245,158,11,0.2)]' : 'bg-black/40 border-white/10'}`}
+                className={`relative flex justify-between items-center px-[4vw] py-[2.5vh] rounded-[1vw] backdrop-blur-md transition-all duration-500 border
+                  ${isNext ? 'bg-amber-500/20 border-amber-400 shadow-[0_0_3vh_rgba(245,158,11,0.2)] border-l-[1vh]' : 'bg-black/40 border-white/10'}`}
               >
                 <div className="flex items-center gap-[2vw]">
                   <span className={`text-[3.5vh] font-bold tracking-wider ${isNext ? 'text-amber-400' : 'text-gray-300'}`}>
                     {prayer.name}
                   </span>
-                  {isNext && <span className="text-[2vh] bg-amber-500 text-black px-[1vw] py-[0.5vh] rounded-full font-bold animate-pulse">BERIKUTNYA</span>}
+                  {isNext && <span className="text-[2vh] bg-red-500 text-white px-[1vw] py-[0.5vh] rounded-full font-bold animate-bounce shadow-lg">SELANJUTNYA</span>}
                 </div>
                 <span className={`text-[4.5vh] font-black ${isNext ? 'text-white' : 'text-gray-200'}`}>
                   {prayer.time}

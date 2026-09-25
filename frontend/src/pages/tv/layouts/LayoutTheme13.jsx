@@ -22,9 +22,14 @@ export default function LayoutTheme13({
     <div className="w-full h-full flex flex-col p-[4vh] text-white font-sans bg-black/40">
       {/* Header */}
       <div className="flex justify-between items-start">
-        <div className="bg-black/60 backdrop-blur-xl px-[3vw] py-[2vh] rounded-br-[3vw] absolute top-0 left-0 border-r border-b border-indigo-500/30">
-          <h1 className="text-[4vh] font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">{mosqueProfile.name}</h1>
-          <p className="text-[2vh] text-indigo-200 mt-[0.5vh]">{mosqueProfile.address}</p>
+        <div className="bg-black/60 backdrop-blur-xl px-[3vw] py-[2vh] rounded-br-[3vw] absolute top-0 left-0 border-r border-b border-indigo-500/30 flex items-center gap-[1.5vw]">
+          {mosqueProfile.logoUrl && (
+            <img src={mosqueProfile.logoUrl} alt="Logo" className="w-[7vh] h-[7vh] object-contain drop-shadow-lg" />
+          )}
+          <div>
+            <h1 className="text-[4vh] font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">{mosqueProfile.name}</h1>
+            <p className="text-[2vh] text-indigo-200 mt-[0.5vh]">{mosqueProfile.address}</p>
+          </div>
         </div>
         
         <div className="bg-black/60 backdrop-blur-xl px-[3vw] py-[2vh] rounded-bl-[3vw] absolute top-0 right-0 text-right border-l border-b border-indigo-500/30">
@@ -54,9 +59,10 @@ export default function LayoutTheme13({
             return (
               <div 
                 key={prayer.id}
-                className={`flex flex-col items-center justify-center w-[15vw] py-[2vh] rounded-[2.5vw] transition-all duration-500 mx-[0.5vw]
-                  ${isNext ? 'bg-gradient-to-br from-indigo-600 to-purple-600 shadow-[0_0_3vh_rgba(99,102,241,0.6)] scale-110 -translate-y-[2vh]' : 'hover:bg-white/5'}`}
+                className={`relative flex flex-col items-center justify-center w-[15vw] py-[2vh] rounded-[2.5vw] transition-all duration-500 mx-[0.5vw]
+                  ${isNext ? 'bg-gradient-to-br from-indigo-600 to-purple-600 shadow-[0_0_3vh_rgba(99,102,241,0.6)] scale-110 -translate-y-[2vh] border-[0.5vh] border-white' : 'hover:bg-white/5'}`}
               >
+                {isNext && <div className="absolute -top-[1.5vh] bg-red-500 text-white text-[1.5vh] font-bold px-[1vw] py-[0.5vh] rounded-full animate-bounce shadow-lg z-10">SELANJUTNYA</div>}
                 <div className={`text-[2vh] font-bold uppercase tracking-widest ${isNext ? 'text-white/80' : 'text-gray-400'}`}>
                   {prayer.name}
                 </div>

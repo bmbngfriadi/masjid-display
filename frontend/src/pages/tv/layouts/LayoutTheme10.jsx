@@ -62,11 +62,12 @@ export default function LayoutTheme10({
         {prayers.map((prayer) => {
           const isNext = nextPrayer?.id === prayer.id;
           return (
-            <div 
+              <div 
               key={prayer.id} 
-              className={`flex-1 flex flex-col items-center justify-center py-[2vh] mx-[0.5vw] rounded-[1.5vw] transition-all duration-700
-                ${isNext ? 'bg-gradient-to-t from-emerald-600 to-emerald-400 scale-105 shadow-[0_0_2vw_rgba(16,185,129,0.5)]' : 'bg-white/5'}`}
+              className={`relative flex-1 flex flex-col items-center justify-center py-[2vh] mx-[0.5vw] rounded-[1.5vw] transition-all duration-700
+                ${isNext ? 'bg-gradient-to-t from-emerald-600 to-emerald-400 scale-105 shadow-[0_0_2vw_rgba(16,185,129,0.5)] border-t-[0.5vh] border-white' : 'bg-white/5'}`}
             >
+              {isNext && <div className="absolute -top-[2vh] bg-red-500 text-white text-[1.8vh] font-bold px-[1vw] py-[0.5vh] rounded-full animate-bounce shadow-lg z-10">SELANJUTNYA</div>}
               <span className={`text-[2.5vh] font-medium tracking-widest ${isNext ? 'text-white' : 'text-gray-300'}`}>{prayer.name}</span>
               <span className={`text-[4.5vh] font-bold mt-[0.5vh] ${isNext ? 'text-white' : 'text-emerald-400'}`}>{prayer.time}</span>
             </div>
