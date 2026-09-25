@@ -92,6 +92,11 @@ export default function useDevice() {
         localStorage.removeItem('masjid_device_token');
         window.location.reload();
       });
+      
+      newSocket.on('device:refresh', () => {
+        console.log('Remote refresh triggered from admin panel');
+        window.location.reload();
+      });
     });
 
     setSocket(newSocket);

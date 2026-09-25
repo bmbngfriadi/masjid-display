@@ -131,3 +131,23 @@ exports.checkPairing = async (req, res) => {
     res.status(500).json({ message: 'Error checking pairing status' });
   }
 };
+
+exports.refreshDevice = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const device = await prisma.device.findUnique({ where: { id } });
+    if (!device) {
+      return res.status(404).json({ message: 'Device not found' });
+    }
+    
+    const io = req.app.get('io');
+    if (io) {
+      io.to(id).emit('device:refresh');
+    }
+    
+    res.json({ message: 'Refresh command sent to device' });
+  } catch (error) {
+    console.error('Error refreshing device:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};

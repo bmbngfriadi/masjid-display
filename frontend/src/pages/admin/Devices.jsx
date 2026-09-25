@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import axios from 'axios';
-import { Monitor, CheckCircle, XCircle, Plus, Edit2, Trash2, Camera, X } from 'lucide-react';
+import { Monitor, CheckCircle, XCircle, Plus, Edit2, Trash2, Camera, X, RefreshCw } from 'lucide-react';
 import { Scanner } from '@yudiel/react-qr-scanner';
 import { useDialog } from '../../contexts/DialogContext';
 
@@ -44,6 +44,18 @@ export default function Devices() {
       fetchDevices(); // Refresh
     } catch (err) {
       showAlert({ title: 'Gagal', message: 'Gagal menghapus device', type: 'error' });
+    }
+  };
+
+  const handleRefresh = async (id) => {
+    try {
+      const token = localStorage.getItem('admin_token');
+      await axios.post(`${API_BASE_URL}/devices/${id}/refresh`, {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      showAlert({ title: 'Sukses', message: 'Perintah muat ulang berhasil dikirim ke layar TV.', type: 'success' });
+    } catch (err) {
+      showAlert({ title: 'Gagal', message: 'Gagal mengirim perintah muat ulang', type: 'error' });
     }
   };
 
@@ -154,6 +166,13 @@ export default function Devices() {
                       title="Edit Nama"
                     >
                       <Edit2 size={18} />
+                    </button>
+                    <button
+                      onClick={() => handleRefresh(device.id)}
+                      className="p-3 md:p-2 text-[var(--text-secondary)] hover:text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-lg transition-colors"
+                      title="Muat Ulang Layar TV"
+                    >
+                      <RefreshCw size={18} />
                     </button>
                     <button
                       onClick={() => handleDelete(device.id)}
