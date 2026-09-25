@@ -15,6 +15,12 @@ const LayoutMinimalist = lazy(() => import('./layouts/LayoutMinimalist'));
 const LayoutGlassmorphism = lazy(() => import('./layouts/LayoutGlassmorphism'));
 const LayoutDynamic = lazy(() => import('./layouts/LayoutDynamic'));
 const LayoutFuturistic = lazy(() => import('./layouts/LayoutFuturistic'));
+const LayoutTheme10 = lazy(() => import('./layouts/LayoutTheme10'));
+const LayoutTheme11 = lazy(() => import('./layouts/LayoutTheme11'));
+const LayoutTheme12 = lazy(() => import('./layouts/LayoutTheme12'));
+const LayoutTheme13 = lazy(() => import('./layouts/LayoutTheme13'));
+const LayoutTheme14 = lazy(() => import('./layouts/LayoutTheme14'));
+const LayoutTheme15 = lazy(() => import('./layouts/LayoutTheme15'));
 const InfoSlideScreen = lazy(() => import('./layouts/InfoSlideScreen'));
 const LayoutJumat = lazy(() => import('./layouts/LayoutJumat'));
 
@@ -848,6 +854,18 @@ export default function TvDisplay() {
           ActiveLayout = LayoutDynamic;
         } else if (layoutStyle === 'futuristic') {
           ActiveLayout = LayoutFuturistic;
+        } else if (layoutStyle === 'theme_10') {
+          ActiveLayout = LayoutTheme10;
+        } else if (layoutStyle === 'theme_11') {
+          ActiveLayout = LayoutTheme11;
+        } else if (layoutStyle === 'theme_12') {
+          ActiveLayout = LayoutTheme12;
+        } else if (layoutStyle === 'theme_13') {
+          ActiveLayout = LayoutTheme13;
+        } else if (layoutStyle === 'theme_14') {
+          ActiveLayout = LayoutTheme14;
+        } else if (layoutStyle === 'theme_15') {
+          ActiveLayout = LayoutTheme15;
         } else {
           ActiveLayout = LayoutSignature;
         }

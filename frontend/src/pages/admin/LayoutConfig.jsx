@@ -70,6 +70,36 @@ export default function LayoutConfig() {
       id: 'futuristic',
       name: 'Futuristic Sci-Fi (Theme 9)',
       desc: 'Tema masa depan beraksen garis neon cybernetic dan cincin radar abstrak.'
+    },
+    {
+      id: 'theme_10',
+      name: 'Floating Digital (Theme 10)',
+      desc: 'Jam digital melayang di tengah dengan jadwal horizontal melayang.'
+    },
+    {
+      id: 'theme_11',
+      name: 'Live Analog (Theme 11)',
+      desc: 'Jam analog bergerak real-time dengan daftar vertikal bergaya klasik.'
+    },
+    {
+      id: 'theme_12',
+      name: 'Flip Clock (Theme 12)',
+      desc: 'Gaya jam stasiun retro (flip clock) dengan grid 5 kolom di bawah.'
+    },
+    {
+      id: 'theme_13',
+      name: 'Glowing Minimalist (Theme 13)',
+      desc: 'Tipografi tipis, bersih, elegan, dan jam menyala terang di tengah.'
+    },
+    {
+      id: 'theme_14',
+      name: 'Dual Progress (Theme 14)',
+      desc: 'Kombinasi jam digital dan analog dengan indikator waktu melingkar.'
+    },
+    {
+      id: 'theme_15',
+      name: 'Typography Hero (Theme 15)',
+      desc: 'Menonjolkan ukuran jam digital super raksasa dengan panel samping tebal.'
     }
   ];
 
