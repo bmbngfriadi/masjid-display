@@ -38,8 +38,10 @@ export default function AdminLayout() {
       .then(res => setCurrentUser(res.data))
       .catch(err => {
         console.error('Error fetching user:', err);
-        localStorage.removeItem('admin_token');
-        navigate('/admin/login');
+        if (err.response && (err.response.status === 401 || err.response.status === 403)) {
+          localStorage.removeItem('admin_token');
+          navigate('/admin/login');
+        }
       })
       .finally(() => setLoading(false));
     } else {
