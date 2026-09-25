@@ -23,7 +23,7 @@ exports.registerDevice = async (req, res) => {
           pairingCode: code,
           pairingCodeExpiresAt: expiresAt,
           token,
-          status: 'ONLINE',
+          lastConnectionStatus: true,
           ip
         }
       });
