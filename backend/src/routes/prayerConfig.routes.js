@@ -5,5 +5,6 @@ const { protect, authorizeFeature } = require('../middleware/auth.middleware');
 
 router.get('/', configController.getConfig);
 router.put('/', protect, authorizeFeature(['canManagePrayerTimes', 'canManageAdzanScreen', 'canManageIqomahScreen', 'canManageSholatScreen']), configController.updateConfig);
+router.post('/preview-iqomah', protect, authorizeFeature(['canManageIqomahScreen']), configController.previewIqomah);
 
 module.exports = router;

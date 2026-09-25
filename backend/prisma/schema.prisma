@@ -103,6 +103,18 @@ model PrayerTimeConfig {
   jumatTimeStart        String  @default("06:00") // Waktu mulai (HH:mm)
   jumatTimeEnd          String  @default("14:00") // Waktu selesai (HH:mm)
   jumatRunningTextEnabled Boolean @default(true)
+  jumatLayoutStyle      String  @default("jumat_1")
+  
+  jumatAdzanBackground    String  @default("black")
+  jumatAdzanBackgroundUrl String?
+  jumatAdzanAudio         String? @default("adzan-makkah.mp3")
+  
+  jumatIqomahBackground    String  @default("1")
+  jumatIqomahBackgroundUrl String?
+  jumatIqomahMessage       String  @default("Luruskan dan rapatkan shaf untuk shalat Jumat")
+  jumatAdzanDuration       Int     @default(4)
+  jumatIqomahDuration      Int     @default(10)
+
   ramadanMode           Boolean @default(false)
   alarmSound  String  @default("beep")
 
@@ -114,6 +126,10 @@ model PrayerTimeConfig {
   iqomahBackground    String  @default("1")
   iqomahBackgroundUrl String?
   iqomahMessage       String  @default("Luruskan dan rapatkan shaf untuk kesempurnaan shalat")
+  iqomahAlarmEnabled  Boolean @default(false)
+  iqomahAlarmSound    String  @default("beep")
+  iqomahAlarmTime     Int     @default(10)
+  iqomahAlarmEnd      Int     @default(0)
 
   sholatDuration      Int     @default(10)
   sholatScreenMessage String  @default("Luruskan dan Rapatkan Shaf")

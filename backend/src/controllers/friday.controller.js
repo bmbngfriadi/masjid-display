@@ -87,3 +87,29 @@ exports.previewFriday = async (req, res) => {
     res.status(500).json({ message: 'Gagal mengirim preview' });
   }
 };
+
+exports.previewAdzanJumat = async (req, res) => {
+  try {
+    const io = req.app.get('io');
+    if (io) {
+      io.to('devices').emit('preview:adzan_jumat');
+    }
+    res.json({ message: 'Preview Adzan Jumat terkirim' });
+  } catch (error) {
+    console.error('Error sending preview:', error);
+    res.status(500).json({ message: 'Gagal mengirim preview' });
+  }
+};
+
+exports.previewIqomahJumat = async (req, res) => {
+  try {
+    const io = req.app.get('io');
+    if (io) {
+      io.to('devices').emit('preview:iqomah_jumat');
+    }
+    res.json({ message: 'Preview Iqomah Jumat terkirim' });
+  } catch (error) {
+    console.error('Error sending preview:', error);
+    res.status(500).json({ message: 'Gagal mengirim preview' });
+  }
+};

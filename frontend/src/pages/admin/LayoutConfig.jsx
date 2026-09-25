@@ -24,7 +24,6 @@ export default function LayoutConfig() {
   const [infoSlideItems, setInfoSlideItems] = useState([]);
   const [layoutDuration, setLayoutDuration] = useState(30);
   const [showDebugTools, setShowDebugTools] = useState(true);
-  const [showPreviewModal, setShowPreviewModal] = useState(false);
 
   const layouts = [
     {
@@ -204,13 +203,6 @@ export default function LayoutConfig() {
           <p className="text-[var(--text-secondary)]">Pilih tata letak (tema) yang akan ditampilkan di TV Masjid.</p>
         </div>
         <div className="flex flex-wrap gap-3 mt-4 md:mt-0">
-          <button
-            onClick={() => setShowPreviewModal(true)}
-            className="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl font-medium transition-colors flex items-center gap-2 border border-slate-200 dark:border-slate-700 shadow-sm"
-          >
-            <MonitorPlay size={18} className="text-blue-500" />
-            Preview Layar TV
-          </button>
           <button
             onClick={handleSave}
             disabled={saving}
@@ -716,45 +708,6 @@ export default function LayoutConfig() {
           </div>
         )}
       </div>
-
-      {/* Modal Preview TV */}
-      {showPreviewModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-sm animate-fade-in p-4 md:p-8">
-          <div className="w-[100%] h-[100%] max-w-[1920px] max-h-[1080px] bg-black rounded-2xl overflow-hidden shadow-2xl relative border border-gray-800 flex flex-col mx-auto my-auto aspect-video">
-            <div className="h-12 bg-gray-900 border-b border-gray-800 flex items-center justify-between px-6 shrink-0 z-10">
-              <div className="flex items-center gap-3">
-                <div className="flex gap-1.5">
-                  <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                  <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                  <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                </div>
-                <div className="text-gray-400 text-sm font-medium ml-4 flex items-center gap-2">
-                  <MonitorPlay size={14} />
-                  Preview Live: <span className="text-white font-bold">{layouts.find(l => l.id === layoutStyle)?.name}</span>
-                </div>
-              </div>
-              <button 
-                onClick={() => setShowPreviewModal(false)}
-                className="text-gray-400 hover:text-white hover:bg-gray-800 p-1.5 rounded-lg transition-colors flex items-center gap-2"
-                title="Tutup Preview"
-              >
-                <span className="text-xs font-semibold mr-1">Tutup</span>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-              </button>
-            </div>
-            
-            <div className="flex-1 relative w-full h-full bg-black overflow-hidden">
-              <iframe 
-                src={`/masjid/tv?previewLayout=${layoutStyle}`}
-                className="absolute inset-0 w-full h-full border-none"
-                style={{ backgroundColor: 'black' }}
-                title="TV Preview"
-              />
-            </div>
-          </div>
-        </div>
-      )}
-
     </div>
   );
 }

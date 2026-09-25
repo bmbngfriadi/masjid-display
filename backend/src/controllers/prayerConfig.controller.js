@@ -32,7 +32,7 @@ exports.updateConfig = async (req, res) => {
       latitude, longitude, cityId, calculationMethod,
       fajrOffset, dhuhrOffset, asrOffset, maghribOffset, ishaOffset,
       fajrIqamah, dhuhrIqamah, asrIqamah, maghribIqamah, ishaIqamah,
-      jumatMode, jumatTimeStart, jumatTimeEnd, jumatRunningTextEnabled, ramadanMode, alarmSound,
+      jumatMode, jumatTimeStart, jumatTimeEnd, jumatRunningTextEnabled, jumatLayoutStyle, ramadanMode, alarmSound,
       adzanDuration,
       adzanBackground,
       adzanBackgroundUrl,
@@ -40,9 +40,21 @@ exports.updateConfig = async (req, res) => {
       iqomahBackground,
       iqomahBackgroundUrl,
       iqomahMessage,
+      iqomahAlarmEnabled,
+      iqomahAlarmSound,
+      iqomahAlarmTime,
+      iqomahAlarmEnd,
       sholatDuration,
       sholatScreenMessage,
-      sholatBackgroundUrl
+      sholatBackgroundUrl,
+      jumatAdzanBackground,
+      jumatAdzanBackgroundUrl,
+      jumatAdzanAudio,
+      jumatAdzanDuration,
+      jumatIqomahBackground,
+      jumatIqomahBackgroundUrl,
+      jumatIqomahMessage,
+      jumatIqomahDuration
     } = req.body;
 
     const updated = await prisma.prayerTimeConfig.update({
@@ -69,6 +81,7 @@ exports.updateConfig = async (req, res) => {
         jumatTimeStart: jumatTimeStart !== undefined ? jumatTimeStart : config.jumatTimeStart,
         jumatTimeEnd: jumatTimeEnd !== undefined ? jumatTimeEnd : config.jumatTimeEnd,
         jumatRunningTextEnabled: jumatRunningTextEnabled !== undefined ? Boolean(jumatRunningTextEnabled) : config.jumatRunningTextEnabled,
+        jumatLayoutStyle: jumatLayoutStyle !== undefined ? jumatLayoutStyle : config.jumatLayoutStyle,
         ramadanMode: ramadanMode !== undefined ? Boolean(ramadanMode) : config.ramadanMode,
         alarmSound: alarmSound !== undefined ? alarmSound : config.alarmSound,
         
@@ -80,10 +93,24 @@ exports.updateConfig = async (req, res) => {
         iqomahBackground: iqomahBackground !== undefined ? iqomahBackground : config.iqomahBackground,
         ...(iqomahBackgroundUrl !== undefined && { iqomahBackgroundUrl }),
         iqomahMessage: iqomahMessage !== undefined ? iqomahMessage : config.iqomahMessage,
+        iqomahAlarmEnabled: iqomahAlarmEnabled !== undefined ? Boolean(iqomahAlarmEnabled) : config.iqomahAlarmEnabled,
+        iqomahAlarmSound: iqomahAlarmSound !== undefined ? iqomahAlarmSound : config.iqomahAlarmSound,
+        iqomahAlarmTime: iqomahAlarmTime !== undefined ? parseInt(iqomahAlarmTime) : config.iqomahAlarmTime,
+        iqomahAlarmEnd: iqomahAlarmEnd !== undefined ? parseInt(iqomahAlarmEnd) : config.iqomahAlarmEnd,
         
         sholatDuration: sholatDuration !== undefined ? parseInt(sholatDuration) : config.sholatDuration,
         sholatScreenMessage: sholatScreenMessage !== undefined ? sholatScreenMessage : config.sholatScreenMessage,
         ...(sholatBackgroundUrl !== undefined && { sholatBackgroundUrl }),
+        
+        jumatAdzanBackground: jumatAdzanBackground !== undefined ? jumatAdzanBackground : config.jumatAdzanBackground,
+        ...(jumatAdzanBackgroundUrl !== undefined && { jumatAdzanBackgroundUrl }),
+        jumatAdzanAudio: jumatAdzanAudio !== undefined ? jumatAdzanAudio : config.jumatAdzanAudio,
+        jumatAdzanDuration: jumatAdzanDuration !== undefined ? parseInt(jumatAdzanDuration) : config.jumatAdzanDuration,
+        
+        jumatIqomahBackground: jumatIqomahBackground !== undefined ? jumatIqomahBackground : config.jumatIqomahBackground,
+        ...(jumatIqomahBackgroundUrl !== undefined && { jumatIqomahBackgroundUrl }),
+        jumatIqomahMessage: jumatIqomahMessage !== undefined ? jumatIqomahMessage : config.jumatIqomahMessage,
+        jumatIqomahDuration: jumatIqomahDuration !== undefined ? parseInt(jumatIqomahDuration) : config.jumatIqomahDuration,
       }
     });
 
@@ -106,5 +133,17 @@ exports.updateConfig = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Terjadi kesalahan saat menyimpan konfigurasi.' });
+  }
+};
+
+exports.previewIqomah = async (req, res) => {
+  try {
+    const config = await prisma.prayerTimeConfig.findFirst();
+    const io = req.app.get('io');
+    if (io) io.emit('preview:iqomah', config);
+    res.json({ message: 'Preview Iqomah screen triggered' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Terjadi kesalahan server.' });
   }
 };

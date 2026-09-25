@@ -1,24 +1,20 @@
 module.exports = {
   apps: [
     {
-      name: 'masjid-backend',
-      script: './backend/server.js',
+      name: "masjid-display-backend",
+      script: "backend/server.js",
       instances: 1,
       autorestart: true,
       watch: false,
-      max_memory_restart: '1G',
-      out_file: './logs/out.log',
-      error_file: './logs/error.log',
-      merge_logs: true,
-      log_date_format: 'YYYY-MM-DD HH:mm Z',
+      max_memory_restart: "300M",
       env: {
-        NODE_ENV: 'development',
+        NODE_ENV: "production",
         PORT: 4001
       },
-      env_production: {
-        NODE_ENV: 'production',
-        PORT: 4001
-      }
+      error_file: "logs/err.log",
+      out_file: "logs/out.log",
+      merge_logs: true,
+      time: true
     }
   ]
 };

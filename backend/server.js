@@ -12,6 +12,12 @@ const prisma = require('./src/config/db');
 const app = express();
 const server = http.createServer(app);
 
+// Global Uncaught Exception Handling
+process.on('uncaughtException', (err) => {
+  console.error('UNCAUGHT EXCEPTION! Shutting down...', err);
+  process.exit(1);
+});
+
 // Use basic middleware
 app.use(helmet());
 app.use(cors());
@@ -161,10 +167,36 @@ app.get('/masjid/*', (req, res) => {
   res.sendFile(path.join(frontendDistPath, 'index.html'));
 });
 
+// Global Error Handler Middleware
+app.use((err, req, res, next) => {
+  console.error('Global Error:', err);
+  res.status(err.status || 500).json({
+    success: false,
+    message: err.message || 'Internal Server Error'
+  });
+});
+
 // Start the server
 const PORT = process.env.PORT || 4001;
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
   console.log(`API Base Path: ${apiBasePath}`);
   console.log(`Socket Path: ${process.env.SOCKET_PATH || '/masjid/socket.io'}`);
+});
+
+// Graceful Shutdown & Unhandled Rejection
+process.on('unhandledRejection', (err) => {
+  console.error('UNHANDLED REJECTION! Shutting down gracefully...', err);
+  server.close(() => {
+    prisma.$disconnect();
+    process.exit(1);
+  });
+});
+
+process.on('SIGTERM', () => {
+  console.log('SIGTERM received. Shutting down gracefully...');
+  server.close(() => {
+    prisma.$disconnect();
+    console.log('Process terminated.');
+  });
 });

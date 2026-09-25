@@ -18,8 +18,22 @@ const LayoutFuturistic = lazy(() => import('./layouts/LayoutFuturistic'));
 const InfoSlideScreen = lazy(() => import('./layouts/InfoSlideScreen'));
 const LayoutJumat = lazy(() => import('./layouts/LayoutJumat'));
 
+// Shared audio context to prevent hitting browser limits
+let sharedAudioContext = null;
+const getAudioContext = () => {
+  if (typeof window !== 'undefined') {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (AudioContext && !sharedAudioContext) {
+      sharedAudioContext = new AudioContext();
+    }
+  }
+  return sharedAudioContext;
+};
+
 export default function TvDisplay() {
   const [previewFridayMode, setPreviewFridayMode] = useState(false);
+  const [previewAdzanJumat, setPreviewAdzanJumat] = useState(false);
+  const [previewIqomahJumat, setPreviewIqomahJumat] = useState(false);
 
   const { isFullscreen, requestFullscreen } = useFullscreen();
   const { isSupported, isActive } = useWakeLock(isFullscreen);
@@ -60,6 +74,9 @@ export default function TvDisplay() {
   const [displayMode, setDisplayMode] = useState('NORMAL');
   const [currentPrayer, setCurrentPrayer] = useState(null);
   const [iqamahTimeRemaining, setIqamahTimeRemaining] = useState(0);
+
+  const activeDisplayMode = previewAdzanJumat ? 'ADHAN' : previewIqomahJumat ? 'IQAMAH_COUNTDOWN' : displayMode;
+  const activeCurrentPrayer = (previewAdzanJumat || previewIqomahJumat) ? 'SHALAT JUMAT' : currentPrayer;
   const [runningText, setRunningText] = useState('Selamat datang di Masjid Baitul Jannah. Luruskan dan rapatkan shaf. Matikan telepon seluler Anda selama ibadah berlangsung.');
   const [mosqueProfile, setMosqueProfile] = useState({
     name: 'Masjid Baitul Jannah',
@@ -73,6 +90,7 @@ export default function TvDisplay() {
   const [layoutStyle, setLayoutStyle] = useState('signature');
   const [displaySetting, setDisplaySetting] = useState(null);
   const [fridayInfo, setFridayInfo] = useState(null);
+  const [isSoftReloading, setIsSoftReloading] = useState(false);
 
   const fetchRunningText = async () => {
     try {
@@ -200,16 +218,69 @@ export default function TvDisplay() {
         setTimeout(() => setPreviewFridayMode(false), 30000); // Preview 30 detik
       };
 
+      const handlePreviewAdzanJumat = () => {
+        setPreviewAdzanJumat(true);
+        setTimeout(() => setPreviewAdzanJumat(false), 15000);
+      };
+
+      const handlePreviewIqomahJumat = () => {
+        setPreviewIqomahJumat(true);
+        setIqamahTimeRemaining((prayerConfig?.jumatIqomahDuration || 10) * 60);
+        setTimeout(() => {
+          setPreviewIqomahJumat(false);
+          setIqamahTimeRemaining(0);
+        }, 15000);
+      };
+
+      const handlePreviewIqomah = (config) => {
+        setDisplayMode('IQAMAH_COUNTDOWN');
+        
+        // If config is passed from backend, use it directly. Otherwise fallback to local state.
+        const currentConfig = config || prayerConfig;
+        if (config) {
+          setPrayerConfig(config);
+        }
+        
+        const alarmTime = currentConfig?.iqomahAlarmTime || 10;
+        setIqamahTimeRemaining(alarmTime + 3);
+        
+        setTimeout(() => {
+          setDisplayMode('NORMAL');
+          setIqamahTimeRemaining(0);
+        }, 15000);
+      };
+
+      const handleSoftRefresh = () => {
+        setIsSoftReloading(true);
+        setTimeout(() => {
+          fetchRunningText();
+          fetchMosqueProfile();
+          fetchPrayerData();
+          fetchDisplaySetting();
+          fetchFridayInfo();
+          setDisplayMode('NORMAL');
+          setIsSoftReloading(false);
+        }, 1500); // Tampilkan loading screen selama 1.5 detik
+      };
+
       socket.on('display:update_mode', handleModeUpdate);
       socket.on('content:updated', handleContentUpdate);
       socket.on('DISPLAY_SETTING_UPDATED', handleDisplaySettingUpdate);
       socket.on('preview:friday', handlePreviewFriday);
+      socket.on('preview:adzan_jumat', handlePreviewAdzanJumat);
+      socket.on('preview:iqomah_jumat', handlePreviewIqomahJumat);
+      socket.on('preview:iqomah', handlePreviewIqomah);
+      socket.on('device:refresh', handleSoftRefresh);
       
       return () => {
         socket.off('display:update_mode', handleModeUpdate);
         socket.off('content:updated', handleContentUpdate);
         socket.off('DISPLAY_SETTING_UPDATED', handleDisplaySettingUpdate);
         socket.off('preview:friday', handlePreviewFriday);
+        socket.off('preview:adzan_jumat', handlePreviewAdzanJumat);
+        socket.off('preview:iqomah_jumat', handlePreviewIqomahJumat);
+        socket.off('preview:iqomah', handlePreviewIqomah);
+        socket.off('device:refresh', handleSoftRefresh);
       };
     }
   }, [socket]);
@@ -223,6 +294,12 @@ export default function TvDisplay() {
     const currentDateStr = format(time, 'yyyy-MM-dd');
     const currentHourMin = format(time, 'HH:mm');
 
+    const isFriday = time.getDay() === 5;
+    const isJumatModeActive = prayerConfig?.jumatMode;
+    const jumatStart = prayerConfig?.jumatTimeStart || "06:00";
+    const jumatEnd = prayerConfig?.jumatTimeEnd || "14:00";
+    const isCurrentlyJumatTime = isFriday && isJumatModeActive && currentHourMin >= jumatStart && currentHourMin < jumatEnd;
+
     const prayers = [
       { id: 'fajr', name: 'SUBUH', time: prayerTimes.fajr },
       { id: 'dhuhr', name: 'DZUHUR', time: prayerTimes.dhuhr },
@@ -234,39 +311,48 @@ export default function TvDisplay() {
     for (let prayer of prayers) {
       if (prayer.time && currentHourMin === prayer.time) {
         if (lastTriggeredPrayer.current.name !== prayer.name || lastTriggeredPrayer.current.date !== currentDateStr) {
+          
+          let displayPrayerName = prayer.name;
+          if (prayer.name === 'DZUHUR' && isCurrentlyJumatTime) {
+            displayPrayerName = 'SHALAT JUMAT';
+          }
+
           lastTriggeredPrayer.current = { name: prayer.name, date: currentDateStr };
           setDisplayMode('ADHAN');
-          setCurrentPrayer(prayer.name);
+          setCurrentPrayer(displayPrayerName);
           break;
         }
       }
     }
-  }, [time, displayMode, prayerTimes]);
+  }, [time, displayMode, prayerTimes, prayerConfig]);
 
   // Handle adzan duration timeout
   useEffect(() => {
     let timeout;
-    if (displayMode === 'ADHAN') {
-      const durationMs = (prayerConfig?.adzanDuration || 4) * 60 * 1000;
+    if (activeDisplayMode === 'ADHAN' && !previewAdzanJumat) {
+      const isJumat = activeCurrentPrayer === 'SHALAT JUMAT';
+      const durationMins = isJumat ? (prayerConfig?.jumatAdzanDuration || 4) : (prayerConfig?.adzanDuration || 4);
+      const durationMs = durationMins * 60 * 1000;
+      
       timeout = setTimeout(() => {
         setDisplayMode('IQAMAH_COUNTDOWN');
         
         // Find iqamah time for current prayer
-        const iqamahMins = getIqamahDuration(currentPrayer);
+        const iqamahMins = getIqamahDuration(activeCurrentPrayer);
         setIqamahTimeRemaining(iqamahMins * 60);
       }, durationMs);
     }
     return () => clearTimeout(timeout);
-  }, [displayMode, currentPrayer, prayerConfig]);
+  }, [activeDisplayMode, activeCurrentPrayer, prayerConfig, previewAdzanJumat]);
 
   // Handle iqamah countdown
   useEffect(() => {
     let interval;
-    if (displayMode === 'IQAMAH_COUNTDOWN' && iqamahTimeRemaining > 0) {
+    if (activeDisplayMode === 'IQAMAH_COUNTDOWN' && iqamahTimeRemaining > 0) {
       interval = setInterval(() => {
         setIqamahTimeRemaining(prev => {
           if (prev <= 1) {
-            setDisplayMode('PRAYER');
+            if (!previewIqomahJumat) setDisplayMode('PRAYER');
             return 0;
           }
           return prev - 1;
@@ -274,7 +360,86 @@ export default function TvDisplay() {
       }, 1000);
     }
     return () => clearInterval(interval);
-  }, [displayMode, iqamahTimeRemaining]);
+  }, [activeDisplayMode, iqamahTimeRemaining, previewIqomahJumat]);
+
+  useEffect(() => {
+    if (activeDisplayMode === 'IQAMAH_COUNTDOWN' && prayerConfig?.iqomahAlarmEnabled) {
+      const alarmTime = prayerConfig.iqomahAlarmTime || 10;
+      const alarmEnd = prayerConfig.iqomahAlarmEnd || 0;
+      
+      if (iqamahTimeRemaining <= alarmTime && iqamahTimeRemaining >= alarmEnd) {
+        const sound = prayerConfig.iqomahAlarmSound || 'beep';
+        
+        try {
+          const ctx = getAudioContext();
+          if (!ctx) return;
+          
+          if (ctx.state === 'suspended') {
+            ctx.resume().catch(e => console.error("Could not resume AudioContext", e));
+          }
+          
+          const playTone = (freq, type, startTime, duration) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, startTime);
+            gain.gain.setValueAtTime(0, startTime);
+            gain.gain.linearRampToValueAtTime(1, startTime + 0.05);
+            gain.gain.setValueAtTime(1, startTime + duration - 0.05);
+            gain.gain.linearRampToValueAtTime(0, startTime + duration);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(startTime);
+            osc.stop(startTime + duration);
+          };
+
+          const now = ctx.currentTime;
+          if (sound === 'beep') {
+            playTone(800, 'sine', now, 0.4);
+          } else if (sound === 'beep-long') {
+            playTone(800, 'sine', now, 1.5);
+          } else if (sound === 'alarm1') {
+            for (let i = 0; i < 5; i++) {
+              playTone(1000, 'square', now + i * 0.2, 0.1);
+            }
+          } else if (sound === 'alarm2') {
+            for (let i = 0; i < 4; i++) {
+              playTone(600, 'triangle', now + i * 0.2, 0.1);
+              playTone(800, 'triangle', now + i * 0.2 + 0.1, 0.1);
+            }
+          } else if (sound === 'alarm3') {
+            playTone(523.25, 'sine', now, 0.5);
+            playTone(659.25, 'sine', now + 0.5, 1.5);
+          } else if (sound === 'alarm4') {
+            // Rapid double beep
+            playTone(900, 'sine', now, 0.15);
+            playTone(900, 'sine', now + 0.3, 0.15);
+          } else if (sound === 'alarm5') {
+            // Descending tone
+            playTone(1200, 'triangle', now, 0.2);
+            playTone(1000, 'triangle', now + 0.2, 0.2);
+            playTone(800, 'triangle', now + 0.4, 0.2);
+          } else if (sound === 'alarm6') {
+            // Echo ping
+            playTone(1500, 'sine', now, 0.1);
+            playTone(1500, 'sine', now + 0.3, 0.05);
+            playTone(1500, 'sine', now + 0.5, 0.02);
+          } else if (sound === 'alarm7') {
+            // Warning siren
+            for (let i = 0; i < 3; i++) {
+              playTone(400, 'sawtooth', now + i * 0.3, 0.15);
+            }
+          } else if (sound === 'alarm8') {
+            // Deep gong
+            playTone(300, 'sine', now, 1.5);
+            playTone(302, 'sine', now, 1.5);
+          }
+        } catch (e) {
+          console.error("Audio API error:", e);
+        }
+      }
+    }
+  }, [iqamahTimeRemaining, activeDisplayMode, prayerConfig]);
 
   // Handle sholat duration timeout
   useEffect(() => {
@@ -357,6 +522,16 @@ export default function TvDisplay() {
   // Hilangkan layar blokir "Mulai Display" agar TV tetap lanjut jalan normal saat server restart/autoreload.
   // Fullscreen bisa diaktifkan manual dengan F11 atau cukup klik di mana saja di layar.
 
+  if (isSoftReloading) {
+    return (
+      <div className="w-screen h-screen bg-black flex flex-col items-center justify-center text-white" style={{ cursor: 'none' }}>
+        <div className="w-16 h-16 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+        <h2 className="text-2xl font-bold tracking-widest text-emerald-400">MEMUAT ULANG SISTEM</h2>
+        <p className="text-gray-400 mt-2">Sinkronisasi data terbaru...</p>
+      </div>
+    );
+  }
+
   if (!deviceToken) {
     if (pairingData) {
       return (
@@ -424,7 +599,7 @@ export default function TvDisplay() {
     if (!name || !prayerTimes) return null;
     const n = name.toLowerCase();
     if (n.includes('subuh') || n.includes('fajr')) return prayerTimes.fajr;
-    if (n.includes('dzuhur') || n.includes('dhuhr') || n.includes('zuhur')) return prayerTimes.dhuhr;
+    if (n.includes('dzuhur') || n.includes('dhuhr') || n.includes('zuhur') || n.includes('jumat')) return prayerTimes.dhuhr;
     if (n.includes('ashar') || n.includes('asr')) return prayerTimes.asr;
     if (n.includes('maghrib')) return prayerTimes.maghrib;
     if (n.includes('isya') || n.includes('isha')) return prayerTimes.isha;
@@ -436,6 +611,7 @@ export default function TvDisplay() {
     if (!prayerName) return mins;
     if (prayerName === 'SUBUH') mins = prayerConfig?.fajrIqamah;
     else if (prayerName === 'DZUHUR') mins = prayerConfig?.dhuhrIqamah;
+    else if (prayerName === 'SHALAT JUMAT') mins = prayerConfig?.jumatIqomahDuration;
     else if (prayerName === 'ASHAR') mins = prayerConfig?.asrIqamah;
     else if (prayerName === 'MAGHRIB') mins = prayerConfig?.maghribIqamah;
     else if (prayerName === 'ISYA') mins = prayerConfig?.ishaIqamah;
@@ -453,22 +629,25 @@ export default function TvDisplay() {
   const isFridayTime = previewFridayMode || (isFriday && currentTimeStr >= displayStart && currentTimeStr < displayEnd && prayerConfig?.jumatMode);
 
   let shouldShowRunningText = false;
-  if (displayMode === 'NORMAL') {
+  if (activeDisplayMode === 'NORMAL') {
     shouldShowRunningText = isFridayTime 
       ? (prayerConfig?.jumatRunningTextEnabled !== false)
       : (displaySetting?.runningTextEnabled !== false);
-  } else if (displayMode === 'ADHAN') {
+  } else if (activeDisplayMode === 'ADHAN') {
     shouldShowRunningText = displaySetting?.runningTextAdzanEnabled !== false;
-  } else if (displayMode === 'IQAMAH_COUNTDOWN') {
+  } else if (activeDisplayMode === 'IQAMAH_COUNTDOWN') {
     shouldShowRunningText = displaySetting?.runningTextIqomahEnabled !== false;
-  } else if (displayMode === 'PRAYER') {
+  } else if (activeDisplayMode === 'PRAYER') {
     shouldShowRunningText = displaySetting?.runningTextSholatEnabled === true;
   }
 
   const renderMainContent = () => {
-    switch(displayMode) {
-      case 'ADHAN':
-        const isAnimated = prayerConfig?.adzanBackground === 'image';
+    switch(activeDisplayMode) {
+      case 'ADHAN': {
+        const isJumatAdzan = activeCurrentPrayer === 'SHALAT JUMAT';
+        const adzanBgSetting = isJumatAdzan ? (prayerConfig?.jumatAdzanBackground || 'black') : (prayerConfig?.adzanBackground || 'black');
+        const adzanBgUrl = isJumatAdzan ? (prayerConfig?.jumatAdzanBackgroundUrl) : (prayerConfig?.adzanBackgroundUrl);
+        const isAnimated = adzanBgSetting === 'image';
 
         if (isAnimated) {
           return (
@@ -479,10 +658,10 @@ export default function TvDisplay() {
               <div className="absolute bottom-16 left-16 flex flex-col items-start z-10">
                 <span className="text-gray-400 text-[2.5vw] tracking-[0.4em] uppercase mb-[1vh] font-medium">WAKTU ADZAN</span>
                 <span className="text-transparent bg-clip-text bg-gradient-to-b from-[#f3e7b1] via-[#d6a94f] to-[#aa771c] text-[12vw] font-extrabold tracking-[0.15em] leading-none mb-[2vh] drop-shadow-lg pl-[0.15em]">
-                  {currentPrayer || 'ADZAN'}
+                  {activeCurrentPrayer || 'ADZAN'}
                 </span>
                 <div className="flex items-center justify-center gap-[1vw] text-white text-[6vw] font-bold font-mono drop-shadow-md">
-                  {(getPrayerTimeByName(currentPrayer) || currentTime).split('').map((c, i) => (
+                  {(getPrayerTimeByName(activeCurrentPrayer) || currentTime).split('').map((c, i) => (
                     <span key={i} className={c === ':' ? 'mb-[0.5vw]' : 'min-w-[4vw] text-center'}>{c}</span>
                   ))}
                 </div>
@@ -506,7 +685,7 @@ export default function TvDisplay() {
 
         return (
           <div className="flex-1 w-full h-full flex flex-col items-center justify-center text-center border-[12px] border-[#c5a059] bg-black relative overflow-hidden">
-            <img src={prayerConfig?.adzanBackgroundUrl || "/masjid/adzan_bg_dark.png"} className="absolute inset-0 w-full h-full object-cover opacity-60" alt="Background" />
+            <img src={adzanBgUrl || "/masjid/adzan_bg_dark.png"} className="absolute inset-0 w-full h-full object-cover opacity-60" alt="Background" />
             <style>{`
               @keyframes adzanProgress {
                 0% { width: 0%; border-radius: 9999px 0 0 9999px; }
@@ -517,7 +696,7 @@ export default function TvDisplay() {
             <div className="relative z-10 flex flex-col items-center">
               <h2 className="text-[3vw] text-white mb-[1vh] font-medium tracking-[0.4em]">WAKTU ADZAN</h2>
               <h1 className="text-[14vw] font-extrabold uppercase tracking-[0.15em] text-transparent bg-clip-text bg-gradient-to-b from-[#f3e7b1] via-[#d6a94f] to-[#aa771c] drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)] leading-none mb-[4vh] pl-[0.15em]">
-                {currentPrayer || 'ADZAN'}
+                {activeCurrentPrayer || 'ADZAN'}
               </h1>
               
               {/* Golden Pill */}
@@ -532,7 +711,7 @@ export default function TvDisplay() {
                 
                 {/* Time Text */}
                 <div className="relative z-10 flex items-center justify-center gap-[1vw] text-[5.5vw] font-bold font-mono text-[#fff19a]" style={{ textShadow: '3px 3px 6px rgba(0,0,0,0.8), -1px -1px 2px rgba(255,255,255,0.4)' }}>
-                  {(getPrayerTimeByName(currentPrayer) || currentTime).split('').map((c, i) => (
+                  {(getPrayerTimeByName(activeCurrentPrayer) || currentTime).split('').map((c, i) => (
                     <span key={i} className={c === ':' ? 'mb-[0.5vw]' : 'min-w-[3.5vw] text-center'}>{c}</span>
                   ))}
                 </div>
@@ -540,19 +719,23 @@ export default function TvDisplay() {
             </div>
           </div>
         );
-      case 'IQAMAH_COUNTDOWN':
+      }
+      case 'IQAMAH_COUNTDOWN': {
+        const isJumatIqomah = activeCurrentPrayer === 'SHALAT JUMAT';
         const minutes = Math.floor(iqamahTimeRemaining / 60);
         const seconds = iqamahTimeRemaining % 60;
-        const bgOption = prayerConfig?.iqomahBackground || '1';
-        const iqomahBgImg = prayerConfig?.iqomahBackgroundUrl || `/masjid/iqomah_bg_${bgOption}.png`;
-        if (bgOption === '5' && !prayerConfig?.iqomahBackgroundUrl) {
+        const bgOption = isJumatIqomah ? (prayerConfig?.jumatIqomahBackground || '1') : (prayerConfig?.iqomahBackground || '1');
+        const iqomahBgImg = isJumatIqomah ? (prayerConfig?.jumatIqomahBackgroundUrl || `/masjid/iqomah_bg_${bgOption}.png`) : (prayerConfig?.iqomahBackgroundUrl || `/masjid/iqomah_bg_${bgOption}.png`);
+        const iqomahMsg = isJumatIqomah ? (prayerConfig?.jumatIqomahMessage || "Luruskan dan rapatkan shaf untuk shalat Jumat") : (prayerConfig?.iqomahMessage || "Luruskan dan rapatkan shaf untuk kesempurnaan shalat");
+
+        if (bgOption === '5' && (!prayerConfig?.iqomahBackgroundUrl && !prayerConfig?.jumatIqomahBackgroundUrl)) {
           return (
             <div className="flex-1 w-full h-full flex flex-col items-center justify-center text-center border-[12px] border-[#c5a059] bg-black relative overflow-hidden">
               <img src="/masjid/adzan_bg_dark.png" className="absolute inset-0 w-full h-full object-cover opacity-60" alt="Background" />
               <div className="relative z-10 flex flex-col items-center">
                 <h2 className="text-[4vw] text-white mb-[2vh] font-medium tracking-[0.4em]">IQAMAH</h2>
                 <div className="relative w-[40vw] h-[12vh] rounded-full overflow-hidden bg-gradient-to-b from-[#e6c97a] to-[#b38531] border-[4px] border-[#f0d892] shadow-[0_10px_30px_rgba(0,0,0,0.8)] flex items-center justify-center mb-[4vh]">
-                  <div className="absolute left-0 top-0 bottom-0 bg-gradient-to-r from-blue-600 to-blue-400 shadow-[0_0_15px_rgba(59,130,246,0.8)]" style={{ width: `${(iqamahTimeRemaining / (getIqamahDuration(currentPrayer) * 60)) * 100}%` }}></div>
+                  <div className="absolute left-0 top-0 bottom-0 bg-gradient-to-r from-blue-600 to-blue-400 shadow-[0_0_15px_rgba(59,130,246,0.8)]" style={{ width: `${(iqamahTimeRemaining / (getIqamahDuration(activeCurrentPrayer) * 60)) * 100}%` }}></div>
                   <div className="relative z-10 flex items-center justify-center gap-[1vw] text-[6vw] font-bold text-[#fff19a]" style={{ textShadow: '3px 3px 6px rgba(0,0,0,0.8), -1px -1px 2px rgba(255,255,255,0.4)' }}>
                     {`${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`.split('').map((c, i) => (
                       <span key={i} className={c === ':' ? 'mb-[0.5vw]' : 'min-w-[4vw] text-center'}>{c}</span>
@@ -560,7 +743,7 @@ export default function TvDisplay() {
                   </div>
                 </div>
                 <div className="bg-[#fcf8e3] text-[#785b28] border-4 border-[#d4b97a] px-[4vw] py-[1.5vh] rounded-full text-[2.5vw] font-bold shadow-[0_10px_25px_rgba(0,0,0,0.3)] max-w-[85vw] truncate tracking-wide">
-                  {prayerConfig?.iqomahMessage || "Luruskan dan rapatkan shaf untuk kesempurnaan shalat"}
+                  {iqomahMsg}
                 </div>
               </div>
             </div>
@@ -580,11 +763,12 @@ export default function TvDisplay() {
                 ))}
               </div>
               <div className="bg-[#fcf8e3] text-[#785b28] border-4 border-[#d4b97a] px-[4vw] py-[1.5vh] rounded-full text-[2.5vw] font-bold shadow-[0_10px_25px_rgba(0,0,0,0.3)] max-w-[85vw] truncate tracking-wide">
-                {prayerConfig?.iqomahMessage || "Luruskan dan rapatkan shaf untuk kesempurnaan shalat"}
+                {iqomahMsg}
               </div>
             </div>
           </div>
         );
+      }
       case 'PRAYER': {
         const hasCustomBg = !!prayerConfig?.sholatBackgroundUrl;
         const isAnim = !hasCustomBg && prayerConfig?.adzanBackground === 'image';
@@ -604,7 +788,7 @@ export default function TvDisplay() {
             <div className="relative z-10 flex flex-col items-center max-w-[90vw] px-8">
               <h2 className="text-[3vw] text-gray-500 mb-[2vh] font-medium tracking-[0.4em] uppercase drop-shadow-md">SHOLAT SEDANG BERLANGSUNG</h2>
               <h1 className="text-[14vw] font-extrabold uppercase tracking-[0.2em] text-transparent bg-clip-text bg-gradient-to-b from-[#f3e7b1] via-[#d6a94f] to-[#aa771c] drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)] opacity-90 leading-none mb-[6vh] pl-[0.2em]">
-                {currentPrayer || 'SHOLAT'}
+                {activeCurrentPrayer || 'SHOLAT'}
               </h1>
               
               <div className="relative w-[45vw] h-[2vh] rounded-full overflow-hidden bg-gray-800/80 border border-gray-600/50 shadow-[0_5px_15px_rgba(0,0,0,0.5)] mb-[6vh]">
@@ -640,7 +824,8 @@ export default function TvDisplay() {
           currentHijri,
           prayerConfig,
           displaySetting,
-          currentBgImage
+          currentBgImage,
+          jumatLayoutStyle: prayerConfig?.jumatLayoutStyle || 'jumat_1'
         };
         
         let ActiveLayout;

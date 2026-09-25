@@ -93,8 +93,8 @@ export default function useDevice() {
         window.location.reload();
       });
       
-      newSocket.on('device:refresh', () => {
-        console.log('Remote refresh triggered from admin panel');
+      newSocket.on('device:hard_refresh', () => {
+        console.log('Remote hard refresh triggered from admin panel');
         window.location.reload();
       });
     });
