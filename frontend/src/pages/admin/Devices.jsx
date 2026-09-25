@@ -54,6 +54,11 @@ export default function Devices() {
         headers: { Authorization: `Bearer ${token}` }
       });
       showAlert({ title: 'Sukses', message: 'Perintah muat ulang berhasil dikirim ke layar TV.', type: 'success' });
+      
+      // Fetch status lebih cepat untuk melihat perubahan OFFLINE -> ONLINE
+      setTimeout(() => fetchDevices(), 1000);
+      setTimeout(() => fetchDevices(), 3000);
+      setTimeout(() => fetchDevices(), 6000);
     } catch (err) {
       showAlert({ title: 'Gagal', message: 'Gagal mengirim perintah muat ulang', type: 'error' });
     }
