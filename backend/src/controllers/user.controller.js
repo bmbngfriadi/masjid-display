@@ -19,6 +19,7 @@ exports.getUsers = async (req, res) => {
         canManageIqomahScreen: true,
         canManageSholatScreen: true,
         canManageLayout: true,
+        isVerified: true,
         createdAt: true
       }
     });
@@ -32,7 +33,7 @@ exports.getUsers = async (req, res) => {
 exports.createUser = async (req, res) => {
   try {
     const { 
-      username, email, password, role,
+      username, email, password, role, isVerified,
       canManageDevices, canManageText, canManageProfile, canManageUsers,
       canManagePrayerTimes, canManageFridaySchedule, canManageAdzanScreen,
       canManageIqomahScreen, canManageSholatScreen, canManageLayout
@@ -54,6 +55,7 @@ exports.createUser = async (req, res) => {
         username,
         email,
         password: hashedPassword,
+        isVerified: isVerified ?? true,
         role: role || 'ADMIN',
         canManageDevices: canManageDevices ?? true,
         canManageText: canManageText ?? true,
@@ -85,7 +87,7 @@ exports.updateUser = async (req, res) => {
   try {
     const { id } = req.params;
     const { 
-      username, email, password, role,
+      username, email, password, role, isVerified,
       canManageDevices, canManageText, canManageProfile, canManageUsers,
       canManagePrayerTimes, canManageFridaySchedule, canManageAdzanScreen,
       canManageIqomahScreen, canManageSholatScreen, canManageLayout
@@ -95,6 +97,7 @@ exports.updateUser = async (req, res) => {
       username,
       email,
       role,
+      isVerified,
       canManageDevices,
       canManageText,
       canManageProfile,
@@ -129,7 +132,8 @@ exports.updateUser = async (req, res) => {
         canManageAdzanScreen: true,
         canManageIqomahScreen: true,
         canManageSholatScreen: true,
-        canManageLayout: true
+        canManageLayout: true,
+        isVerified: true
       }
     });
 

@@ -28,7 +28,8 @@ export default function Users() {
     canManageAdzanScreen: true,
     canManageIqomahScreen: true,
     canManageSholatScreen: true,
-    canManageLayout: true
+    canManageLayout: true,
+    isVerified: true
   });
   
   const [modalMode, setModalMode] = useState('add'); // 'add' or 'edit'
@@ -135,7 +136,8 @@ export default function Users() {
       canManageAdzanScreen: true,
       canManageIqomahScreen: true,
       canManageSholatScreen: true,
-      canManageLayout: true
+      canManageLayout: true,
+      isVerified: true
     });
     setError('');
     setShowModal(true);
@@ -158,7 +160,8 @@ export default function Users() {
       canManageAdzanScreen: user.canManageAdzanScreen,
       canManageIqomahScreen: user.canManageIqomahScreen,
       canManageSholatScreen: user.canManageSholatScreen,
-      canManageLayout: user.canManageLayout
+      canManageLayout: user.canManageLayout,
+      isVerified: user.isVerified
     });
     setError('');
     setShowModal(true);
@@ -202,6 +205,7 @@ export default function Users() {
             <thead>
               <tr>
                 <th>Pengguna</th>
+                <th>Status</th>
                 <th>Hak Akses (Izin)</th>
                 <th>Tanggal Bergabung</th>
                 <th className="text-right">Aksi</th>
@@ -220,6 +224,13 @@ export default function Users() {
                         <div className="text-xs text-[var(--text-secondary)]">{user.email}</div>
                       </div>
                     </div>
+                  </td>
+                  <td data-label="Status">
+                    {user.isVerified ? (
+                      <span className="px-2 py-1 bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 text-xs rounded-md font-medium">Aktif</span>
+                    ) : (
+                      <span className="px-2 py-1 bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400 text-xs rounded-md font-medium">Menunggu Verifikasi</span>
+                    )}
                   </td>
                   <td data-label="Hak Akses">
                     <div className="flex flex-wrap gap-2">
@@ -333,9 +344,22 @@ export default function Users() {
               </div>
 
               <div className="mb-6">
-                <label className="form-label mb-3 block border-b border-[var(--border-color)] pb-2">Checklist Hak Akses</label>
+                <label className="form-label mb-3 block border-b border-[var(--border-color)] pb-2">Pengaturan Akun & Hak Akses</label>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4">
                   
+                  <label className="flex items-center gap-3 p-4 bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-900/50 rounded-xl cursor-pointer hover:border-emerald-500 transition-colors md:col-span-2">
+                    <input 
+                      type="checkbox" 
+                      checked={formData.isVerified}
+                      onChange={(e) => setFormData({...formData, isVerified: e.target.checked})}
+                      className="w-5 h-5 accent-emerald-500"
+                    />
+                    <div>
+                      <div className="font-semibold text-emerald-800 dark:text-emerald-400 text-sm">Akun Terverifikasi (Aktif)</div>
+                      <div className="text-xs text-emerald-600 dark:text-emerald-500/70">Mengizinkan pengguna ini untuk masuk ke sistem</div>
+                    </div>
+                  </label>
+
                   <label className="flex items-center gap-3 p-4 bg-slate-50 dark:bg-[#0a0a0a] border border-[var(--border-color)] rounded-xl cursor-pointer hover:border-[var(--primary-500)] transition-colors">
                     <input 
                       type="checkbox" 

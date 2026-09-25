@@ -56,11 +56,8 @@ exports.register = async (req, res) => {
   try {
     const { username, email, password } = req.body;
 
-    // Security check: Only allow public registration if no users exist (Initial Setup)
     const userCount = await prisma.user.count();
-    if (userCount > 0) {
-      return res.status(403).json({ message: 'Akun Admin Utama sudah ada. Pembuatan user baru harus melalui dashboard Admin.' });
-    }
+    const isFirstUser = userCount === 0;
 
     const existingUser = await prisma.user.findFirst({
       where: { OR: [{ email }, { username }] }
@@ -73,28 +70,51 @@ exports.register = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Auto verify the first admin user so they don't get locked out if SMTP is broken
-    const user = await prisma.user.create({
-      data: {
-        username,
-        email,
-        password: hashedPassword,
-        isVerified: true,
-        role: 'ADMIN',
-        canManageText: true,
-        canManageProfile: true,
-        canManagePrayerTimes: true,
-        canManageFridaySchedule: true,
-        canManageAdzanScreen: true,
-        canManageIqomahScreen: true,
-        canManageSholatScreen: true,
-        canManageLayout: true,
-        canManageDevices: true,
-        canManageUsers: true
-      }
-    });
-
-    res.status(201).json({ message: 'Registrasi Admin Utama berhasil! Akun langsung aktif.' });
+    if (isFirstUser) {
+      // First user is automatically verified and has all permissions
+      await prisma.user.create({
+        data: {
+          username,
+          email,
+          password: hashedPassword,
+          isVerified: true,
+          role: 'SUPER_ADMIN',
+          canManageText: true,
+          canManageProfile: true,
+          canManagePrayerTimes: true,
+          canManageFridaySchedule: true,
+          canManageAdzanScreen: true,
+          canManageIqomahScreen: true,
+          canManageSholatScreen: true,
+          canManageLayout: true,
+          canManageDevices: true,
+          canManageUsers: true
+        }
+      });
+      return res.status(201).json({ message: 'Registrasi Admin Utama berhasil! Akun langsung aktif.' });
+    } else {
+      // Subsequent users must be verified by super admin and start with no permissions
+      await prisma.user.create({
+        data: {
+          username,
+          email,
+          password: hashedPassword,
+          isVerified: false,
+          role: 'ADMIN',
+          canManageText: false,
+          canManageProfile: false,
+          canManagePrayerTimes: false,
+          canManageFridaySchedule: false,
+          canManageAdzanScreen: false,
+          canManageIqomahScreen: false,
+          canManageSholatScreen: false,
+          canManageLayout: false,
+          canManageDevices: false,
+          canManageUsers: false
+        }
+      });
+      return res.status(201).json({ message: 'Pendaftaran berhasil! Akun Anda menunggu verifikasi dan persetujuan dari Super Admin sebelum bisa digunakan.' });
+    }
   } catch (error) {
     console.error('Register error:', error);
     res.status(500).json({ message: 'Server error during registration' });
