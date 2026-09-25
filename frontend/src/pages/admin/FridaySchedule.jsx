@@ -107,6 +107,20 @@ export default function FridaySchedule() {
     }));
   };
 
+  const formatRupiah = (number) => {
+    if (number === undefined || number === null || number === '') return '';
+    return 'Rp. ' + number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  };
+
+  const handleCurrencyChange = (e) => {
+    const { name, value } = e.target;
+    const rawValue = value.replace(/\D/g, '');
+    setFormData(prev => ({
+      ...prev,
+      [name]: rawValue ? parseInt(rawValue, 10) : ''
+    }));
+  };
+
   useEffect(() => {
     // Automatically calculate saldoAkhir when finances change
     const awal = parseFloat(formData.saldoAwal) || 0;
@@ -334,41 +348,41 @@ export default function FridaySchedule() {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1">Saldo Awal (Rp)</label>
+                <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1">Saldo Awal</label>
                 <input 
-                  type="number" 
+                  type="text" 
                   name="saldoAwal" 
-                  value={formData.saldoAwal} 
-                  onChange={handleInputChange} 
+                  value={formatRupiah(formData.saldoAwal)} 
+                  onChange={handleCurrencyChange} 
                   className="form-control font-mono" 
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1">Pemasukan (Rp)</label>
+                <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1">Pemasukan</label>
                 <input 
-                  type="number" 
+                  type="text" 
                   name="pemasukan" 
-                  value={formData.pemasukan} 
-                  onChange={handleInputChange} 
+                  value={formatRupiah(formData.pemasukan)} 
+                  onChange={handleCurrencyChange} 
                   className="form-control font-mono text-green-600 dark:text-green-400" 
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1">Pengeluaran (Rp)</label>
+                <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1">Pengeluaran</label>
                 <input 
-                  type="number" 
+                  type="text" 
                   name="pengeluaran" 
-                  value={formData.pengeluaran} 
-                  onChange={handleInputChange} 
+                  value={formatRupiah(formData.pengeluaran)} 
+                  onChange={handleCurrencyChange} 
                   className="form-control font-mono text-red-600 dark:text-red-400" 
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1">Saldo Akhir (Rp)</label>
+                <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1">Saldo Akhir</label>
                 <input 
-                  type="number" 
+                  type="text" 
                   name="saldoAkhir" 
-                  value={formData.saldoAkhir} 
+                  value={formatRupiah(formData.saldoAkhir)} 
                   readOnly
                   className="form-control font-mono font-bold bg-slate-100 dark:bg-slate-800/80 text-slate-500 cursor-not-allowed border-none" 
                 />
