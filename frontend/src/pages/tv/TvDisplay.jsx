@@ -129,8 +129,10 @@ export default function TvDisplay() {
       const res = await fetch(`${API_BASE_URL}/display-setting`);
       const data = await res.json();
       if (data) {
-        if (data.layoutStyle) setLayoutStyle(data.layoutStyle);
         setDisplaySetting(data);
+        const params = new URLSearchParams(window.location.search);
+        const previewLayout = params.get('previewLayout');
+        setLayoutStyle(previewLayout || data.layoutStyle || 'signature');
       }
     } catch (e) {
       console.error('Failed to fetch display setting', e);
