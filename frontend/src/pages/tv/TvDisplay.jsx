@@ -441,10 +441,14 @@ export default function TvDisplay() {
   };
 
   const isFriday = time.getDay() === 5;
-  const currentHour = time.getHours();
-  const displayStart = prayerConfig?.jumatDisplayStart ?? 6;
-  const displayEnd = prayerConfig?.jumatDisplayEnd ?? 14;
-  const isFridayTime = previewFridayMode || (isFriday && currentHour >= displayStart && currentHour < displayEnd && prayerConfig?.jumatMode);
+  const currentHours = time.getHours().toString().padStart(2, '0');
+  const currentMinutes = time.getMinutes().toString().padStart(2, '0');
+  const currentTimeStr = `${currentHours}:${currentMinutes}`;
+  
+  const displayStart = prayerConfig?.jumatTimeStart || "06:00";
+  const displayEnd = prayerConfig?.jumatTimeEnd || "14:00";
+  
+  const isFridayTime = previewFridayMode || (isFriday && currentTimeStr >= displayStart && currentTimeStr < displayEnd && prayerConfig?.jumatMode);
 
   let shouldShowRunningText = false;
   if (displayMode === 'NORMAL') {

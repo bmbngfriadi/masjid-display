@@ -98,8 +98,10 @@ model PrayerTimeConfig {
   ishaIqamah    Int @default(10)
 
   jumatMode             Boolean @default(true)
-  jumatDisplayStart     Int     @default(6) // Jam mulai tampil (0-23)
-  jumatDisplayEnd       Int     @default(14) // Jam selesai tampil (0-23)
+  jumatDisplayStart     Int     @default(6) // Jam mulai tampil (0-23) [DEPRECATED]
+  jumatDisplayEnd       Int     @default(14) // Jam selesai tampil (0-23) [DEPRECATED]
+  jumatTimeStart        String  @default("06:00") // Waktu mulai (HH:mm)
+  jumatTimeEnd          String  @default("14:00") // Waktu selesai (HH:mm)
   jumatRunningTextEnabled Boolean @default(true)
   ramadanMode           Boolean @default(false)
   alarmSound  String  @default("beep")

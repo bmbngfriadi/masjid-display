@@ -12,8 +12,8 @@ export default function FridaySchedule() {
   const [saving, setSaving] = useState(false);
   const [previewing, setPreviewing] = useState(false);
   const [jumatMode, setJumatMode] = useState(true);
-  const [jumatDisplayStart, setJumatDisplayStart] = useState(6);
-  const [jumatDisplayEnd, setJumatDisplayEnd] = useState(14);
+  const [jumatTimeStart, setJumatTimeStart] = useState("06:00");
+  const [jumatTimeEnd, setJumatTimeEnd] = useState("14:00");
   const [jumatRunningTextEnabled, setJumatRunningTextEnabled] = useState(true);
   
   const [formData, setFormData] = useState({
@@ -45,8 +45,8 @@ export default function FridaySchedule() {
       ]);
       const res = resFriday;
       setJumatMode(resPrayer.data.jumatMode);
-      setJumatDisplayStart(resPrayer.data.jumatDisplayStart || 6);
-      setJumatDisplayEnd(resPrayer.data.jumatDisplayEnd || 14);
+      setJumatTimeStart(resPrayer.data.jumatTimeStart || "06:00");
+      setJumatTimeEnd(resPrayer.data.jumatTimeEnd || "14:00");
       setJumatRunningTextEnabled(resPrayer.data.jumatRunningTextEnabled !== false);
       setDisplaySetting(resSetting.data);
       let parsedRunningText = [];
@@ -151,8 +151,8 @@ export default function FridaySchedule() {
         }),
         axios.put(`${API_BASE_URL}/prayer-config`, {
           jumatMode,
-          jumatDisplayStart,
-          jumatDisplayEnd,
+          jumatTimeStart,
+          jumatTimeEnd,
           jumatRunningTextEnabled
         }, {
           headers: { Authorization: `Bearer ${token}` }
@@ -247,25 +247,23 @@ export default function FridaySchedule() {
               <div>
                 <label className="block text-sm font-bold text-[var(--text-primary)] mb-1">Mulai Tampil (Jam)</label>
                 <input 
-                  type="number" 
-                  min="0" max="23"
-                  value={jumatDisplayStart} 
-                  onChange={(e) => setJumatDisplayStart(parseInt(e.target.value) || 0)} 
+                  type="time" 
+                  value={jumatTimeStart} 
+                  onChange={(e) => setJumatTimeStart(e.target.value)} 
                   className="form-control" 
                 />
               </div>
               <div>
                 <label className="block text-sm font-bold text-[var(--text-primary)] mb-1">Selesai Tampil (Jam)</label>
                 <input 
-                  type="number" 
-                  min="0" max="23"
-                  value={jumatDisplayEnd} 
-                  onChange={(e) => setJumatDisplayEnd(parseInt(e.target.value) || 0)} 
+                  type="time" 
+                  value={jumatTimeEnd} 
+                  onChange={(e) => setJumatTimeEnd(e.target.value)} 
                   className="form-control" 
                 />
               </div>
             </div>
-            <p className="text-xs text-[var(--text-secondary)]">Format 24 jam (misal: 6 untuk jam 06:00, 14 untuk jam 14:00).</p>
+            <p className="text-xs text-[var(--text-secondary)]">Pilih rentang jam untuk mode khusus Jumat.</p>
           </div>
 
           <div className="glass-card p-6">
