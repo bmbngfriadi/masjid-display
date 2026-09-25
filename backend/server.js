@@ -153,6 +153,14 @@ app.get(`${apiBasePath}/health`, (req, res) => {
   res.json({ status: 'ok', time: new Date() });
 });
 
+// Serve frontend static files in production
+const frontendDistPath = path.join(__dirname, '../frontend/dist');
+app.use('/masjid', express.static(frontendDistPath));
+
+app.get('/masjid/*', (req, res) => {
+  res.sendFile(path.join(frontendDistPath, 'index.html'));
+});
+
 // Start the server
 const PORT = process.env.PORT || 4001;
 server.listen(PORT, () => {

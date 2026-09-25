@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "description": "Masjid Prayer Display System",
   "scripts": {
-    "start": "concurrently \"npm run start:backend\" \"npm run start:frontend\"",
+    "start": "cd backend && npm start",
     "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
     "start:backend": "cd backend && npm start",
     "dev:backend": "cd backend && npm run dev",
-    "start:frontend": "cd frontend && npm start",
+    "start:frontend": "echo 'Frontend is served by backend in production'",
     "dev:frontend": "cd frontend && npm run dev",
     "build": "cd frontend && npm run build"
   },
