@@ -56,6 +56,12 @@ exports.register = async (req, res) => {
   try {
     const { username, email, password } = req.body;
 
+    // Security check: Only allow public registration if no users exist (Initial Setup)
+    const userCount = await prisma.user.count();
+    if (userCount > 0) {
+      return res.status(403).json({ message: 'Akun Admin Utama sudah ada. Pembuatan user baru harus melalui dashboard Admin.' });
+    }
+
     const existingUser = await prisma.user.findFirst({
       where: { OR: [{ email }, { username }] }
     });
@@ -67,18 +73,13 @@ exports.register = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const verifyToken = crypto.randomBytes(20).toString('hex');
-    const verifyEmailToken = crypto.createHash('sha256').update(verifyToken).digest('hex');
-    const verifyEmailExpire = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
-
+    // Auto verify the first admin user so they don't get locked out if SMTP is broken
     const user = await prisma.user.create({
       data: {
         username,
         email,
         password: hashedPassword,
-        isVerified: false,
-        verifyEmailToken,
-        verifyEmailExpire,
+        isVerified: true,
         role: 'ADMIN',
         canManageText: true,
         canManageProfile: true,
@@ -88,43 +89,12 @@ exports.register = async (req, res) => {
         canManageIqomahScreen: true,
         canManageSholatScreen: true,
         canManageLayout: true,
-        canManageDevices: false,
-        canManageUsers: false
+        canManageDevices: true,
+        canManageUsers: true
       }
     });
 
-    const verifyUrl = `${process.env.FRONTEND_URL}/masjid/admin/verify-email/${verifyToken}`;
-    const message = `Halo ${username},\n\nTerima kasih telah mendaftar di Sistem Informasi Masjid Baitul Jannah.\n\nSilakan klik tautan berikut untuk memverifikasi alamat email Anda:\n\n${verifyUrl}\n\nTautan ini akan kedaluwarsa dalam 24 jam.\nJika Anda tidak merasa mendaftar, silakan abaikan email ini.`;
-
-    const htmlMessage = `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);">
-        <h2 style="color: #047857; text-align: center; margin-bottom: 24px;">Verifikasi Email Anda</h2>
-        <p style="color: #334155; font-size: 16px; line-height: 1.5;">Halo <strong>${username}</strong>,</p>
-        <p style="color: #334155; font-size: 16px; line-height: 1.5;">Terima kasih telah mendaftar di Sistem Informasi Masjid Baitul Jannah. Untuk menyelesaikan pendaftaran dan mengaktifkan akun Anda, silakan verifikasi alamat email ini dengan mengeklik tombol di bawah:</p>
-        <div style="text-align: center; margin: 35px 0;">
-          <a href="${verifyUrl}" style="background-color: #047857; color: #ffffff; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block; font-size: 16px; border: 2px solid #047857;">Verifikasi Email Sekarang</a>
-        </div>
-        <p style="color: #64748b; font-size: 14px; text-align: center;">Jika tombol di atas tidak merespons, Anda juga dapat menyalin dan menempelkan tautan berikut ke browser Anda:</p>
-        <p style="color: #0ea5e9; font-size: 14px; word-break: break-all; text-align: center; margin-bottom: 24px;"><a href="${verifyUrl}" style="color: #0ea5e9;">${verifyUrl}</a></p>
-        <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 24px 0;" />
-        <p style="color: #94a3b8; font-size: 13px; text-align: center; line-height: 1.5;">Tautan ini akan kedaluwarsa dalam 24 jam.<br>Jika Anda tidak merasa mendaftar akun ini, silakan abaikan email ini.</p>
-        <p style="color: #94a3b8; font-size: 12px; text-align: center; margin-top: 20px;">&copy; ${new Date().getFullYear()} Takmir Masjid Baitul Jannah</p>
-      </div>
-    `;
-
-    try {
-      await sendEmail({
-        email: user.email,
-        subject: 'Verifikasi Email - Masjid Baitul Jannah',
-        message,
-        html: htmlMessage
-      });
-      res.status(201).json({ message: 'Registrasi berhasil. Silakan cek email Anda untuk verifikasi.' });
-    } catch (err) {
-      console.error('Email error during registration:', err);
-      // We don't delete the user, but we might want to tell them email failed
-      res.status(500).json({ message: 'Registrasi berhasil, namun gagal mengirim email verifikasi. Silakan hubungi administrator.' });
-    }
+    res.status(201).json({ message: 'Registrasi Admin Utama berhasil! Akun langsung aktif.' });
   } catch (error) {
     console.error('Register error:', error);
     res.status(500).json({ message: 'Server error during registration' });
@@ -204,6 +174,12 @@ exports.forgotPassword = async (req, res) => {
       </div>
     `;
 
+    // FALLBACK: Log the reset URL to the console so admins can reset password even if SMTP fails
+    console.log(`\n======================================================`);
+    console.log(`🔑 PASSWORD RESET REQUESTED FOR: ${email}`);
+    console.log(`🔗 RESET LINK: ${resetUrl}`);
+    console.log(`======================================================\n`);
+
     try {
       await sendEmail({
         email: user.email,
@@ -214,11 +190,8 @@ exports.forgotPassword = async (req, res) => {
       res.status(200).json({ message: 'Email sent' });
     } catch (err) {
       console.error('Email error:', err);
-      await prisma.user.update({
-        where: { email },
-        data: { resetPasswordToken: null, resetPasswordExpire: null }
-      });
-      return res.status(500).json({ message: 'Email could not be sent' });
+      // Don't nullify the token if email fails, so the admin can still use the console link!
+      res.status(200).json({ message: 'Permintaan reset berhasil dibuat, namun gagal mengirim email. Jika Anda admin server, silakan cek log VPS (pm2 logs) untuk mendapatkan link reset.' });
     }
   } catch (error) {
     console.error('Forgot password error:', error);
