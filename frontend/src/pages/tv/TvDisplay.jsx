@@ -256,17 +256,29 @@ export default function TvDisplay() {
         }, 15000);
       };
 
-      const handleSoftRefresh = () => {
+      const handleHardRefresh = async () => {
         setIsSoftReloading(true);
+        try {
+          // Unregister all Service Workers to bust PWA cache
+          if ('serviceWorker' in navigator) {
+            const registrations = await navigator.serviceWorker.getRegistrations();
+            for (let registration of registrations) {
+              await registration.unregister();
+            }
+          }
+          // Clear all CacheStorage
+          if ('caches' in window) {
+            const cacheNames = await caches.keys();
+            await Promise.all(cacheNames.map(name => caches.delete(name)));
+          }
+        } catch (err) {
+          console.error('Failed to clear cache:', err);
+        }
+        
+        // Force reload the page
         setTimeout(() => {
-          fetchRunningText();
-          fetchMosqueProfile();
-          fetchPrayerData();
-          fetchDisplaySetting();
-          fetchFridayInfo();
-          setDisplayMode('NORMAL');
-          setIsSoftReloading(false);
-        }, 1500); // Tampilkan loading screen selama 1.5 detik
+          window.location.reload(true);
+        }, 1000);
       };
 
       socket.on('display:update_mode', handleModeUpdate);
@@ -276,7 +288,7 @@ export default function TvDisplay() {
       socket.on('preview:adzan_jumat', handlePreviewAdzanJumat);
       socket.on('preview:iqomah_jumat', handlePreviewIqomahJumat);
       socket.on('preview:iqomah', handlePreviewIqomah);
-      socket.on('device:refresh', handleSoftRefresh);
+      socket.on('device:refresh', handleHardRefresh);
       
       return () => {
         socket.off('display:update_mode', handleModeUpdate);
@@ -286,7 +298,7 @@ export default function TvDisplay() {
         socket.off('preview:adzan_jumat', handlePreviewAdzanJumat);
         socket.off('preview:iqomah_jumat', handlePreviewIqomahJumat);
         socket.off('preview:iqomah', handlePreviewIqomah);
-        socket.off('device:refresh', handleSoftRefresh);
+        socket.off('device:refresh', handleHardRefresh);
       };
     }
   }, [socket]);
