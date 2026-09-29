@@ -122,6 +122,26 @@ export default function AdzanScreenConfig() {
     }
   };
 
+  const handlePreview = async () => {
+    try {
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/masjid/api';
+      const token = localStorage.getItem('admin_token');
+      
+      const res = await fetch(`${API_BASE_URL}/prayer-config/preview-adzan`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!res.ok) throw new Error('Failed to trigger preview');
+      
+      showAlert({ title: 'Preview Aktif', message: 'Layar TV sekarang menampilkan preview Adzan selama 30 detik.', type: 'success' });
+    } catch (error) {
+      showAlert({ title: 'Gagal', message: 'Gagal memicu preview di TV', type: 'error' });
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -137,25 +157,35 @@ export default function AdzanScreenConfig() {
           <h2 className="page-title">Adzan Screen</h2>
           <p className="text-[var(--text-secondary)]">Atur tampilan dan audio layar TV saat waktu adzan tiba.</p>
         </div>
-        <button
-          onClick={handleSubmit}
-          disabled={saving}
-          className="btn-primary mt-4 md:mt-0 shadow-lg shadow-[var(--primary-500)]/30"
-        >
-          {saving ? (
-            <>
-              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></div>
-              <span>Menyimpan...</span>
-            </>
-          ) : (
-            <>
-              <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-              <span>Simpan Pengaturan</span>
-            </>
-          )}
-        </button>
+        <div className="flex items-center gap-3 mt-4 md:mt-0">
+          <button
+            type="button"
+            onClick={handlePreview}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl font-semibold bg-emerald-100 text-emerald-700 hover:bg-emerald-200 dark:bg-emerald-900/40 dark:text-emerald-400 dark:hover:bg-emerald-900/60 transition-all border border-emerald-200 dark:border-emerald-800"
+          >
+            <MonitorPlay size={18} />
+            Test Preview TV (30s)
+          </button>
+          <button
+            onClick={handleSubmit}
+            disabled={saving}
+            className="btn-primary shadow-lg shadow-[var(--primary-500)]/30"
+          >
+            {saving ? (
+              <>
+                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></div>
+                <span>Menyimpan...</span>
+              </>
+            ) : (
+              <>
+                <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                <span>Simpan Pengaturan</span>
+              </>
+            )}
+          </button>
+        </div>
       </div>
 
       {message.text && (

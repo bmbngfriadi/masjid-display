@@ -147,3 +147,15 @@ exports.previewIqomah = async (req, res) => {
     res.status(500).json({ message: 'Terjadi kesalahan server.' });
   }
 };
+
+exports.previewAdzan = async (req, res) => {
+  try {
+    const config = await prisma.prayerTimeConfig.findFirst();
+    const io = req.app.get('io');
+    if (io) io.emit('preview:adzan', config);
+    res.json({ message: 'Preview Adzan screen triggered' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Terjadi kesalahan server.' });
+  }
+};

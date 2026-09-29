@@ -256,6 +256,19 @@ export default function TvDisplay() {
         }, 15000);
       };
 
+      const handlePreviewAdzan = (config) => {
+        setDisplayMode('ADHAN');
+        setCurrentPrayer({ name: 'SHALAT SUBUH' });
+        
+        if (config) {
+          setPrayerConfig(config);
+        }
+        
+        setTimeout(() => {
+          setDisplayMode('NORMAL');
+        }, 30000); // 30 seconds
+      };
+
       const handleHardRefresh = async () => {
         setIsSoftReloading(true);
         try {
@@ -288,6 +301,7 @@ export default function TvDisplay() {
       socket.on('preview:adzan_jumat', handlePreviewAdzanJumat);
       socket.on('preview:iqomah_jumat', handlePreviewIqomahJumat);
       socket.on('preview:iqomah', handlePreviewIqomah);
+      socket.on('preview:adzan', handlePreviewAdzan);
       socket.on('device:refresh', handleHardRefresh);
       
       return () => {
@@ -298,6 +312,7 @@ export default function TvDisplay() {
         socket.off('preview:adzan_jumat', handlePreviewAdzanJumat);
         socket.off('preview:iqomah_jumat', handlePreviewIqomahJumat);
         socket.off('preview:iqomah', handlePreviewIqomah);
+        socket.off('preview:adzan', handlePreviewAdzan);
         socket.off('device:refresh', handleHardRefresh);
       };
     }
