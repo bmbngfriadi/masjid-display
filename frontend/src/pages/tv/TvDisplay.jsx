@@ -258,7 +258,7 @@ export default function TvDisplay() {
 
       const handlePreviewAdzan = (config) => {
         setDisplayMode('ADHAN');
-        setCurrentPrayer({ name: 'SHALAT SUBUH' });
+        setCurrentPrayer('SUBUH');
         
         if (config) {
           setPrayerConfig(config);
