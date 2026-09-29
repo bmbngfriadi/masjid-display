@@ -256,6 +256,16 @@ export default function TvDisplay() {
            delay += 10000;
         }
         
+        // Go back to Friday Mode for 10s
+        setTimeout(() => {
+           setPreviewAdzanJumat(false);
+           setPreviewIqomahJumat(false);
+           setPreviewSholatJumat(false);
+           setPreviewFridayMode(true);
+        }, delay);
+        delay += 10000;
+        
+        // Final cleanup
         setTimeout(() => {
            setPreviewFridayMode(false);
            setPreviewAdzanJumat(false);
