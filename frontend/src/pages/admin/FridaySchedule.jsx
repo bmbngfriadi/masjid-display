@@ -30,6 +30,7 @@ export default function FridaySchedule() {
   const [jumatIqomahBackgroundUrl, setJumatIqomahBackgroundUrl] = useState('');
   const [jumatIqomahMessage, setJumatIqomahMessage] = useState('Luruskan dan rapatkan shaf untuk shalat Jumat');
   const [jumatIqomahDuration, setJumatIqomahDuration] = useState(10);
+  const [jumatSholatEnabled, setJumatSholatEnabled] = useState(true);
   
   
   const [formData, setFormData] = useState({
@@ -77,6 +78,7 @@ export default function FridaySchedule() {
       setJumatIqomahBackgroundUrl(resPrayer.data.jumatIqomahBackgroundUrl || '');
       setJumatIqomahMessage(resPrayer.data.jumatIqomahMessage || 'Luruskan dan rapatkan shaf untuk shalat Jumat');
       setJumatIqomahDuration(resPrayer.data.jumatIqomahDuration ?? 10);
+      setJumatSholatEnabled(resPrayer.data.jumatSholatEnabled !== false);
       
       setDisplaySetting(resSetting.data);
       let parsedRunningText = [];
@@ -220,7 +222,8 @@ export default function FridaySchedule() {
           jumatIqomahBackground,
           jumatIqomahBackgroundUrl,
           jumatIqomahMessage,
-          jumatIqomahDuration
+          jumatIqomahDuration,
+          jumatSholatEnabled
         }, {
           headers: { Authorization: `Bearer ${token}` }
         })
@@ -755,6 +758,19 @@ export default function FridaySchedule() {
             </div>
             </div>
             )}
+            
+            <div className="bg-black/5 dark:bg-white/5 border border-[var(--border-color)] rounded-xl p-4 mb-2 mt-6">
+              <div className="flex items-center justify-between cursor-pointer" onClick={() => setJumatSholatEnabled(!jumatSholatEnabled)}>
+                <div>
+                  <h3 className="text-base font-bold text-[var(--text-primary)] mb-1">Tampilkan Layar Sholat Jumat</h3>
+                  <p className="text-xs text-[var(--text-secondary)]">Munculkan layar peringatan luruskan shaf (Layar Sholat) setelah hitung mundur Iqomah selesai.</p>
+                </div>
+                <div className={`w-12 h-6 shrink-0 rounded-full p-1 transition-colors duration-300 ${jumatSholatEnabled ? 'bg-[var(--primary-500)]' : 'bg-slate-300 dark:bg-slate-700'}`}>
+                  <div className={`bg-white w-4 h-4 rounded-full shadow-sm transform transition-transform duration-300 ${jumatSholatEnabled ? 'translate-x-6' : 'translate-x-0'}`}></div>
+                </div>
+              </div>
+            </div>
+            
           </div>
         </div>
 

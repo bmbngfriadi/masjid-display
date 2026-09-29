@@ -56,7 +56,8 @@ exports.updateConfig = async (req, res) => {
       jumatIqomahBackgroundUrl,
       jumatIqomahMessage,
       jumatIqomahEnabled,
-      jumatIqomahDuration
+      jumatIqomahDuration,
+      jumatSholatEnabled
     } = req.body;
 
     const updated = await prisma.prayerTimeConfig.update({
@@ -115,6 +116,7 @@ exports.updateConfig = async (req, res) => {
         jumatIqomahMessage: jumatIqomahMessage !== undefined ? jumatIqomahMessage : config.jumatIqomahMessage,
         jumatIqomahDuration: jumatIqomahDuration !== undefined ? parseInt(jumatIqomahDuration) : config.jumatIqomahDuration,
         jumatIqomahEnabled: jumatIqomahEnabled !== undefined ? Boolean(jumatIqomahEnabled) : config.jumatIqomahEnabled,
+        jumatSholatEnabled: jumatSholatEnabled !== undefined ? Boolean(jumatSholatEnabled) : config.jumatSholatEnabled,
       }
     });
 

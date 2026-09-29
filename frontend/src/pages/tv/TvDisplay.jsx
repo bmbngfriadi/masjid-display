@@ -360,8 +360,10 @@ export default function TvDisplay() {
                 setDisplayMode('IQAMAH_COUNTDOWN');
                 const iqamahMins = getIqamahDuration('SHALAT JUMAT');
                 setIqamahTimeRemaining(iqamahMins * 60);
-              } else {
+              } else if (prayerConfig?.jumatSholatEnabled !== false) {
                 setDisplayMode('PRAYER');
+              } else {
+                setDisplayMode('NORMAL');
               }
               setCurrentPrayer(displayPrayerName);
             } else {
@@ -388,7 +390,11 @@ export default function TvDisplay() {
       
       timeout = setTimeout(() => {
         if (isJumat && prayerConfig?.jumatIqomahEnabled === false) {
-          setDisplayMode('PRAYER');
+          if (prayerConfig?.jumatSholatEnabled !== false) {
+            setDisplayMode('PRAYER');
+          } else {
+            setDisplayMode('NORMAL');
+          }
         } else {
           setDisplayMode('IQAMAH_COUNTDOWN');
           
@@ -408,7 +414,14 @@ export default function TvDisplay() {
       interval = setInterval(() => {
         setIqamahTimeRemaining(prev => {
           if (prev <= 1) {
-            if (!previewIqomahJumat) setDisplayMode('PRAYER');
+            if (!previewIqomahJumat) {
+              const isJumat = activeCurrentPrayer === 'SHALAT JUMAT';
+              if (isJumat && prayerConfig?.jumatSholatEnabled === false) {
+                setDisplayMode('NORMAL');
+              } else {
+                setDisplayMode('PRAYER');
+              }
+            }
             return 0;
           }
           return prev - 1;

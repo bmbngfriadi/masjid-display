@@ -116,6 +116,7 @@ model PrayerTimeConfig {
   jumatIqomahMessage       String  @default("Luruskan dan rapatkan shaf untuk shalat Jumat")
   jumatAdzanDuration       Int     @default(4)
   jumatIqomahDuration      Int     @default(10)
+  jumatSholatEnabled       Boolean @default(true)
 
   ramadanMode           Boolean @default(false)
   alarmSound  String  @default("beep")
