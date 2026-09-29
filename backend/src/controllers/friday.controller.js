@@ -78,8 +78,9 @@ exports.updateFridayInfo = async (req, res) => {
 exports.previewFriday = async (req, res) => {
   try {
     const io = req.app.get('io');
+    const { jumatAdzanEnabled, jumatIqomahEnabled, jumatSholatEnabled } = req.body;
     if (io) {
-      io.to('devices').emit('preview:friday');
+      io.to('devices').emit('preview:friday', { jumatAdzanEnabled, jumatIqomahEnabled, jumatSholatEnabled });
     }
     res.json({ message: 'Preview terkirim' });
   } catch (error) {

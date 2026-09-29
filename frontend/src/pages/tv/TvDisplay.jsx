@@ -220,13 +220,13 @@ export default function TvDisplay() {
         }
       };
 
-      const handlePreviewFriday = () => {
+      const handlePreviewFriday = (toggles) => {
         setPreviewFridayMode(true);
         let delay = 10000;
         
-        const adzan = prayerConfig?.jumatAdzanEnabled !== false;
-        const iqomah = prayerConfig?.jumatIqomahEnabled !== false;
-        const sholat = prayerConfig?.jumatSholatEnabled !== false;
+        const adzan = toggles?.jumatAdzanEnabled !== undefined ? toggles.jumatAdzanEnabled : (prayerConfig?.jumatAdzanEnabled !== false);
+        const iqomah = toggles?.jumatIqomahEnabled !== undefined ? toggles.jumatIqomahEnabled : (prayerConfig?.jumatIqomahEnabled !== false);
+        const sholat = toggles?.jumatSholatEnabled !== undefined ? toggles.jumatSholatEnabled : (prayerConfig?.jumatSholatEnabled !== false);
         
         if (adzan) {
            setTimeout(() => {

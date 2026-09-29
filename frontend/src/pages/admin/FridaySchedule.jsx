@@ -242,7 +242,11 @@ export default function FridaySchedule() {
     setPreviewing(true);
     try {
       const token = localStorage.getItem('admin_token');
-      await axios.post(`${API_BASE_URL}/friday/preview`, {}, {
+      await axios.post(`${API_BASE_URL}/friday/preview`, {
+        jumatAdzanEnabled,
+        jumatIqomahEnabled,
+        jumatSholatEnabled
+      }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       showAlert({ title: 'Preview Berjalan', message: 'Preview Shalat Jumat sedang ditampilkan di TV selama 30 detik.', type: 'info' });
