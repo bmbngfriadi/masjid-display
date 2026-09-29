@@ -113,3 +113,16 @@ exports.previewIqomahJumat = async (req, res) => {
     res.status(500).json({ message: 'Gagal mengirim preview' });
   }
 };
+
+exports.previewSholatJumat = async (req, res) => {
+  try {
+    const io = req.app.get('io');
+    if (io) {
+      io.to('devices').emit('preview:sholat_jumat');
+    }
+    res.json({ message: 'Preview Sholat Jumat terkirim' });
+  } catch (error) {
+    console.error('Error sending preview:', error);
+    res.status(500).json({ message: 'Gagal mengirim preview' });
+  }
+};

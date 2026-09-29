@@ -8,5 +8,6 @@ router.put('/', protect, authorizeFeature('canManageFridaySchedule'), fridayCont
 router.post('/preview', protect, authorizeFeature('canManageFridaySchedule'), fridayController.previewFriday);
 router.post('/preview-adzan', protect, authorizeFeature('canManageFridaySchedule'), fridayController.previewAdzanJumat);
 router.post('/preview-iqomah', protect, authorizeFeature('canManageFridaySchedule'), fridayController.previewIqomahJumat);
+router.post('/preview-sholat', protect, authorizeFeature('canManageFridaySchedule'), fridayController.previewSholatJumat);
 
 module.exports = router;

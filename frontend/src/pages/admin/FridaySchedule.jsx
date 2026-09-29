@@ -13,6 +13,7 @@ export default function FridaySchedule() {
   const [previewing, setPreviewing] = useState(false);
   const [previewingAdzan, setPreviewingAdzan] = useState(false);
   const [previewingIqomah, setPreviewingIqomah] = useState(false);
+  const [previewingSholat, setPreviewingSholat] = useState(false);
   const [jumatMode, setJumatMode] = useState(true);
   const [jumatTimeStart, setJumatTimeStart] = useState("06:00");
   const [jumatTimeEnd, setJumatTimeEnd] = useState("14:00");
@@ -280,6 +281,21 @@ export default function FridaySchedule() {
       showAlert({ title: 'Error', message: 'Gagal mengaktifkan preview', type: 'error' });
     } finally {
       setPreviewingIqomah(false);
+    }
+  };
+
+  const handlePreviewSholat = async () => {
+    setPreviewingSholat(true);
+    try {
+      const token = localStorage.getItem('admin_token');
+      await axios.post(`${API_BASE_URL}/friday/preview-sholat`, {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      showAlert({ title: 'Preview Aktif', message: 'Tampilan Sholat Jumat ditampilkan di TV selama 15 detik.', type: 'success' });
+    } catch (error) {
+      showAlert({ title: 'Error', message: 'Gagal mengaktifkan preview', type: 'error' });
+    } finally {
+      setPreviewingSholat(false);
     }
   };
 
@@ -772,6 +788,40 @@ export default function FridaySchedule() {
                 </div>
               </div>
             </div>
+            
+            {jumatSholatEnabled && (
+            <>
+            <div>
+              <div className="flex items-center justify-between mb-4 mt-2">
+                <label className="block text-sm font-medium text-[var(--text-secondary)]">Preview Layar Sholat Jumat</label>
+                <button
+                  type="button"
+                  onClick={handlePreviewSholat}
+                  disabled={previewingSholat}
+                  className="px-3 py-1.5 bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 rounded-lg text-xs font-semibold hover:bg-green-200 dark:hover:bg-green-800/50 transition-colors flex items-center gap-1 disabled:opacity-50"
+                >
+                  {previewingSholat ? (
+                    <div className="w-3 h-3 border-2 border-green-500 border-t-transparent rounded-full animate-spin"></div>
+                  ) : (
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                  )}
+                  Preview di TV
+                </button>
+              </div>
+              <div className="rounded-xl overflow-hidden border-[3px] border-transparent shadow-lg bg-black aspect-video relative flex items-center justify-center">
+                <img src="/masjid/adzan_bg_dark.png" className="absolute inset-0 w-full h-full object-cover opacity-20 mix-blend-luminosity grayscale" alt="Background" />
+                <div className="relative z-10 flex flex-col items-center scale-50 origin-center">
+                  <h2 className="text-2xl text-gray-500 mb-2 font-medium tracking-[0.3em] uppercase drop-shadow-md">SHOLAT SEDANG BERLANGSUNG</h2>
+                  <h1 className="text-[5rem] font-extrabold uppercase tracking-widest text-transparent bg-clip-text bg-gradient-to-b from-[#f3e7b1] via-[#d6a94f] to-[#aa771c] drop-shadow-[0_5px_10px_rgba(0,0,0,0.8)] opacity-90 leading-none mb-6">SHALAT JUMAT</h1>
+                  <div className="relative w-[16rem] h-2 rounded-full overflow-hidden bg-gray-800/80 border border-gray-600/50 shadow-[0_2px_5px_rgba(0,0,0,0.5)] mb-4">
+                    <div className="absolute left-0 top-0 bottom-0 bg-gradient-to-r from-gray-500 to-gray-400 shadow-[0_0_5px_rgba(255,255,255,0.2)] w-1/3"></div>
+                  </div>
+                  <div className="text-xl text-gray-500 font-medium tracking-[0.2em] uppercase drop-shadow-md">Mengikuti Pengaturan Utama Layar Sholat</div>
+                </div>
+              </div>
+            </div>
+            </>
+            )}
             
           </div>
         </div>
