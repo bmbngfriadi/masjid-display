@@ -177,6 +177,22 @@ export default function MasjidProfile() {
                 </div>
               )}
             </div>
+            
+            {profile.logoUrl && (
+              <div className="mt-8 animate-fade-in">
+                <label className="form-label mb-3 flex items-center gap-2">
+                  <ImageIcon size={16} className="text-[var(--primary-500)]" />
+                  Pratinjau Logo Saat Ini
+                </label>
+                <div className="p-6 bg-slate-50 dark:bg-[#0a0a0a] rounded-2xl border border-[var(--border-color)] inline-block shadow-sm">
+                  <img 
+                    src={profile.logoUrl} 
+                    alt="Logo Preview" 
+                    className="w-32 h-32 object-contain drop-shadow-xl"
+                  />
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
