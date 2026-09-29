@@ -346,13 +346,32 @@ export default function TvDisplay() {
         if (lastTriggeredPrayer.current.name !== prayer.name || lastTriggeredPrayer.current.date !== currentDateStr) {
           
           let displayPrayerName = prayer.name;
+          let isJumat = false;
           if (prayer.name === 'DZUHUR' && isCurrentlyJumatTime) {
             displayPrayerName = 'SHALAT JUMAT';
+            isJumat = true;
           }
 
           lastTriggeredPrayer.current = { name: prayer.name, date: currentDateStr };
-          setDisplayMode('ADHAN');
-          setCurrentPrayer(displayPrayerName);
+          
+          if (isJumat) {
+            if (prayerConfig?.jumatAdzanEnabled === false) {
+              if (prayerConfig?.jumatIqomahEnabled !== false) {
+                setDisplayMode('IQAMAH_COUNTDOWN');
+                const iqamahMins = getIqamahDuration('SHALAT JUMAT');
+                setIqamahTimeRemaining(iqamahMins * 60);
+              } else {
+                setDisplayMode('PRAYER');
+              }
+              setCurrentPrayer(displayPrayerName);
+            } else {
+              setDisplayMode('ADHAN');
+              setCurrentPrayer(displayPrayerName);
+            }
+          } else {
+            setDisplayMode('ADHAN');
+            setCurrentPrayer(displayPrayerName);
+          }
           break;
         }
       }
@@ -368,11 +387,15 @@ export default function TvDisplay() {
       const durationMs = durationMins * 60 * 1000;
       
       timeout = setTimeout(() => {
-        setDisplayMode('IQAMAH_COUNTDOWN');
-        
-        // Find iqamah time for current prayer
-        const iqamahMins = getIqamahDuration(activeCurrentPrayer);
-        setIqamahTimeRemaining(iqamahMins * 60);
+        if (isJumat && prayerConfig?.jumatIqomahEnabled === false) {
+          setDisplayMode('PRAYER');
+        } else {
+          setDisplayMode('IQAMAH_COUNTDOWN');
+          
+          // Find iqamah time for current prayer
+          const iqamahMins = getIqamahDuration(activeCurrentPrayer);
+          setIqamahTimeRemaining(iqamahMins * 60);
+        }
       }, durationMs);
     }
     return () => clearTimeout(timeout);

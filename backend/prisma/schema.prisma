@@ -105,10 +105,12 @@ model PrayerTimeConfig {
   jumatRunningTextEnabled Boolean @default(true)
   jumatLayoutStyle      String  @default("jumat_1")
   
+  jumatAdzanEnabled       Boolean @default(true)
   jumatAdzanBackground    String  @default("black")
   jumatAdzanBackgroundUrl String?
   jumatAdzanAudio         String? @default("adzan-makkah.mp3")
   
+  jumatIqomahEnabled       Boolean @default(true)
   jumatIqomahBackground    String  @default("1")
   jumatIqomahBackgroundUrl String?
   jumatIqomahMessage       String  @default("Luruskan dan rapatkan shaf untuk shalat Jumat")

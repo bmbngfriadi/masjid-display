@@ -51,9 +51,11 @@ exports.updateConfig = async (req, res) => {
       jumatAdzanBackgroundUrl,
       jumatAdzanAudio,
       jumatAdzanDuration,
+      jumatAdzanEnabled,
       jumatIqomahBackground,
       jumatIqomahBackgroundUrl,
       jumatIqomahMessage,
+      jumatIqomahEnabled,
       jumatIqomahDuration
     } = req.body;
 
@@ -106,11 +108,13 @@ exports.updateConfig = async (req, res) => {
         ...(jumatAdzanBackgroundUrl !== undefined && { jumatAdzanBackgroundUrl }),
         jumatAdzanAudio: jumatAdzanAudio !== undefined ? jumatAdzanAudio : config.jumatAdzanAudio,
         jumatAdzanDuration: jumatAdzanDuration !== undefined ? parseInt(jumatAdzanDuration) : config.jumatAdzanDuration,
+        jumatAdzanEnabled: jumatAdzanEnabled !== undefined ? Boolean(jumatAdzanEnabled) : config.jumatAdzanEnabled,
         
         jumatIqomahBackground: jumatIqomahBackground !== undefined ? jumatIqomahBackground : config.jumatIqomahBackground,
         ...(jumatIqomahBackgroundUrl !== undefined && { jumatIqomahBackgroundUrl }),
         jumatIqomahMessage: jumatIqomahMessage !== undefined ? jumatIqomahMessage : config.jumatIqomahMessage,
         jumatIqomahDuration: jumatIqomahDuration !== undefined ? parseInt(jumatIqomahDuration) : config.jumatIqomahDuration,
+        jumatIqomahEnabled: jumatIqomahEnabled !== undefined ? Boolean(jumatIqomahEnabled) : config.jumatIqomahEnabled,
       }
     });
 

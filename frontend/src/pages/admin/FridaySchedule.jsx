@@ -20,10 +20,12 @@ export default function FridaySchedule() {
   const [jumatLayoutStyle, setJumatLayoutStyle] = useState('jumat_1');
 
   // Jumat Adzan & Iqomah Screen settings
+  const [jumatAdzanEnabled, setJumatAdzanEnabled] = useState(true);
   const [jumatAdzanBackground, setJumatAdzanBackground] = useState('black');
   const [jumatAdzanBackgroundUrl, setJumatAdzanBackgroundUrl] = useState('');
   const [jumatAdzanAudio, setJumatAdzanAudio] = useState('adzan-makkah.mp3');
   const [jumatAdzanDuration, setJumatAdzanDuration] = useState(4);
+  const [jumatIqomahEnabled, setJumatIqomahEnabled] = useState(true);
   const [jumatIqomahBackground, setJumatIqomahBackground] = useState('1');
   const [jumatIqomahBackgroundUrl, setJumatIqomahBackgroundUrl] = useState('');
   const [jumatIqomahMessage, setJumatIqomahMessage] = useState('Luruskan dan rapatkan shaf untuk shalat Jumat');
@@ -64,11 +66,13 @@ export default function FridaySchedule() {
       setJumatRunningTextEnabled(resPrayer.data.jumatRunningTextEnabled !== false);
       setJumatLayoutStyle(resPrayer.data.jumatLayoutStyle || 'jumat_1');
       
+      setJumatAdzanEnabled(resPrayer.data.jumatAdzanEnabled !== false);
       setJumatAdzanBackground(resPrayer.data.jumatAdzanBackground || 'black');
       setJumatAdzanBackgroundUrl(resPrayer.data.jumatAdzanBackgroundUrl || '');
       setJumatAdzanAudio(resPrayer.data.jumatAdzanAudio || 'adzan-makkah.mp3');
       setJumatAdzanDuration(resPrayer.data.jumatAdzanDuration ?? 4);
       
+      setJumatIqomahEnabled(resPrayer.data.jumatIqomahEnabled !== false);
       setJumatIqomahBackground(resPrayer.data.jumatIqomahBackground || '1');
       setJumatIqomahBackgroundUrl(resPrayer.data.jumatIqomahBackgroundUrl || '');
       setJumatIqomahMessage(resPrayer.data.jumatIqomahMessage || 'Luruskan dan rapatkan shaf untuk shalat Jumat');
@@ -207,10 +211,12 @@ export default function FridaySchedule() {
           jumatTimeEnd,
           jumatRunningTextEnabled,
           jumatLayoutStyle,
+          jumatAdzanEnabled,
           jumatAdzanBackground,
           jumatAdzanBackgroundUrl,
           jumatAdzanAudio,
           jumatAdzanDuration,
+          jumatIqomahEnabled,
           jumatIqomahBackground,
           jumatIqomahBackgroundUrl,
           jumatIqomahMessage,
@@ -535,6 +541,19 @@ export default function FridaySchedule() {
           </div>
           
           <div className="space-y-5">
+            <div className="bg-black/5 dark:bg-white/5 border border-[var(--border-color)] rounded-xl p-4 mb-2">
+              <div className="flex items-center justify-between cursor-pointer" onClick={() => setJumatAdzanEnabled(!jumatAdzanEnabled)}>
+                <div>
+                  <h3 className="text-base font-bold text-[var(--text-primary)] mb-1">Tampilkan Layar Adzan Jumat</h3>
+                  <p className="text-xs text-[var(--text-secondary)]">Ubah layar TV menjadi mode Adzan saat waktu shalat Jumat tiba.</p>
+                </div>
+                <div className={`w-12 h-6 shrink-0 rounded-full p-1 transition-colors duration-300 ${jumatAdzanEnabled ? 'bg-[var(--primary-500)]' : 'bg-slate-300 dark:bg-slate-700'}`}>
+                  <div className={`bg-white w-4 h-4 rounded-full shadow-sm transform transition-transform duration-300 ${jumatAdzanEnabled ? 'translate-x-6' : 'translate-x-0'}`}></div>
+                </div>
+              </div>
+            </div>
+            
+            {jumatAdzanEnabled && (
             <div>
               <div className="flex items-center justify-between mb-4">
                 <label className="block text-sm font-medium text-[var(--text-secondary)]">Tema Adzan Jumat</label>
@@ -628,7 +647,22 @@ export default function FridaySchedule() {
                 />
               </div>
             </div>
+            </div>
+            )}
             
+            <div className="bg-black/5 dark:bg-white/5 border border-[var(--border-color)] rounded-xl p-4 mb-2 mt-6">
+              <div className="flex items-center justify-between cursor-pointer" onClick={() => setJumatIqomahEnabled(!jumatIqomahEnabled)}>
+                <div>
+                  <h3 className="text-base font-bold text-[var(--text-primary)] mb-1">Tampilkan Layar Iqomah Jumat</h3>
+                  <p className="text-xs text-[var(--text-secondary)]">Munculkan layar hitung mundur Iqomah setelah Adzan selesai.</p>
+                </div>
+                <div className={`w-12 h-6 shrink-0 rounded-full p-1 transition-colors duration-300 ${jumatIqomahEnabled ? 'bg-[var(--primary-500)]' : 'bg-slate-300 dark:bg-slate-700'}`}>
+                  <div className={`bg-white w-4 h-4 rounded-full shadow-sm transform transition-transform duration-300 ${jumatIqomahEnabled ? 'translate-x-6' : 'translate-x-0'}`}></div>
+                </div>
+              </div>
+            </div>
+
+            {jumatIqomahEnabled && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-[var(--border-color)]">
               <div>
                 <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">Pesan Layar Iqomah Jumat</label>
@@ -719,6 +753,8 @@ export default function FridaySchedule() {
                 ))}
               </div>
             </div>
+            </div>
+            )}
           </div>
         </div>
 
