@@ -87,7 +87,7 @@ export default function TvDisplay() {
   const [iqamahTimeRemaining, setIqamahTimeRemaining] = useState(0);
 
   const activeDisplayMode = previewFridayMode ? 'NORMAL' : (previewAdzanJumat ? 'ADHAN' : (previewIqomahJumat ? 'IQAMAH_COUNTDOWN' : (previewSholatJumat || previewSholat ? 'PRAYER' : displayMode)));
-  const activeCurrentPrayer = (previewAdzanJumat || previewIqomahJumat || previewSholatJumat || previewFridayMode || previewSholat) ? 'SHALAT JUMAT' : currentPrayer;
+  const activeCurrentPrayer = (previewAdzanJumat || previewIqomahJumat || previewSholatJumat || previewFridayMode) ? 'SHALAT JUMAT' : currentPrayer;
   const [runningText, setRunningText] = useState('Selamat datang di Masjid Baitul Jannah. Luruskan dan rapatkan shaf. Matikan telepon seluler Anda selama ibadah berlangsung.');
   const [mosqueProfile, setMosqueProfile] = useState({
     name: 'Masjid Baitul Jannah',
@@ -330,6 +330,7 @@ export default function TvDisplay() {
 
       const handlePreviewSholat = (config) => {
         setPreviewSholat(true);
+        setCurrentPrayer('SUBUH');
         if (config) {
           setPrayerConfig(config);
         }
