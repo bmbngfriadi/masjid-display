@@ -7,5 +7,6 @@ router.get('/', configController.getConfig);
 router.put('/', protect, authorizeFeature(['canManagePrayerTimes', 'canManageAdzanScreen', 'canManageIqomahScreen', 'canManageSholatScreen']), configController.updateConfig);
 router.post('/preview-iqomah', protect, authorizeFeature(['canManageIqomahScreen']), configController.previewIqomah);
 router.post('/preview-adzan', protect, authorizeFeature(['canManageAdzanScreen']), configController.previewAdzan);
+router.post('/preview-sholat', protect, authorizeFeature(['canManageSholatScreen']), configController.previewSholat);
 
 module.exports = router;

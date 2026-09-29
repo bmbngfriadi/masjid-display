@@ -11,6 +11,7 @@ export default function SholatScreenConfig() {
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [previewing, setPreviewing] = useState(false);
   const [message, setMessage] = useState({ text: '', type: '' });
   const [imagePreview, setImagePreview] = useState(null);
 
@@ -68,6 +69,28 @@ export default function SholatScreenConfig() {
     setImagePreview(null);
   };
 
+  const handlePreview = async () => {
+    setPreviewing(true);
+    try {
+      const token = localStorage.getItem('admin_token');
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/masjid/api';
+      await fetch(`${API_BASE_URL}/prayer-config/preview-sholat`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(config)
+      });
+      showAlert({ title: 'Preview Berjalan', message: 'Preview Sholat Screen sedang ditampilkan di TV selama 30 detik.', type: 'info' });
+    } catch (err) {
+      showAlert({ title: 'Gagal', message: 'Gagal mengirim perintah preview ke TV.', type: 'error' });
+      console.error(err);
+    } finally {
+      setPreviewing(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
@@ -116,25 +139,40 @@ export default function SholatScreenConfig() {
           <h2 className="page-title">Sholat Screen</h2>
           <p className="text-[var(--text-secondary)]">Atur durasi dan pesan yang tampil saat sholat sedang berlangsung.</p>
         </div>
-        <button
-          onClick={handleSubmit}
-          disabled={saving}
-          className="btn-primary mt-4 md:mt-0 shadow-lg shadow-[var(--primary-500)]/30"
-        >
-          {saving ? (
-            <>
-              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></div>
-              <span>Menyimpan...</span>
-            </>
-          ) : (
-            <>
-              <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-              <span>Simpan Tampilan</span>
-            </>
-          )}
-        </button>
+        <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto mt-4 md:mt-0">
+          <button 
+            onClick={handlePreview} 
+            disabled={previewing || saving}
+            className="btn-outline w-full md:w-auto bg-transparent border-2 border-[var(--primary-500)] text-[var(--primary-600)] hover:bg-[var(--primary-50)] dark:text-[var(--primary-400)] dark:hover:bg-[var(--primary-900)]/30 rounded-xl px-6 py-2.5 font-semibold transition-all flex items-center justify-center"
+          >
+            {previewing ? (
+              <div className="w-5 h-5 border-2 border-[var(--primary-500)] border-t-transparent rounded-full animate-spin"></div>
+            ) : (
+              <>
+                <MonitorPlay size={20} className="mr-2" />
+                Preview di TV (30 Detik)
+              </>
+            )}
+          </button>
+          
+          <button
+            onClick={handleSubmit}
+            disabled={saving || previewing}
+            className="btn-primary shadow-lg shadow-[var(--primary-500)]/30 flex items-center justify-center px-6 py-2.5 rounded-xl text-white font-semibold"
+          >
+            {saving ? (
+              <>
+                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></div>
+                <span>Menyimpan...</span>
+              </>
+            ) : (
+              <>
+                <Save size={20} className="mr-2" />
+                <span>Simpan Tampilan</span>
+              </>
+            )}
+          </button>
+        </div>
       </div>
 
       {message.text && (

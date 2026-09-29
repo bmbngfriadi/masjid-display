@@ -165,3 +165,15 @@ exports.previewAdzan = async (req, res) => {
     res.status(500).json({ message: 'Terjadi kesalahan server.' });
   }
 };
+
+exports.previewSholat = async (req, res) => {
+  try {
+    const config = req.body || await prisma.prayerTimeConfig.findFirst();
+    const io = req.app.get('io');
+    if (io) io.emit('preview:sholat', config);
+    res.json({ message: 'Preview Sholat screen triggered' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Terjadi kesalahan server.' });
+  }
+};

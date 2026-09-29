@@ -41,6 +41,10 @@ export default function TvDisplay() {
   const [previewAdzanJumat, setPreviewAdzanJumat] = useState(false);
   const [previewIqomahJumat, setPreviewIqomahJumat] = useState(false);
   const [previewSholatJumat, setPreviewSholatJumat] = useState(false);
+  const [previewAdzan, setPreviewAdzan] = useState(false);
+  const [previewIqomah, setPreviewIqomah] = useState(false);
+  const [previewSholat, setPreviewSholat] = useState(false);
+
 
   const { isFullscreen, requestFullscreen } = useFullscreen();
   const { isSupported, isActive } = useWakeLock(isFullscreen);
@@ -82,8 +86,8 @@ export default function TvDisplay() {
   const [currentPrayer, setCurrentPrayer] = useState(null);
   const [iqamahTimeRemaining, setIqamahTimeRemaining] = useState(0);
 
-  const activeDisplayMode = previewAdzanJumat ? 'ADHAN' : previewIqomahJumat ? 'IQAMAH_COUNTDOWN' : previewSholatJumat ? 'PRAYER' : displayMode;
-  const activeCurrentPrayer = (previewAdzanJumat || previewIqomahJumat || previewSholatJumat) ? 'SHALAT JUMAT' : currentPrayer;
+  const activeDisplayMode = previewFridayMode ? 'NORMAL' : (previewAdzanJumat ? 'ADHAN' : (previewIqomahJumat ? 'IQAMAH_COUNTDOWN' : (previewSholatJumat || previewSholat ? 'PRAYER' : displayMode)));
+  const activeCurrentPrayer = (previewAdzanJumat || previewIqomahJumat || previewSholatJumat || previewFridayMode || previewSholat) ? 'SHALAT JUMAT' : currentPrayer;
   const [runningText, setRunningText] = useState('Selamat datang di Masjid Baitul Jannah. Luruskan dan rapatkan shaf. Matikan telepon seluler Anda selama ibadah berlangsung.');
   const [mosqueProfile, setMosqueProfile] = useState({
     name: 'Masjid Baitul Jannah',
@@ -324,6 +328,16 @@ export default function TvDisplay() {
         }, 30000); // 30 seconds
       };
 
+      const handlePreviewSholat = (config) => {
+        setPreviewSholat(true);
+        if (config) {
+          setPrayerConfig(config);
+        }
+        setTimeout(() => {
+          setPreviewSholat(false);
+        }, 30000); // 30 seconds
+      };
+
       const handleHardRefresh = async () => {
         setIsSoftReloading(true);
         try {
@@ -358,6 +372,7 @@ export default function TvDisplay() {
       socket.on('preview:sholat_jumat', handlePreviewSholatJumat);
       socket.on('preview:iqomah', handlePreviewIqomah);
       socket.on('preview:adzan', handlePreviewAdzan);
+      socket.on('preview:sholat', handlePreviewSholat);
       socket.on('device:refresh', handleHardRefresh);
       
       return () => {
@@ -370,6 +385,7 @@ export default function TvDisplay() {
         socket.off('preview:sholat_jumat', handlePreviewSholatJumat);
         socket.off('preview:iqomah', handlePreviewIqomah);
         socket.off('preview:adzan', handlePreviewAdzan);
+        socket.off('preview:sholat', handlePreviewSholat);
         socket.off('device:refresh', handleHardRefresh);
       };
     }
