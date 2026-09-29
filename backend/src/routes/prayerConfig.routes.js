@@ -4,7 +4,7 @@ const configController = require('../controllers/prayerConfig.controller');
 const { protect, authorizeFeature } = require('../middleware/auth.middleware');
 
 router.get('/', configController.getConfig);
-router.put('/', protect, authorizeFeature(['canManagePrayerTimes', 'canManageAdzanScreen', 'canManageIqomahScreen', 'canManageSholatScreen']), configController.updateConfig);
+router.put('/', protect, authorizeFeature(['canManagePrayerTimes', 'canManageAdzanScreen', 'canManageIqomahScreen', 'canManageSholatScreen', 'canManageFridaySchedule']), configController.updateConfig);
 router.post('/preview-iqomah', protect, authorizeFeature(['canManageIqomahScreen']), configController.previewIqomah);
 router.post('/preview-adzan', protect, authorizeFeature(['canManageAdzanScreen']), configController.previewAdzan);
 router.post('/preview-sholat', protect, authorizeFeature(['canManageSholatScreen']), configController.previewSholat);
