@@ -651,7 +651,6 @@ export default function FridaySchedule() {
                 />
               </div>
             </div>
-            </div>
             </>
             )}
             
@@ -758,7 +757,6 @@ export default function FridaySchedule() {
                   </div>
                 ))}
               </div>
-            </div>
             </div>
             </>
             )}
