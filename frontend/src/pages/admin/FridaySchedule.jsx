@@ -557,6 +557,7 @@ export default function FridaySchedule() {
             </div>
             
             {jumatAdzanEnabled && (
+            <>
             <div>
               <div className="flex items-center justify-between mb-4">
                 <label className="block text-sm font-medium text-[var(--text-secondary)]">Tema Adzan Jumat</label>
@@ -651,6 +652,7 @@ export default function FridaySchedule() {
               </div>
             </div>
             </div>
+            </>
             )}
             
             <div className="bg-black/5 dark:bg-white/5 border border-[var(--border-color)] rounded-xl p-4 mb-2 mt-6">
@@ -666,6 +668,7 @@ export default function FridaySchedule() {
             </div>
 
             {jumatIqomahEnabled && (
+            <>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-[var(--border-color)]">
               <div>
                 <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">Pesan Layar Iqomah Jumat</label>
@@ -757,6 +760,7 @@ export default function FridaySchedule() {
               </div>
             </div>
             </div>
+            </>
             )}
             
             <div className="bg-black/5 dark:bg-white/5 border border-[var(--border-color)] rounded-xl p-4 mb-2 mt-6">
