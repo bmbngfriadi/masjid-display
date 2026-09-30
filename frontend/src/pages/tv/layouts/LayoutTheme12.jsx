@@ -32,7 +32,7 @@ export default function LayoutTheme12({
           </div>
         </div>
         <div className="text-right">
-          <div className="text-[3vh] font-bold text-white">{format(currentDate, 'EEEE, dd MMM yyyy', { locale: id })}</div>
+          <div className="text-[3vh] font-bold text-white">{format(time, 'EEEE, dd MMM yyyy', { locale: id })}</div>
           <div className="text-[2.5vh] text-cyan-400 mt-[0.5vh]">{currentHijri}</div>
         </div>
       </div>

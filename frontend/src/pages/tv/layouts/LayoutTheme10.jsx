@@ -37,7 +37,7 @@ export default function LayoutTheme10({
         </div>
         <div className="text-right bg-black/40 backdrop-blur-md px-[3vw] py-[1.5vh] rounded-[2vw] border border-white/10 shadow-2xl">
           <div className="text-[2.5vh] font-bold text-amber-400">{currentHijri}</div>
-          <div className="text-[2vh] text-white/90">{format(currentDate, 'EEEE, d MMMM yyyy', { locale: id })}</div>
+          <div className="text-[2vh] text-white/90">{currentDate}</div>
         </div>
       </div>
 

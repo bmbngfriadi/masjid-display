@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, lazy, Suspense } from 'react';
+import { useState, useEffect, useRef, lazy, Suspense, Component } from 'react';
 import { format } from 'date-fns';
 import { id } from 'date-fns/locale';
 import useFullscreen from '../../hooks/useFullscreen';
@@ -24,7 +24,6 @@ const LayoutTheme15 = lazy(() => import('./layouts/LayoutTheme15'));
 const InfoSlideScreen = lazy(() => import('./layouts/InfoSlideScreen'));
 const LayoutJumat = lazy(() => import('./layouts/LayoutJumat'));
 
-// Shared audio context to prevent hitting browser limits
 let sharedAudioContext = null;
 const getAudioContext = () => {
   if (typeof window !== 'undefined') {
@@ -35,6 +34,27 @@ const getAudioContext = () => {
   }
   return sharedAudioContext;
 };
+
+class ErrorBoundary extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="w-full h-full bg-red-900 text-white p-10 z-[9999] absolute inset-0 overflow-auto whitespace-pre-wrap font-mono text-sm">
+          <h2>Error in Display Layout:</h2>
+          {String(this.state.error?.stack || this.state.error)}
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 export default function TvDisplay() {
   const [previewFridayMode, setPreviewFridayMode] = useState(false);
@@ -1018,11 +1038,11 @@ export default function TvDisplay() {
             
             {(showInfoSlide && displaySetting?.infoSlideItems?.length > 0 && !isFridayTime) ? (
               <Suspense fallback={<div className="w-full h-full bg-black flex items-center justify-center text-white/50 text-xl font-bold animate-pulse">Loading Slide...</div>}>
-                <InfoSlideScreen displaySetting={displaySetting} />
+                <ErrorBoundary><InfoSlideScreen displaySetting={displaySetting} /></ErrorBoundary>
               </Suspense>
             ) : (
               <Suspense fallback={<div className="w-full h-full bg-black flex items-center justify-center text-white/50 text-xl font-bold animate-pulse">Loading Layout...</div>}>
-                <ActiveLayout {...commonProps} fridayInfo={fridayInfo} />
+                <ErrorBoundary><ActiveLayout {...commonProps} fridayInfo={fridayInfo} /></ErrorBoundary>
               </Suspense>
             )}
             

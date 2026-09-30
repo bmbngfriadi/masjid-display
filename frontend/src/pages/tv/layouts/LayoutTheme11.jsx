@@ -62,7 +62,7 @@ export default function LayoutTheme11({
       {/* Right Panel: Vertical Timetable */}
       <div className="w-1/2 h-full flex flex-col justify-center pl-[6vh]">
         <div className="text-right mb-[4vh]">
-          <h2 className="text-[4vh] font-bold text-white drop-shadow-md">{format(currentDate, 'EEEE, d MMMM yyyy', { locale: id })}</h2>
+          <h2 className="text-[4vh] font-bold text-white drop-shadow-md">{format(time, 'EEEE, d MMMM yyyy', { locale: id })}</h2>
           <h3 className="text-[3vh] text-amber-400 font-medium mt-[1vh]">{currentHijri}</h3>
         </div>
 

@@ -41,7 +41,7 @@ export default function LayoutTheme15({
             </div>
           </div>
           <div className="mt-[6vh] text-[4vh] font-bold text-gray-300">
-            {format(currentDate, 'EEEE, d MMMM yyyy', { locale: id })} <span className="mx-[1vw] text-teal-500">•</span> {currentHijri}
+            {format(time, 'EEEE, d MMMM yyyy', { locale: id })} <span className="mx-[1vw] text-teal-500">•</span> {currentHijri}
           </div>
         </div>
         

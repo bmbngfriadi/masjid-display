@@ -93,7 +93,7 @@ export default function LayoutTheme14({
         </div>
 
         <div>
-          <div className="text-[3.5vh] font-bold">{format(currentDate, 'EEEE, dd MMMM yyyy', { locale: id })}</div>
+          <div className="text-[3.5vh] font-bold">{format(time, 'EEEE, dd MMMM yyyy', { locale: id })}</div>
           <div className="text-[2.5vh] text-rose-400 mt-[0.5vh]">{currentHijri}</div>
         </div>
       </div>

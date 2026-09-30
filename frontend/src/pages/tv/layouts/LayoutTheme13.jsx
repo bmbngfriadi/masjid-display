@@ -33,7 +33,7 @@ export default function LayoutTheme13({
         </div>
         
         <div className="bg-black/60 backdrop-blur-xl px-[3vw] py-[2vh] rounded-bl-[3vw] absolute top-0 right-0 text-right border-l border-b border-indigo-500/30">
-          <div className="text-[2.5vh] font-bold text-white">{format(currentDate, 'EEEE, dd MMMM yyyy', { locale: id })}</div>
+          <div className="text-[2.5vh] font-bold text-white">{format(time, 'EEEE, dd MMMM yyyy', { locale: id })}</div>
           <div className="text-[2vh] text-indigo-300 mt-[0.5vh]">{currentHijri}</div>
         </div>
       </div>
