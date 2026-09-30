@@ -21,11 +21,11 @@ export default function LayoutTheme14({
   // Calculate circular progress safely
   let progress = 0;
   try {
-    if (nextPrayer && nextPrayer.time) {
+    if (nextPrayer && nextPrayer.timeStr) {
       const now = new Date();
       // Ensure the time format is valid before parsing
-      if (typeof nextPrayer.time === 'string' && nextPrayer.time.includes(':')) {
-        const nextTime = parse(nextPrayer.time, 'HH:mm', new Date());
+      if (typeof nextPrayer.timeStr === 'string' && nextPrayer.timeStr.includes(':')) {
+        const nextTime = parse(nextPrayer.timeStr, 'HH:mm', new Date());
         
         let prevPrayerIndex = prayers.findIndex(p => p.id === nextPrayer.id) - 1;
         if (prevPrayerIndex < 0) prevPrayerIndex = 4;

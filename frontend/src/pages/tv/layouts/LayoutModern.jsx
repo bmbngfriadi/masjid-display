@@ -54,7 +54,7 @@ export default function LayoutModern({ time, mosqueProfile, prayerTimes, nextPra
         {/* Prayer Cards */}
         <div className="w-full flex flex-col gap-[1vh]">
           {prayers.map((prayer) => {
-            const isNext = nextPrayer?.name.toLowerCase() === prayer.name.toLowerCase();
+            const isNext = nextPrayer?.name?.toLowerCase() === prayer.name.toLowerCase();
             return (
               <div 
                 key={prayer.name} 

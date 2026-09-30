@@ -52,7 +52,7 @@ export default function LayoutClassic({ time, mosqueProfile, prayerTimes, nextPr
       <div className="relative z-10 w-full bg-black/70 backdrop-blur-md border-t-[0.2vw] border-emerald-500/50 p-[2vw] flex flex-col justify-center">
         <div className="grid grid-cols-6 gap-[1.5vw] w-full max-w-[96vw] mx-auto">
           {prayers.map((prayer) => {
-            const isNext = nextPrayer?.name.toLowerCase() === prayer.name.toLowerCase();
+            const isNext = nextPrayer?.name?.toLowerCase() === prayer.name.toLowerCase();
             return (
               <div 
                 key={prayer.name} 

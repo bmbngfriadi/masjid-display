@@ -52,7 +52,7 @@ export default function LayoutMinimalist({ time, mosqueProfile, prayerTimes, nex
       <div className="relative z-10 w-full bg-white/95 text-slate-900 shadow-[0_-10px_40px_rgba(0,0,0,0.5)] border-t border-white flex flex-col">
         <div className="flex justify-between items-stretch h-[18vh]">
           {prayers.map((prayer, index) => {
-            const isNext = nextPrayer?.name.toLowerCase() === prayer.name.toLowerCase();
+            const isNext = nextPrayer?.name?.toLowerCase() === prayer.name.toLowerCase();
             return (
               <div 
                 key={prayer.name} 
