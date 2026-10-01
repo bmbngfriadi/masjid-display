@@ -11,7 +11,6 @@ export default function LayoutConfig() {
   const [layoutStyle, setLayoutStyle] = useState('signature');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [success, setSuccess] = useState('');
   const [backgroundUrl, setBackgroundUrl] = useState('');
   const [imagePreview, setImagePreview] = useState(null);
   const [backgroundUrls, setBackgroundUrls] = useState([]);
@@ -135,7 +134,6 @@ export default function LayoutConfig() {
 
   const handleSave = async () => {
     setSaving(true);
-    setSuccess('');
     try {
       const token = localStorage.getItem('admin_token');
       const payload = {
@@ -165,7 +163,12 @@ export default function LayoutConfig() {
       await axios.put(`${API_BASE_URL}/display-setting`, payload, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      setSuccess('Layout style berhasil disimpan! TV akan otomatis diperbarui.');
+      
+      showAlert({ 
+        title: 'Berhasil', 
+        message: 'Pengaturan layout berhasil disimpan! Layar TV telah diperbarui otomatis.', 
+        type: 'success' 
+      });
       
       // Update original config setelah berhasil save
       setOriginalConfig(prev => ({
@@ -264,12 +267,6 @@ export default function LayoutConfig() {
           </button>
         </div>
       </div>
-
-      {success && (
-        <div className="mb-6 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-start gap-3">
-          <p className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">{success}</p>
-        </div>
-      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
         {layouts.map(layout => (
