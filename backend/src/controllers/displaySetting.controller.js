@@ -112,6 +112,7 @@ exports.updateDisplaySetting = async (req, res) => {
     const io = req.app.get('io');
     if (io) {
       io.emit('DISPLAY_SETTING_UPDATED', setting);
+      io.emit('device:hard_refresh');
     }
 
     res.json(setting);

@@ -22,7 +22,7 @@ process.on('uncaughtException', (err) => {
 app.use(helmet());
 app.use(cors());
 app.use(compression()); // Gzip compress all responses for faster load times
-app.use(express.json({ limit: '10mb' }));
+app.use(express.json({ limit: '50mb' }));
 
 // Keamanan Tambahan (Security Hardening)
 const xss = require('xss-clean');

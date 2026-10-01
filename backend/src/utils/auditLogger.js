@@ -11,6 +11,18 @@ const prisma = require('../config/db');
  * @param {String|Object} [params.newValue] - The new state of the entity (optional)
  * @param {String} [params.ip] - The IP address of the user (from req.ip)
  */
+const sanitizeValue = (val) => {
+  if (!val) return null;
+  let str = typeof val === 'object' ? JSON.stringify(val) : String(val);
+  // Hapus pola gambar base64 agar tidak menuh-menuhin log
+  str = str.replace(/data:image\/[a-zA-Z]*;base64,[^"]+/g, '"[BASE64_IMAGE_REMOVED]"');
+  // Potong jika masih terlalu panjang
+  if (str.length > 2000) {
+    return str.substring(0, 2000) + '... [TRUNCATED]';
+  }
+  return str;
+};
+
 const logAction = async ({ userId, action, entity, entityId, oldValue, newValue, ip }) => {
   try {
     await prisma.auditLog.create({
@@ -19,8 +31,8 @@ const logAction = async ({ userId, action, entity, entityId, oldValue, newValue,
         action,
         entity,
         entityId: entityId ? String(entityId) : null,
-        oldValue: oldValue ? (typeof oldValue === 'object' ? JSON.stringify(oldValue) : oldValue) : null,
-        newValue: newValue ? (typeof newValue === 'object' ? JSON.stringify(newValue) : newValue) : null,
+        oldValue: sanitizeValue(oldValue),
+        newValue: sanitizeValue(newValue),
         ip
       }
     });

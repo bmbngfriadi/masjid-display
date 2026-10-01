@@ -181,7 +181,8 @@ export default function TvDisplay() {
         setDisplaySetting(data);
         const params = new URLSearchParams(window.location.search);
         const previewLayout = params.get('previewLayout');
-        setLayoutStyle(previewLayout || data.layoutStyle || 'signature');
+        // Prioritaskan database (data.layoutStyle), baru fallback ke previewLayout jika di DB kosong
+        setLayoutStyle(data.layoutStyle || previewLayout || 'signature');
       }
     } catch (e) {
       console.error('Failed to fetch display setting', e);

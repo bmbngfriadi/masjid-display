@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  # 1. Database Mandiri khusus Masjid
+  db:
+    image: postgres:15-alpine
+    container_name: masjid_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Gamaadmin53
+      POSTGRES_DB: masjid_db
+    ports:
+      - "5435:5432" # Port 5435 agar tidak tabrakan
+    volumes:
+      - masjid_pgdata:/var/lib/postgresql/data
+
+  # 2. Backend Masjid
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: masjid_backend
+    restart: unless-stopped
+    ports:
+      - "4001:4001"
+    environment:
+      - DATABASE_URL=postgresql://postgres:Gamaadmin53@db:5432/masjid_db?schema=public
+      - NODE_ENV=production
+      - PORT=4001
+      - JWT_SECRET=SUPER_SECRET_CHANGE_ME
+      - APP_BASE_PATH=/masjid
+      - SOCKET_PATH=/masjid/socket.io
+      - FRONTEND_URL=https://cg-plantbatam.com
+    depends_on:
+      - db
+
+  # 3. Frontend Masjid
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: masjid_frontend
+    restart: unless-stopped
+    ports:
+      - "5179:80"
+    depends_on:
+      - backend
+
+volumes:
+  masjid_pgdata:

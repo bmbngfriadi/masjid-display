@@ -154,6 +154,7 @@ export default function LayoutConfig() {
       setSuccess('Layout style berhasil disimpan! TV akan otomatis diperbarui.');
     } catch (err) {
       console.error('Failed to save', err);
+      showAlert({ title: 'Gagal', message: 'Gagal menyimpan pengaturan layout.', type: 'error' });
     } finally {
       setSaving(false);
     }
