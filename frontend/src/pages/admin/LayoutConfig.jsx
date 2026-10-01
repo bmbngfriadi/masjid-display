@@ -24,6 +24,7 @@ export default function LayoutConfig() {
   const [infoSlideItems, setInfoSlideItems] = useState([]);
   const [layoutDuration, setLayoutDuration] = useState(30);
   const [showDebugTools, setShowDebugTools] = useState(true);
+  const [originalConfig, setOriginalConfig] = useState({});
 
   const layouts = [
     {
@@ -123,6 +124,7 @@ export default function LayoutConfig() {
         if (res.data.infoSlideItems) setInfoSlideItems(res.data.infoSlideItems);
         if (res.data.layoutDuration) setLayoutDuration(res.data.layoutDuration);
         if (res.data.showDebugTools !== undefined) setShowDebugTools(res.data.showDebugTools);
+        setOriginalConfig(res.data);
       }
     } catch (err) {
       console.error('Failed to fetch display setting', err);
@@ -136,10 +138,8 @@ export default function LayoutConfig() {
     setSuccess('');
     try {
       const token = localStorage.getItem('admin_token');
-      await axios.put(`${API_BASE_URL}/display-setting`, { 
+      const payload = {
         layoutStyle, 
-        backgroundUrl,
-        backgroundUrls,
         backgroundSlideInterval,
         backgroundSliderEnabled,
         infoSlideEnabled,
@@ -148,10 +148,30 @@ export default function LayoutConfig() {
         infoSlideDuration,
         infoSlideItems,
         layoutDuration
-      }, {
+      };
+
+      // Hanya kirim base64 raksasa jika ada perubahan, untuk menghindari Nginx 413 Payload Too Large
+      if (backgroundUrl !== originalConfig.backgroundUrl) {
+        payload.backgroundUrl = backgroundUrl;
+      }
+      
+      // Deteksi perubahan pada array backgroundUrls (slider)
+      const currentSliderBase64 = JSON.stringify(backgroundUrls);
+      const originalSliderBase64 = JSON.stringify(originalConfig.backgroundUrls || []);
+      if (currentSliderBase64 !== originalSliderBase64) {
+        payload.backgroundUrls = backgroundUrls;
+      }
+
+      await axios.put(`${API_BASE_URL}/display-setting`, payload, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setSuccess('Layout style berhasil disimpan! TV akan otomatis diperbarui.');
+      
+      // Update original config setelah berhasil save
+      setOriginalConfig(prev => ({
+        ...prev,
+        ...payload
+      }));
     } catch (err) {
       console.error('Failed to save', err);
       showAlert({ title: 'Gagal', message: 'Gagal menyimpan pengaturan layout.', type: 'error' });
