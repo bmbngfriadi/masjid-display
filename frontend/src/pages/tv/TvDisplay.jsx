@@ -739,6 +739,16 @@ export default function TvDisplay() {
     );
   }
 
+  // Prevent flicker by showing a loading screen until the database settings are loaded
+  if (!displaySetting || !prayerConfig) {
+    return (
+      <div className="w-screen h-screen flex flex-col items-center justify-center bg-black text-white cursor-none">
+        <div className="w-12 h-12 border-4 border-[var(--primary-500)] border-t-transparent rounded-full animate-spin mb-6"></div>
+        <p className="text-gray-400 font-medium tracking-widest uppercase">Menyiapkan Tampilan...</p>
+      </div>
+    );
+  }
+
   // Formatting date and time
   const currentTime = format(time, 'HH:mm:ss');
   const currentDate = format(time, 'EEEE, dd MMMM yyyy', { locale: id });
