@@ -26,7 +26,7 @@ export default function LayoutJumat({
     }
   };
 
-  const commonData = { time, mosqueProfile, nextPrayer, currentDate, currentHijri, fridayInfo, formatRupiah };
+  const commonData = { time, mosqueProfile, prayerTimes, nextPrayer, currentDate, currentHijri, fridayInfo, formatRupiah };
 
   switch (jumatLayoutStyle) {
     case 'jumat_2': return <JumatLayout2 {...commonData} />;
@@ -312,19 +312,27 @@ function JumatLayout4({ mosqueProfile, currentDate, fridayInfo, formatRupiah }) 
 }
 
 // ================= LAYOUT 5: SIMPLICITY =================
-function JumatLayout5({ mosqueProfile, time, fridayInfo, formatRupiah }) {
+function JumatLayout5({ mosqueProfile, time, fridayInfo, formatRupiah, prayerTimes }) {
   return (
     <div className="w-full h-full flex flex-col p-[6vh] text-white relative z-10 bg-black/90 animate-fade-in overflow-hidden">
       <div className="flex justify-between items-end border-b-4 border-[var(--primary-500)] pb-[3vh] mb-[6vh] shrink-0 h-[20vh]">
         <div className="flex items-center gap-[2vw] min-w-0">
           <LogoArea mosqueProfile={mosqueProfile} className="w-[14vh] h-[14vh]" />
-          <div className="min-w-0">
-            <h2 className="text-[3vh] text-[var(--primary-500)] font-bold tracking-widest uppercase mb-[0.5vh]">Informasi Shalat Jumat</h2>
+          <div className="min-w-0 flex flex-col justify-center">
+            <div className="flex items-center gap-[1vw] mb-[0.5vh]">
+              <h2 className="text-[3vh] text-[var(--primary-500)] font-bold tracking-widest uppercase">Informasi Shalat Jumat</h2>
+              {prayerTimes?.dhuhr && (
+                <div className="bg-[var(--primary-600)]/80 text-white px-[1vw] py-[0.3vh] rounded-full text-[2vh] font-bold tracking-wider border border-[var(--primary-500)]/50">
+                  Adzan: {prayerTimes.dhuhr}
+                </div>
+              )}
+            </div>
             <h1 className="text-[6vh] leading-none font-black break-words leading-tight drop-shadow-md">{mosqueProfile?.name}</h1>
           </div>
         </div>
-        <div className="text-[10vh] leading-none font-mono font-black text-gray-200 shrink-0">
+        <div className="text-[10vh] leading-none font-mono font-black text-gray-200 shrink-0 flex items-baseline">
           {format(time, 'HH:mm')}
+          <span className="text-[5vh] text-[var(--primary-400)] ml-[1vw]">{format(time, 'ss')}</span>
         </div>
       </div>
       
