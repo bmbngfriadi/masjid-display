@@ -631,10 +631,21 @@ export default function TvDisplay() {
 
     const isBgSliderEnabled = displaySetting?.backgroundSliderEnabled !== false && displaySetting?.backgroundUrls && displaySetting.backgroundUrls.length > 0;
     const isInfoSlideEnabled = displaySetting?.infoSlideEnabled;
-    const layoutDurationSec = displaySetting?.layoutDuration || 30;
+    const layoutDurationSec = displaySetting?.layoutDuration !== undefined ? displaySetting.layoutDuration : 30;
     const bgIntervalSec = displaySetting?.backgroundSlideInterval || 10;
     const infoDurationSec = displaySetting?.infoSlideDuration || 10;
     
+    // Auto-skip LAYOUT phase if duration is 0
+    if (currentPhase === 'LAYOUT' && layoutDurationSec === 0) {
+      if (isBgSliderEnabled) {
+        setCurrentPhase('SLIDESHOW');
+        setCurrentBgIndex(0);
+      } else if (isInfoSlideEnabled) {
+        setCurrentPhase('INFO');
+      }
+      return;
+    }
+
     if (currentPhase === 'LAYOUT') {
       timeoutId = setTimeout(() => {
         if (isBgSliderEnabled) {
@@ -650,29 +661,32 @@ export default function TvDisplay() {
     else if (currentPhase === 'SLIDESHOW') {
       // If setting gets disabled while in this phase, force transition
       if (!isBgSliderEnabled) {
-        setCurrentPhase('LAYOUT');
+        setCurrentPhase(layoutDurationSec > 0 ? 'LAYOUT' : (isInfoSlideEnabled ? 'INFO' : 'LAYOUT'));
         return;
       }
       timeoutId = setTimeout(() => {
         if (currentBgIndex < displaySetting.backgroundUrls.length - 1) {
           setCurrentBgIndex(prev => prev + 1);
         } else {
-          // Finished slideshow, go to INFO if enabled, else loop back to LAYOUT
+          // Finished slideshow, go to INFO if enabled, else loop back
           if (isInfoSlideEnabled) {
             setCurrentPhase('INFO');
           } else {
-            setCurrentPhase('LAYOUT');
+            setCurrentPhase(layoutDurationSec > 0 ? 'LAYOUT' : 'SLIDESHOW');
+            if (layoutDurationSec === 0) setCurrentBgIndex(0);
           }
         }
       }, bgIntervalSec * 1000);
     }
     else if (currentPhase === 'INFO') {
       if (!isInfoSlideEnabled) {
-        setCurrentPhase('LAYOUT');
+        setCurrentPhase(layoutDurationSec > 0 ? 'LAYOUT' : (isBgSliderEnabled ? 'SLIDESHOW' : 'LAYOUT'));
+        if (layoutDurationSec === 0 && isBgSliderEnabled) setCurrentBgIndex(0);
         return;
       }
       timeoutId = setTimeout(() => {
-        setCurrentPhase('LAYOUT');
+        setCurrentPhase(layoutDurationSec > 0 ? 'LAYOUT' : (isBgSliderEnabled ? 'SLIDESHOW' : 'LAYOUT'));
+        if (layoutDurationSec === 0 && isBgSliderEnabled) setCurrentBgIndex(0);
       }, infoDurationSec * 1000);
     }
     

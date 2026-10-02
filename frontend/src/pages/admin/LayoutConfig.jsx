@@ -22,6 +22,7 @@ export default function LayoutConfig() {
   const [infoSlideDuration, setInfoSlideDuration] = useState(10);
   const [infoSlideItems, setInfoSlideItems] = useState([]);
   const [layoutDuration, setLayoutDuration] = useState(30);
+  const [layoutMainEnabled, setLayoutMainEnabled] = useState(true);
   const [showDebugTools, setShowDebugTools] = useState(true);
   const [originalConfig, setOriginalConfig] = useState({});
 
@@ -121,7 +122,10 @@ export default function LayoutConfig() {
         if (res.data.infoSlideScrollSpeed) setInfoSlideScrollSpeed(res.data.infoSlideScrollSpeed);
         if (res.data.infoSlideDuration) setInfoSlideDuration(res.data.infoSlideDuration);
         if (res.data.infoSlideItems) setInfoSlideItems(res.data.infoSlideItems);
-        if (res.data.layoutDuration) setLayoutDuration(res.data.layoutDuration);
+        if (res.data.layoutDuration !== undefined) {
+          setLayoutDuration(res.data.layoutDuration === 0 ? 30 : res.data.layoutDuration);
+          setLayoutMainEnabled(res.data.layoutDuration !== 0);
+        }
         if (res.data.showDebugTools !== undefined) setShowDebugTools(res.data.showDebugTools);
         setOriginalConfig(res.data);
       }
@@ -145,7 +149,7 @@ export default function LayoutConfig() {
         infoSlideScrollSpeed,
         infoSlideDuration,
         infoSlideItems,
-        layoutDuration
+        layoutDuration: layoutMainEnabled ? layoutDuration : 0
       };
 
       // Hanya kirim base64 raksasa jika ada perubahan, untuk menghindari Nginx 413 Payload Too Large
@@ -662,25 +666,37 @@ export default function LayoutConfig() {
 
       {/* Pengaturan Durasi Layout Utama */}
       <div className="mt-8 glass-card p-6 border-l-4 border-l-[var(--primary-500)]">
-        <div className="flex items-start justify-between mb-4">
-          <div>
-            <h3 className="text-xl font-bold text-[var(--text-primary)]">Durasi Tampilan Utama (Layout)</h3>
+        <div className="flex items-start justify-between gap-4 mb-4">
+          <div className="flex-1">
+            <h3 className="text-xl font-bold text-[var(--text-primary)]">Tampilan Utama (Background Tunggal)</h3>
             <p className="text-sm text-[var(--text-secondary)]">
-              Berapa lama tampilan utama (jam dan jadwal) dengan <b>background tunggal</b> bertahan sebelum layar berpindah ke <b>Background Slider</b> atau <b>Info Slide</b>.
+              Berapa lama tampilan utama (jam dan jadwal) dengan <b>background tunggal</b> bertahan sebelum layar berpindah ke <b>Background Slider</b> atau <b>Info Slide</b>. Jika dinonaktifkan, TV akan langsung menggunakan Slider/Info Slide sebagai tampilan utamanya.
             </p>
           </div>
+          <label className="relative inline-flex items-center cursor-pointer shrink-0 mt-1">
+            <input 
+              type="checkbox" 
+              className="sr-only peer" 
+              checked={layoutMainEnabled}
+              onChange={(e) => setLayoutMainEnabled(e.target.checked)}
+            />
+            <div className="w-14 h-7 bg-gray-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-[var(--primary-500)]"></div>
+          </label>
         </div>
-        <div className="flex items-center gap-4">
-          <input 
-            type="number" 
-            min="5" 
-            max="3600"
-            value={layoutDuration} 
-            onChange={(e) => setLayoutDuration(parseInt(e.target.value))} 
-            className="form-control max-w-[150px] font-bold text-lg" 
-          />
-          <span className="text-sm font-medium text-[var(--text-secondary)]">Detik</span>
-        </div>
+        {layoutMainEnabled && (
+          <div className="flex items-center gap-4 mt-4 bg-black/5 dark:bg-white/5 p-4 rounded-xl border border-[var(--border-color)]">
+            <span className="text-sm font-bold text-[var(--text-primary)]">Durasi Tampil:</span>
+            <input 
+              type="number" 
+              min="5" 
+              max="3600"
+              value={layoutDuration} 
+              onChange={(e) => setLayoutDuration(parseInt(e.target.value))} 
+              className="form-control max-w-[120px] font-bold text-lg" 
+            />
+            <span className="text-sm font-medium text-[var(--text-secondary)]">Detik</span>
+          </div>
+        )}
       </div>
 
       {/* Background Slider Section */}
