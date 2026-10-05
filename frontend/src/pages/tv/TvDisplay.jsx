@@ -124,8 +124,8 @@ export default function TvDisplay() {
   const [isSoftReloading, setIsSoftReloading] = useState(false);
   const [adzanAlarmCountdown, setAdzanAlarmCountdown] = useState(null);
   const [iqomahAlarmCountdown, setIqomahAlarmCountdown] = useState(null);
-  const [previewAdzanAlarm, setPreviewAdzanAlarm] = useState(false);
-  const [previewIqomahAlarm, setPreviewIqomahAlarm] = useState(false);
+  const [previewAdzanAlarm, setPreviewAdzanAlarm] = useState(null);
+  const [previewIqomahAlarm, setPreviewIqomahAlarm] = useState(null);
 
   const fetchRunningText = async () => {
     try {
@@ -401,12 +401,66 @@ export default function TvDisplay() {
       socket.on('preview:sholat', handlePreviewSholat);
       socket.on('device:refresh', handleHardRefresh);
       socket.on('preview:adzan_alarm', () => {
-        setPreviewAdzanAlarm(true);
-        setTimeout(() => setPreviewAdzanAlarm(false), 10000);
+        let count = 10;
+        setPreviewAdzanAlarm(10);
+        try {
+          const audioCtx = window.audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+          window.audioCtx = audioCtx;
+          if (audioCtx.state === 'suspended') audioCtx.resume();
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+          gain.gain.setValueAtTime(0, audioCtx.currentTime);
+          gain.gain.linearRampToValueAtTime(1, audioCtx.currentTime + 0.05);
+          gain.gain.setValueAtTime(1, audioCtx.currentTime + 1.5 - 0.05);
+          gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 1.5);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(audioCtx.currentTime);
+          osc.stop(audioCtx.currentTime + 1.5);
+        } catch(e) {}
+        
+        const intv = setInterval(() => {
+          count--;
+          if (count <= 0) {
+            clearInterval(intv);
+            setPreviewAdzanAlarm(null);
+          } else {
+            setPreviewAdzanAlarm(count);
+          }
+        }, 1000);
       });
       socket.on('preview:iqomah_alarm', () => {
-        setPreviewIqomahAlarm(true);
-        setTimeout(() => setPreviewIqomahAlarm(false), 10000);
+        let count = 10;
+        setPreviewIqomahAlarm(10);
+        try {
+          const audioCtx = window.audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+          window.audioCtx = audioCtx;
+          if (audioCtx.state === 'suspended') audioCtx.resume();
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+          gain.gain.setValueAtTime(0, audioCtx.currentTime);
+          gain.gain.linearRampToValueAtTime(1, audioCtx.currentTime + 0.05);
+          gain.gain.setValueAtTime(1, audioCtx.currentTime + 1.5 - 0.05);
+          gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 1.5);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(audioCtx.currentTime);
+          osc.stop(audioCtx.currentTime + 1.5);
+        } catch(e) {}
+        
+        const intv = setInterval(() => {
+          count--;
+          if (count <= 0) {
+            clearInterval(intv);
+            setPreviewIqomahAlarm(null);
+          } else {
+            setPreviewIqomahAlarm(count);
+          }
+        }, 1000);
       });
       
       return () => {
@@ -1200,7 +1254,7 @@ export default function TvDisplay() {
           {renderMainContent()}
 
           {/* Adzan Alarm Overlay */}
-          {(adzanAlarmCountdown !== null || previewAdzanAlarm) && (
+          {(adzanAlarmCountdown !== null || previewAdzanAlarm !== null) && (
             <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md animate-fade-in">
               <div className="flex flex-col items-center justify-center text-center">
                 <h2 className="text-[3cqw] text-[#00ccff] font-bold tracking-[0.3em] uppercase mb-[1cqh] drop-shadow-[0_2px_10px_rgba(0,204,255,0.6)] animate-pulse">
@@ -1212,7 +1266,7 @@ export default function TvDisplay() {
                 <div className="relative w-[25cqw] h-[25cqw] flex flex-col items-center justify-center mx-auto">
                   <div className="absolute inset-0 rounded-full border-[1cqw] border-[#00ccff] shadow-[0_0_60px_rgba(0,204,255,0.8)] bg-black/60 animate-pulse"></div>
                   <span className="relative z-10 text-[#00ccff] text-[12cqw] font-extrabold font-mono leading-none drop-shadow-[0_0_20px_rgba(0,204,255,1)]">
-                    {adzanAlarmCountdown?.secondsRemaining || '10'}
+                    {adzanAlarmCountdown?.secondsRemaining || previewAdzanAlarm || '10'}
                   </span>
                   <span className="relative z-10 text-white/60 text-[1.5cqw] uppercase tracking-widest mt-2 font-bold">Detik</span>
                 </div>
@@ -1221,7 +1275,7 @@ export default function TvDisplay() {
           )}
 
           {/* Iqomah Alarm Overlay */}
-          {(iqomahAlarmCountdown !== null || previewIqomahAlarm) && (
+          {(iqomahAlarmCountdown !== null || previewIqomahAlarm !== null) && (
             <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md animate-fade-in">
               <div className="flex flex-col items-center justify-center text-center">
                 <h2 className="text-[3cqw] text-[#55ff77] font-bold tracking-[0.3em] uppercase mb-[1cqh] drop-shadow-[0_2px_10px_rgba(85,255,119,0.6)] animate-pulse">
@@ -1233,7 +1287,7 @@ export default function TvDisplay() {
                 <div className="relative w-[25cqw] h-[25cqw] flex flex-col items-center justify-center mx-auto">
                   <div className="absolute inset-0 rounded-full border-[1cqw] border-[#33ff55] shadow-[0_0_60px_rgba(51,255,85,0.8)] bg-black/60 animate-pulse"></div>
                   <span className="relative z-10 text-[#33ff55] text-[12cqw] font-extrabold font-mono leading-none drop-shadow-[0_0_20px_rgba(51,255,85,1)]">
-                    {iqomahAlarmCountdown?.secondsRemaining || '10'}
+                    {iqomahAlarmCountdown?.secondsRemaining || previewIqomahAlarm || '10'}
                   </span>
                   <span className="relative z-10 text-white/60 text-[1.5cqw] uppercase tracking-widest mt-2 font-bold">Detik</span>
                 </div>
