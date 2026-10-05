@@ -22,6 +22,10 @@ export default function FridaySchedule() {
 
   // Jumat Adzan & Iqomah Screen settings
   const [jumatAdzanEnabled, setJumatAdzanEnabled] = useState(true);
+  const [jumatAdzanAlarmEnabled, setJumatAdzanAlarmEnabled] = useState(false);
+  const [jumatAdzanAlarmSound, setJumatAdzanAlarmSound] = useState('beep');
+  const [jumatAdzanAlarmTime, setJumatAdzanAlarmTime] = useState(10);
+  const [jumatAdzanAlarmEnd, setJumatAdzanAlarmEnd] = useState(0);
   const [jumatAdzanBackground, setJumatAdzanBackground] = useState('black');
   const [jumatAdzanBackgroundUrl, setJumatAdzanBackgroundUrl] = useState('');
   const [jumatAdzanAudio, setJumatAdzanAudio] = useState('adzan-makkah.mp3');
@@ -69,6 +73,10 @@ export default function FridaySchedule() {
       setJumatLayoutStyle(resPrayer.data.jumatLayoutStyle || 'jumat_1');
       
       setJumatAdzanEnabled(resPrayer.data.jumatAdzanEnabled !== false);
+      setJumatAdzanAlarmEnabled(resPrayer.data.jumatAdzanAlarmEnabled === true);
+      setJumatAdzanAlarmSound(resPrayer.data.jumatAdzanAlarmSound || 'beep');
+      setJumatAdzanAlarmTime(resPrayer.data.jumatAdzanAlarmTime ?? 10);
+      setJumatAdzanAlarmEnd(resPrayer.data.jumatAdzanAlarmEnd ?? 0);
       setJumatAdzanBackground(resPrayer.data.jumatAdzanBackground || 'black');
       setJumatAdzanBackgroundUrl(resPrayer.data.jumatAdzanBackgroundUrl || '');
       setJumatAdzanAudio(resPrayer.data.jumatAdzanAudio || 'adzan-makkah.mp3');
@@ -215,6 +223,10 @@ export default function FridaySchedule() {
           jumatRunningTextEnabled,
           jumatLayoutStyle,
           jumatAdzanEnabled,
+          jumatAdzanAlarmEnabled,
+          jumatAdzanAlarmSound,
+          jumatAdzanAlarmTime,
+          jumatAdzanAlarmEnd,
           jumatAdzanBackground,
           jumatAdzanBackgroundUrl,
           jumatAdzanAudio,
@@ -244,6 +256,10 @@ export default function FridaySchedule() {
       const token = localStorage.getItem('admin_token');
       await axios.post(`${API_BASE_URL}/friday/preview`, {
         jumatAdzanEnabled,
+        jumatAdzanAlarmEnabled,
+        jumatAdzanAlarmSound,
+        jumatAdzanAlarmTime,
+        jumatAdzanAlarmEnd,
         jumatIqomahEnabled,
         jumatSholatEnabled
       }, {
@@ -262,7 +278,7 @@ export default function FridaySchedule() {
     setPreviewingAdzan(true);
     try {
       const token = localStorage.getItem('admin_token');
-      await axios.post(`${API_BASE_URL}/friday/preview-adzan`, {}, {
+      await axios.post(`${API_BASE_URL}/friday/preview-adzan`, { jumatAdzanAlarmEnabled, jumatAdzanAlarmSound, jumatAdzanAlarmTime, jumatAdzanAlarmEnd }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       showAlert({ title: 'Preview Aktif', message: 'Tampilan Adzan Jumat ditampilkan di TV selama 15 detik.', type: 'success' });
@@ -270,6 +286,81 @@ export default function FridaySchedule() {
       showAlert({ title: 'Error', message: 'Gagal mengaktifkan preview', type: 'error' });
     } finally {
       setPreviewingAdzan(false);
+    }
+  };
+
+  const handlePreviewAdzanAlarm = async () => {
+    try {
+      const token = localStorage.getItem('admin_token');
+      await axios.post(`${API_BASE_URL}/friday/preview-adzan-alarm`, { jumatAdzanAlarmSound, jumatAdzanAlarmTime, jumatAdzanAlarmEnd }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      showAlert({ title: 'Preview Alarm Aktif', message: 'Layar TV sekarang mensimulasikan peringatan Adzan Jumat selama 15 detik.', type: 'success' });
+    } catch (error) {
+      showAlert({ title: 'Gagal', message: 'Gagal memicu preview alarm di TV', type: 'error' });
+    }
+  };
+
+  const playAlarmPreview = (sound) => {
+    try {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      const ctx = new AudioContext();
+      
+      const playTone = (freq, type, startTime, duration) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, startTime);
+        gain.gain.setValueAtTime(0, startTime);
+        gain.gain.linearRampToValueAtTime(1, startTime + 0.05);
+        gain.gain.setValueAtTime(1, startTime + duration - 0.05);
+        gain.gain.linearRampToValueAtTime(0, startTime + duration);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(startTime);
+        osc.stop(startTime + duration);
+      };
+
+      const now = ctx.currentTime;
+      if (sound === 'beep') {
+        playTone(800, 'sine', now, 0.4);
+      } else if (sound === 'beep-long') {
+        playTone(800, 'sine', now, 1.5);
+      } else if (sound === 'alarm1') {
+        for (let i = 0; i < 5; i++) {
+          playTone(1000, 'square', now + i * 0.2, 0.1);
+        }
+      } else if (sound === 'alarm2') {
+        for (let i = 0; i < 4; i++) {
+          playTone(600, 'triangle', now + i * 0.2, 0.1);
+          playTone(800, 'triangle', now + i * 0.2 + 0.1, 0.1);
+        }
+      } else if (sound === 'alarm3') {
+        playTone(523.25, 'sine', now, 0.5);
+        playTone(659.25, 'sine', now + 0.5, 1.5);
+      } else if (sound === 'alarm4') {
+        playTone(900, 'sine', now, 0.15);
+        playTone(900, 'sine', now + 0.3, 0.15);
+      } else if (sound === 'alarm5') {
+        playTone(1200, 'triangle', now, 0.2);
+        playTone(1000, 'triangle', now + 0.2, 0.2);
+        playTone(800, 'triangle', now + 0.4, 0.2);
+      } else if (sound === 'alarm6') {
+        playTone(1500, 'sine', now, 0.1);
+        playTone(1500, 'sine', now + 0.3, 0.05);
+        playTone(1500, 'sine', now + 0.5, 0.02);
+      } else if (sound === 'alarm7') {
+        for (let i = 0; i < 3; i++) {
+          playTone(400, 'sawtooth', now + i * 0.3, 0.15);
+        }
+      } else if (sound === 'alarm8') {
+        playTone(300, 'sine', now, 1.5);
+        playTone(302, 'sine', now, 1.5);
+      }
+      
+      setTimeout(() => ctx.close(), 2000);
+    } catch (e) {
+      console.error("Audio API error:", e);
     }
   };
 
@@ -578,6 +669,86 @@ export default function FridaySchedule() {
             
             {jumatAdzanEnabled && (
             <>
+            <div className="bg-black/5 dark:bg-white/5 border border-[var(--border-color)] rounded-xl p-4 mb-4">
+              <div className="flex items-center justify-between cursor-pointer" onClick={() => setJumatAdzanAlarmEnabled(!jumatAdzanAlarmEnabled)}>
+                <div>
+                  <h3 className="text-base font-bold text-[var(--text-primary)] mb-1">Pop-up Peringatan Sebelum Adzan Jumat</h3>
+                  <p className="text-xs text-[var(--text-secondary)]">Tampilkan pop-up hitung mundur di layar utama sebelum Adzan Jumat dimulai.</p>
+                </div>
+                <div className={`w-12 h-6 shrink-0 rounded-full p-1 transition-colors duration-300 ${jumatAdzanAlarmEnabled ? 'bg-orange-500' : 'bg-slate-300 dark:bg-slate-700'}`}>
+                  <div className={`bg-white w-4 h-4 rounded-full shadow-sm transform transition-transform duration-300 ${jumatAdzanAlarmEnabled ? 'translate-x-6' : 'translate-x-0'}`}></div>
+                </div>
+              </div>
+              
+              {jumatAdzanAlarmEnabled && (
+                <div className="mt-4 pt-4 border-t border-[var(--border-color)]">
+                  <div className="flex justify-between items-center mb-4">
+                    <h4 className="text-sm font-semibold text-[var(--text-primary)]">Pengaturan Suara Alarm</h4>
+                    <button
+                      type="button"
+                      onClick={handlePreviewAdzanAlarm}
+                      className="px-3 py-1.5 bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400 rounded-lg text-xs font-semibold hover:bg-orange-200 dark:hover:bg-orange-800/50 transition-colors flex items-center gap-1"
+                    >
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+                      Preview Alarm
+                    </button>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                      <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1">Suara Alarm</label>
+                      <div className="flex gap-2">
+                        <select
+                          value={jumatAdzanAlarmSound}
+                          onChange={(e) => setJumatAdzanAlarmSound(e.target.value)}
+                          className="form-control flex-1 text-sm py-1.5"
+                        >
+                          <option value="beep">Beep Pendek</option>
+                          <option value="beep-long">Beep Panjang</option>
+                          <option value="alarm1">Digital Alarm</option>
+                          <option value="alarm2">Classic Bell</option>
+                          <option value="alarm3">Chime</option>
+                          <option value="alarm4">Rapid Beep</option>
+                          <option value="alarm5">Descending Tone</option>
+                          <option value="alarm6">Echo Ping</option>
+                          <option value="alarm7">Warning Siren</option>
+                          <option value="alarm8">Deep Gong</option>
+                        </select>
+                        <button
+                          type="button"
+                          onClick={() => playAlarmPreview(jumatAdzanAlarmSound)}
+                          className="px-3 py-1.5 bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700 rounded-lg transition-colors flex items-center justify-center shrink-0"
+                          title="Mainkan Suara"
+                        >
+                          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd"></path></svg>
+                        </button>
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1">Mulai Bunyi (Sisa Detik)</label>
+                      <input
+                        type="number"
+                        value={jumatAdzanAlarmTime}
+                        onChange={(e) => setJumatAdzanAlarmTime(e.target.value)}
+                        min="1"
+                        className="form-control text-sm py-1.5"
+                      />
+                      <p className="text-[10px] text-[var(--text-secondary)] mt-1">Mulai sebelum adzan tiba</p>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1">Selesai Bunyi (Sisa Detik)</label>
+                      <input
+                        type="number"
+                        value={jumatAdzanAlarmEnd}
+                        onChange={(e) => setJumatAdzanAlarmEnd(e.target.value)}
+                        min="0"
+                        className="form-control text-sm py-1.5"
+                      />
+                      <p className="text-[10px] text-[var(--text-secondary)] mt-1">Berhenti sebelum adzan tiba</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
             <div>
               <div className="flex items-center justify-between mb-4">
                 <label className="block text-sm font-medium text-[var(--text-secondary)]">Tema Adzan Jumat</label>

@@ -19,54 +19,54 @@ export default function LayoutTheme13({
   ];
 
   return (
-    <div className="w-full h-full flex flex-col p-[4vh] text-white font-sans bg-black/40">
+    <div className="w-full h-full flex flex-col p-[4cqh] text-white font-sans bg-black/40">
       {/* Header */}
       <div className="flex justify-between items-start">
-        <div className="bg-black/60 backdrop-blur-xl px-[3vw] py-[2vh] rounded-br-[3vw] absolute top-0 left-0 border-r border-b border-indigo-500/30 flex items-center gap-[1.5vw]">
+        <div className="bg-black/60 backdrop-blur-xl px-[3cqw] py-[2cqh] rounded-br-[3cqw] absolute top-0 left-0 border-r border-b border-indigo-500/30 flex items-center gap-[1.5cqw]">
           {mosqueProfile.logoUrl && (
-            <img src={mosqueProfile.logoUrl} alt="Logo" className="w-[7vh] h-[7vh] object-contain drop-shadow-lg" />
+            <img src={mosqueProfile.logoUrl} alt="Logo" className="w-[7cqh] h-[7cqh] object-contain drop-shadow-lg" />
           )}
           <div>
-            <h1 className="text-[4vh] font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">{mosqueProfile.name}</h1>
-            <p className="text-[2vh] text-indigo-200 mt-[0.5vh]">{mosqueProfile.address}</p>
+            <h1 className="text-[4cqh] font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">{mosqueProfile.name}</h1>
+            <p className="text-[2cqh] text-indigo-200 mt-[0.5cqh]">{mosqueProfile.address}</p>
           </div>
         </div>
         
-        <div className="bg-black/60 backdrop-blur-xl px-[3vw] py-[2vh] rounded-bl-[3vw] absolute top-0 right-0 text-right border-l border-b border-indigo-500/30">
-          <div className="text-[2.5vh] font-bold text-white">{format(time, 'EEEE, dd MMMM yyyy', { locale: id })}</div>
-          <div className="text-[2vh] text-indigo-300 mt-[0.5vh]">{currentHijri}</div>
+        <div className="bg-black/60 backdrop-blur-xl px-[3cqw] py-[2cqh] rounded-bl-[3cqw] absolute top-0 right-0 text-right border-l border-b border-indigo-500/30">
+          <div className="text-[2.5cqh] font-bold text-white">{format(time, 'EEEE, dd MMMM yyyy', { locale: id })}</div>
+          <div className="text-[2cqh] text-indigo-300 mt-[0.5cqh]">{currentHijri}</div>
         </div>
       </div>
 
       {/* Center Clock */}
-      <div className="flex-1 flex flex-col justify-center items-center mt-[8vh]">
+      <div className="flex-1 flex flex-col justify-center items-center mt-[8cqh]">
         <div className="relative">
-          <div className="absolute inset-0 bg-indigo-500/20 blur-[10vh] rounded-full"></div>
-          <div className="text-[22vh] font-light tracking-tighter leading-none relative z-10 flex items-baseline">
+          <div className="absolute inset-0 bg-indigo-500/20 blur-[10cqh] rounded-full"></div>
+          <div className="text-[22cqh] font-light tracking-tighter leading-none relative z-10 flex items-baseline">
             {format(time, 'HH')}
-            <span className="text-[15vh] mx-[1vw] animate-pulse text-indigo-400">:</span>
+            <span className="text-[15cqh] mx-[1cqw] animate-pulse text-indigo-400">:</span>
             {format(time, 'mm')}
-            <span className="text-[8vh] ml-[1.5vw] text-purple-400 font-bold">{format(time, 'ss')}</span>
+            <span className="text-[8cqh] ml-[1.5cqw] text-purple-400 font-bold">{format(time, 'ss')}</span>
           </div>
         </div>
       </div>
 
       {/* Bottom Floating Bar */}
-      <div className="flex justify-center mb-[2vh]">
-        <div className="flex bg-black/70 backdrop-blur-2xl rounded-[3vw] p-[1vh] border border-white/10 shadow-[0_2vh_5vh_rgba(0,0,0,0.5)]">
+      <div className="flex justify-center mb-[2cqh]">
+        <div className="flex bg-black/70 backdrop-blur-2xl rounded-[3cqw] p-[1cqh] border border-white/10 shadow-[0_2cqh_5cqh_rgba(0,0,0,0.5)]">
           {prayers.map((prayer) => {
             const isNext = nextPrayer?.name?.toUpperCase() === prayer.name.toUpperCase();
             return (
               <div 
                 key={prayer.id}
-                className={`relative flex flex-col items-center justify-center w-[15vw] py-[2vh] rounded-[2.5vw] transition-all duration-500 mx-[0.5vw]
-                  ${isNext ? 'bg-gradient-to-br from-indigo-600 to-purple-600 shadow-[0_0_3vh_rgba(99,102,241,0.6)] scale-110 -translate-y-[2vh] border-[0.5vh] border-white' : 'hover:bg-white/5'}`}
+                className={`relative flex flex-col items-center justify-center w-[15cqw] py-[2cqh] rounded-[2.5cqw] transition-all duration-500 mx-[0.5cqw]
+                  ${isNext ? 'bg-gradient-to-br from-indigo-600 to-purple-600 shadow-[0_0_3cqh_rgba(99,102,241,0.6)] scale-110 -translate-y-[2cqh] border-[0.5cqh] border-white animate-pulse transform scale-105 shadow-xl shadow-yellow-500/20 ' : 'hover:bg-white/5'}`}
               >
-                {isNext && <div className="absolute -top-[1.5vh] bg-red-500 text-white text-[1.5vh] font-bold px-[1vw] py-[0.5vh] rounded-full animate-bounce shadow-lg z-10">SELANJUTNYA</div>}
-                <div className={`text-[2vh] font-bold uppercase tracking-widest ${isNext ? 'text-white/80' : 'text-gray-400'}`}>
+                {isNext && <div className="absolute -top-[1.5cqh] bg-red-500 text-white text-[1.5cqh] font-bold px-[1cqw] py-[0.5cqh] rounded-full animate-bounce shadow-lg z-10">SELANJUTNYA</div>}
+                <div className={`text-[2cqh] font-bold uppercase tracking-widest ${isNext ? 'text-white/80 animate-pulse transform scale-105 shadow-xl shadow-yellow-500/20 ' : 'text-gray-400'}`}>
                   {prayer.name}
                 </div>
-                <div className={`text-[4vh] font-bold mt-[0.5vh] ${isNext ? 'text-white' : 'text-gray-200'}`}>
+                <div className={`text-[4cqh] font-bold mt-[0.5cqh] ${isNext ? 'text-white animate-pulse transform scale-105 shadow-xl shadow-yellow-500/20 ' : 'text-gray-200'}`}>
                   {prayer.time}
                 </div>
               </div>

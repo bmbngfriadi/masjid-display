@@ -37,6 +37,10 @@ exports.updateConfig = async (req, res) => {
       adzanBackground,
       adzanBackgroundUrl,
       adzanAudio,
+      adzanAlarmEnabled,
+      adzanAlarmSound,
+      adzanAlarmTime,
+      adzanAlarmEnd,
       iqomahBackground,
       iqomahBackgroundUrl,
       iqomahMessage,
@@ -52,6 +56,10 @@ exports.updateConfig = async (req, res) => {
       jumatAdzanAudio,
       jumatAdzanDuration,
       jumatAdzanEnabled,
+      jumatAdzanAlarmEnabled,
+      jumatAdzanAlarmSound,
+      jumatAdzanAlarmTime,
+      jumatAdzanAlarmEnd,
       jumatIqomahBackground,
       jumatIqomahBackgroundUrl,
       jumatIqomahMessage,
@@ -92,6 +100,10 @@ exports.updateConfig = async (req, res) => {
         adzanBackground: adzanBackground !== undefined ? adzanBackground : config.adzanBackground,
         ...(adzanBackgroundUrl !== undefined && { adzanBackgroundUrl }),
         adzanAudio: adzanAudio !== undefined ? adzanAudio : config.adzanAudio,
+        adzanAlarmEnabled: adzanAlarmEnabled !== undefined ? Boolean(adzanAlarmEnabled) : config.adzanAlarmEnabled,
+        adzanAlarmSound: adzanAlarmSound !== undefined ? adzanAlarmSound : config.adzanAlarmSound,
+        adzanAlarmTime: adzanAlarmTime !== undefined ? parseInt(adzanAlarmTime) : config.adzanAlarmTime,
+        adzanAlarmEnd: adzanAlarmEnd !== undefined ? parseInt(adzanAlarmEnd) : config.adzanAlarmEnd,
         
         iqomahBackground: iqomahBackground !== undefined ? iqomahBackground : config.iqomahBackground,
         ...(iqomahBackgroundUrl !== undefined && { iqomahBackgroundUrl }),
@@ -110,6 +122,10 @@ exports.updateConfig = async (req, res) => {
         jumatAdzanAudio: jumatAdzanAudio !== undefined ? jumatAdzanAudio : config.jumatAdzanAudio,
         jumatAdzanDuration: jumatAdzanDuration !== undefined ? parseInt(jumatAdzanDuration) : config.jumatAdzanDuration,
         jumatAdzanEnabled: jumatAdzanEnabled !== undefined ? Boolean(jumatAdzanEnabled) : config.jumatAdzanEnabled,
+        jumatAdzanAlarmEnabled: jumatAdzanAlarmEnabled !== undefined ? Boolean(jumatAdzanAlarmEnabled) : config.jumatAdzanAlarmEnabled,
+        jumatAdzanAlarmSound: jumatAdzanAlarmSound !== undefined ? jumatAdzanAlarmSound : config.jumatAdzanAlarmSound,
+        jumatAdzanAlarmTime: jumatAdzanAlarmTime !== undefined ? parseInt(jumatAdzanAlarmTime) : config.jumatAdzanAlarmTime,
+        jumatAdzanAlarmEnd: jumatAdzanAlarmEnd !== undefined ? parseInt(jumatAdzanAlarmEnd) : config.jumatAdzanAlarmEnd,
         
         jumatIqomahBackground: jumatIqomahBackground !== undefined ? jumatIqomahBackground : config.jumatIqomahBackground,
         ...(jumatIqomahBackgroundUrl !== undefined && { jumatIqomahBackgroundUrl }),
@@ -154,6 +170,18 @@ exports.previewIqomah = async (req, res) => {
   }
 };
 
+exports.previewIqomahAlarm = async (req, res) => {
+  try {
+    const config = req.body || await prisma.prayerTimeConfig.findFirst();
+    const io = req.app.get('io');
+    if (io) io.emit('preview:iqomah_alarm', config);
+    res.json({ message: 'Preview Iqomah Alarm triggered' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Terjadi kesalahan server.' });
+  }
+};
+
 exports.previewAdzan = async (req, res) => {
   try {
     const config = await prisma.prayerTimeConfig.findFirst();
@@ -166,12 +194,36 @@ exports.previewAdzan = async (req, res) => {
   }
 };
 
+exports.previewAdzanAlarm = async (req, res) => {
+  try {
+    const config = req.body || await prisma.prayerTimeConfig.findFirst();
+    const io = req.app.get('io');
+    if (io) io.emit('preview:adzan_alarm', config);
+    res.json({ message: 'Preview Adzan Alarm triggered' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Terjadi kesalahan server.' });
+  }
+};
+
 exports.previewSholat = async (req, res) => {
   try {
     const config = req.body || await prisma.prayerTimeConfig.findFirst();
     const io = req.app.get('io');
     if (io) io.emit('preview:sholat', config);
     res.json({ message: 'Preview Sholat screen triggered' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Terjadi kesalahan server.' });
+  }
+};
+
+exports.previewFullFlow = async (req, res) => {
+  try {
+    const config = req.body || await prisma.prayerTimeConfig.findFirst();
+    const io = req.app.get('io');
+    if (io) io.emit('preview:full_flow', config);
+    res.json({ message: 'Preview Full Flow triggered' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Terjadi kesalahan server.' });

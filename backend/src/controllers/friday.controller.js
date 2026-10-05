@@ -78,9 +78,9 @@ exports.updateFridayInfo = async (req, res) => {
 exports.previewFriday = async (req, res) => {
   try {
     const io = req.app.get('io');
-    const { jumatAdzanEnabled, jumatIqomahEnabled, jumatSholatEnabled } = req.body;
+    const { jumatAdzanEnabled, jumatAdzanAlarmEnabled, jumatAdzanAlarmSound, jumatAdzanAlarmTime, jumatAdzanAlarmEnd, jumatIqomahEnabled, jumatSholatEnabled } = req.body;
     if (io) {
-      io.to('devices').emit('preview:friday', { jumatAdzanEnabled, jumatIqomahEnabled, jumatSholatEnabled });
+      io.to('devices').emit('preview:friday', { jumatAdzanEnabled, jumatAdzanAlarmEnabled, jumatAdzanAlarmSound, jumatAdzanAlarmTime, jumatAdzanAlarmEnd, jumatIqomahEnabled, jumatSholatEnabled });
     }
     res.json({ message: 'Preview terkirim' });
   } catch (error) {
@@ -92,13 +92,28 @@ exports.previewFriday = async (req, res) => {
 exports.previewAdzanJumat = async (req, res) => {
   try {
     const io = req.app.get('io');
+    const { jumatAdzanAlarmEnabled, jumatAdzanAlarmSound, jumatAdzanAlarmTime, jumatAdzanAlarmEnd } = req.body;
     if (io) {
-      io.to('devices').emit('preview:adzan_jumat');
+      io.to('devices').emit('preview:adzan_jumat', { jumatAdzanAlarmEnabled, jumatAdzanAlarmSound, jumatAdzanAlarmTime, jumatAdzanAlarmEnd });
     }
     res.json({ message: 'Preview Adzan Jumat terkirim' });
   } catch (error) {
     console.error('Error sending preview:', error);
     res.status(500).json({ message: 'Gagal mengirim preview' });
+  }
+};
+
+exports.previewAdzanAlarmJumat = async (req, res) => {
+  try {
+    const io = req.app.get('io');
+    const { jumatAdzanAlarmSound, jumatAdzanAlarmTime, jumatAdzanAlarmEnd } = req.body;
+    if (io) {
+      io.to('devices').emit('preview:adzan_alarm_jumat', { jumatAdzanAlarmSound, jumatAdzanAlarmTime, jumatAdzanAlarmEnd });
+    }
+    res.json({ message: 'Preview Adzan Alarm Jumat terkirim' });
+  } catch (error) {
+    console.error('Error sending preview:', error);
+    res.status(500).json({ message: 'Gagal mengirim preview alarm' });
   }
 };
 

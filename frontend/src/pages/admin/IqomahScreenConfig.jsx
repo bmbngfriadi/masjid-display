@@ -108,6 +108,36 @@ export default function IqomahScreenConfig() {
     }
   };
 
+  const [previewingAlarm, setPreviewingAlarm] = useState(false);
+  const handlePreviewAlarm = async (e) => {
+    if (e) e.preventDefault();
+    try {
+      setPreviewingAlarm(true);
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/masjid/api';
+      const token = localStorage.getItem('admin_token');
+      
+      await fetch(`${API_BASE_URL}/prayer-config`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(config)
+      });
+
+      await fetch(`${API_BASE_URL}/prayer-config/preview-iqomah-alarm`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      setTimeout(() => setPreviewingAlarm(false), 15000);
+    } catch (error) {
+      console.error('Failed to trigger alarm preview', error);
+      setPreviewingAlarm(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
@@ -134,6 +164,29 @@ export default function IqomahScreenConfig() {
       setMessage({ text: error.message, type: 'error' });
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handlePreviewFullFlow = async () => {
+    try {
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/masjid/api';
+      const token = localStorage.getItem('admin_token');
+      
+      const res = await fetch(`${API_BASE_URL}/prayer-config/preview-full-flow`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(config)
+      });
+
+      if (!res.ok) throw new Error('Failed to trigger full flow preview');
+      
+      setMessage({ text: 'Simulasi Penuh Aktif: Layar TV memutar Adzan -> Iqomah -> Sholat.', type: 'success' });
+      setTimeout(() => setMessage({ text: '', type: '' }), 5000);
+    } catch (error) {
+      setMessage({ text: 'Gagal memicu simulasi penuh di TV', type: 'error' });
     }
   };
 
@@ -179,6 +232,34 @@ export default function IqomahScreenConfig() {
                 <span>Preview di TV</span>
               </span>
             )}
+          </button>
+          
+          <button
+            onClick={handlePreviewAlarm}
+            disabled={previewingAlarm}
+            className={`btn-secondary flex items-center justify-center relative overflow-hidden group ${previewingAlarm ? 'bg-red-50 text-red-500 border-red-200 cursor-wait' : ''}`}
+            title="Test Preview Alarm di layar utama"
+          >
+            {previewingAlarm ? (
+              <span className="flex items-center gap-2">
+                <div className="w-4 h-4 border-2 border-red-500 border-t-transparent rounded-full animate-spin"></div>
+                <span className="text-red-500">Previewing...</span>
+              </span>
+            ) : (
+              <span className="flex items-center gap-2">
+                <MonitorPlay className="w-4 h-4 group-hover:scale-110 transition-transform text-red-500" />
+                <span className="text-red-500 font-semibold">Test Preview Alarm (15s)</span>
+              </span>
+            )}
+          </button>
+          
+          <button
+            onClick={handlePreviewFullFlow}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl font-semibold bg-blue-100 text-blue-700 hover:bg-blue-200 dark:bg-blue-900/40 dark:text-blue-400 dark:hover:bg-blue-900/60 transition-all border border-blue-200 dark:border-blue-800"
+            title="Simulasi 45 detik: Adzan -> Iqomah -> Sholat"
+          >
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            <span className="hidden lg:inline">Simulasi Full Flow</span>
           </button>
           
           <button

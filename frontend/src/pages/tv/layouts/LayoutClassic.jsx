@@ -34,14 +34,14 @@ export default function LayoutClassic({ time, mosqueProfile, prayerTimes, nextPr
       <div className="absolute inset-0 bg-black/40"></div>
 
       {/* Top Section: Clock and Date */}
-      <div className="relative z-10 w-full h-1/2 flex flex-col items-center justify-center mt-[3vh]">
-        <div className="bg-black/40 backdrop-blur-md px-[4vw] py-[2vh] rounded-[2vw] border border-white/20 shadow-2xl flex flex-col items-center">
-          <h1 className="text-[12vw] font-bold font-mono tracking-tighter leading-none mb-[1.5vh] drop-shadow-lg text-white">
-            {format(time, 'HH:mm')}
+      <div className="relative z-10 w-full h-1/2 flex flex-col items-center justify-center mt-[3cqh]">
+        <div className="bg-black/40 backdrop-blur-md px-[4cqw] py-[2cqh] rounded-[2cqw] border border-white/20 shadow-2xl flex flex-col items-center">
+          <h1 className="text-[min(12cqw,18cqh)] font-bold font-mono tracking-tighter leading-none mb-[1.5cqh] drop-shadow-lg text-white">
+            {format(time, 'HH')}<span className="animate-[pulse_1s_ease-in-out_infinite] opacity-80">:</span>{format(time, 'mm')}<span className="text-[0.6em] ml-[0.5cqw] opacity-80 animate-pulse text-yellow-300">{format(time, 'ss')}</span>
           </h1>
-          <div className="flex flex-col items-center gap-[0.5vh]">
-            <h2 className="text-[2.5vw] text-emerald-400 font-semibold tracking-wide drop-shadow-md">{currentDate}</h2>
-            <h3 className="text-[1.8vw] text-yellow-400 tracking-wider font-medium drop-shadow-md">{currentHijri}</h3>
+          <div className="flex flex-col items-center gap-[0.5cqh]">
+            <h2 className="text-[2.5cqw] text-emerald-400 font-semibold tracking-wide drop-shadow-md">{currentDate}</h2>
+            <h3 className="text-[1.8cqw] text-yellow-400 tracking-wider font-medium drop-shadow-md">{currentHijri}</h3>
           </div>
         </div>
       </div>
@@ -49,30 +49,30 @@ export default function LayoutClassic({ time, mosqueProfile, prayerTimes, nextPr
       <div className="flex-1"></div>
 
       {/* Bottom Section: Prayer Times Grid */}
-      <div className="relative z-10 w-full bg-black/70 backdrop-blur-md border-t-[0.2vw] border-emerald-500/50 p-[2vw] flex flex-col justify-center">
-        <div className="grid grid-cols-6 gap-[1.5vw] w-full max-w-[96vw] mx-auto">
+      <div className="relative z-10 w-full bg-black/70 backdrop-blur-md border-t-[0.2cqw] border-emerald-500/50 p-[2cqw] flex flex-col justify-center">
+        <div className="grid grid-cols-6 gap-[1.5cqw] w-full max-w-[96cqw] mx-auto">
           {prayers.map((prayer) => {
             const isNext = nextPrayer?.name?.toLowerCase() === prayer.name.toLowerCase();
             return (
               <div 
                 key={prayer.name} 
-                className={`flex flex-col items-center p-[1.5vw] rounded-[1vw] border-[0.2vw] transition-all duration-500 relative overflow-hidden ${
+                className={`flex flex-col items-center p-[1.5cqw] rounded-[1cqw] border-[0.2cqw] transition-all duration-500 relative overflow-hidden ${
                   isNext 
-                    ? 'border-emerald-400 bg-emerald-900/60 shadow-[0_0_30px_rgba(52,211,153,0.3)] scale-105' 
+                    ? 'border-emerald-400 bg-emerald-900/60 shadow-[0_0_30px_rgba(52,211,153,0.3)] scale-105 animate-pulse transform scale-105 shadow-xl shadow-yellow-500/20 ' 
                     : 'border-white/10 bg-white/5'
                 }`}
               >
                 {isNext && (
-                  <div className="absolute top-0 w-full h-[0.5vh] bg-gradient-to-r from-transparent via-emerald-400 to-transparent animate-pulse"></div>
+                  <div className="absolute top-0 w-full h-[0.5cqh] bg-gradient-to-r from-transparent via-emerald-400 to-transparent animate-pulse"></div>
                 )}
-                <h4 className={`text-[1.5vw] font-bold uppercase tracking-widest mb-[1vh] ${isNext ? 'text-emerald-300' : 'text-gray-300'}`}>
+                <h4 className={`text-[1.5cqw] font-bold uppercase tracking-widest mb-[1cqh] ${isNext ? 'text-emerald-300 animate-pulse transform scale-105 shadow-xl shadow-yellow-500/20 ' : 'text-gray-300'}`}>
                   {prayer.name}
                 </h4>
-                <div className={`text-[4vw] font-mono font-bold tracking-tighter mb-[0.5vh] ${isNext ? 'text-white' : 'text-white'}`}>
+                <div className={`text-[4cqw] font-mono font-bold tracking-tighter mb-[0.5cqh] ${isNext ? 'text-white animate-pulse transform scale-105 shadow-xl shadow-yellow-500/20 ' : 'text-white'}`}>
                   {prayer.time}
                 </div>
                 {prayer.iqamah && (
-                  <div className={`text-[1vw] font-medium px-[1vw] py-[0.5vh] rounded-full ${isNext ? 'bg-emerald-800/80 text-emerald-100' : 'bg-white/10 text-gray-300'}`}>
+                  <div className={`text-[1cqw] font-medium px-[1cqw] py-[0.5cqh] rounded-full ${isNext ? 'bg-emerald-800/80 text-emerald-100 animate-pulse transform scale-105 shadow-xl shadow-yellow-500/20 ' : 'bg-white/10 text-gray-300'}`}>
                     Iqamah: {prayer.iqamah}
                   </div>
                 )}

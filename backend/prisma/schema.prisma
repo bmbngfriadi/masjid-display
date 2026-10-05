@@ -106,6 +106,10 @@ model PrayerTimeConfig {
   jumatLayoutStyle      String  @default("jumat_1")
   
   jumatAdzanEnabled       Boolean @default(true)
+  jumatAdzanAlarmEnabled  Boolean @default(false)
+  jumatAdzanAlarmSound    String  @default("beep")
+  jumatAdzanAlarmTime     Int     @default(10)
+  jumatAdzanAlarmEnd      Int     @default(0)
   jumatAdzanBackground    String  @default("black")
   jumatAdzanBackgroundUrl String?
   jumatAdzanAudio         String? @default("adzan-makkah.mp3")
@@ -125,6 +129,10 @@ model PrayerTimeConfig {
   adzanBackground    String  @default("black")
   adzanBackgroundUrl String?
   adzanAudio         String? @default("adzan-makkah.mp3")
+  adzanAlarmEnabled  Boolean @default(false)
+  adzanAlarmSound    String  @default("beep")
+  adzanAlarmTime     Int     @default(10) // Detik sebelum adzan dimulai
+  adzanAlarmEnd      Int     @default(0)  // Detik sebelum adzan dihentikan
 
   iqomahBackground    String  @default("1")
   iqomahBackgroundUrl String?

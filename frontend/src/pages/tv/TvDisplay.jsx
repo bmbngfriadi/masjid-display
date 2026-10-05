@@ -122,6 +122,10 @@ export default function TvDisplay() {
   const [displaySetting, setDisplaySetting] = useState(null);
   const [fridayInfo, setFridayInfo] = useState(null);
   const [isSoftReloading, setIsSoftReloading] = useState(false);
+  const [adzanAlarmCountdown, setAdzanAlarmCountdown] = useState(null);
+  const [iqomahAlarmCountdown, setIqomahAlarmCountdown] = useState(null);
+  const [previewAdzanAlarm, setPreviewAdzanAlarm] = useState(false);
+  const [previewIqomahAlarm, setPreviewIqomahAlarm] = useState(false);
 
   const fetchRunningText = async () => {
     try {
@@ -396,6 +400,14 @@ export default function TvDisplay() {
       socket.on('preview:adzan', handlePreviewAdzan);
       socket.on('preview:sholat', handlePreviewSholat);
       socket.on('device:refresh', handleHardRefresh);
+      socket.on('preview:adzan_alarm', () => {
+        setPreviewAdzanAlarm(true);
+        setTimeout(() => setPreviewAdzanAlarm(false), 10000);
+      });
+      socket.on('preview:iqomah_alarm', () => {
+        setPreviewIqomahAlarm(true);
+        setTimeout(() => setPreviewIqomahAlarm(false), 10000);
+      });
       
       return () => {
         socket.off('display:update_mode', handleModeUpdate);
@@ -409,6 +421,8 @@ export default function TvDisplay() {
         socket.off('preview:adzan', handlePreviewAdzan);
         socket.off('preview:sholat', handlePreviewSholat);
         socket.off('device:refresh', handleHardRefresh);
+        socket.off('preview:adzan_alarm');
+        socket.off('preview:iqomah_alarm');
       };
     }
   }, [socket]);
@@ -435,6 +449,93 @@ export default function TvDisplay() {
       { id: 'maghrib', name: 'MAGHRIB', time: prayerTimes.maghrib },
       { id: 'isha', name: 'ISYA', time: prayerTimes.isha }
     ];
+
+    let activeCountdown = null;
+    let activeIqomahCountdown = null;
+
+    for (let prayer of prayers) {
+      if (prayer.time) {
+        let displayPrayerName = prayer.name;
+        let isJumat = false;
+        if (prayer.name === 'DZUHUR' && isCurrentlyJumatTime) {
+          displayPrayerName = 'SHALAT JUMAT';
+          isJumat = true;
+        }
+
+        const [ph, pm] = prayer.time.split(':').map(Number);
+        const prayerDate = new Date(time);
+        prayerDate.setHours(ph, pm, 0, 0);
+        
+        const diffSeconds = Math.floor((prayerDate.getTime() - time.getTime()) / 1000);
+        
+        let alarmTime = prayerConfig?.adzanAlarmTime !== undefined ? prayerConfig.adzanAlarmTime : 10;
+        let alarmEnd = prayerConfig?.adzanAlarmEnd !== undefined ? prayerConfig.adzanAlarmEnd : 0;
+        let sound = prayerConfig?.adzanAlarmSound || 'beep';
+
+        if (isJumat) {
+          if (prayerConfig?.jumatAdzanEnabled === false) {
+             alarmTime = -1; // disable adzan alarm for jumat if adzan disabled
+          } else {
+             alarmTime = prayerConfig?.jumatAdzanAlarmTime !== undefined ? prayerConfig.jumatAdzanAlarmTime : alarmTime;
+             alarmEnd = prayerConfig?.jumatAdzanAlarmEnd !== undefined ? prayerConfig.jumatAdzanAlarmEnd : alarmEnd;
+             sound = prayerConfig?.jumatAdzanAlarmSound || sound;
+          }
+        }
+        
+        if (diffSeconds > 0 && diffSeconds <= alarmTime && diffSeconds >= alarmEnd) {
+          activeCountdown = { prayerName: displayPrayerName, secondsRemaining: diffSeconds };
+          // Play sound
+          if (diffSeconds === alarmTime && sound && sound !== 'none' && !previewAdzanAlarm) {
+            const audioCtx = window.audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+            window.audioCtx = audioCtx;
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0, audioCtx.currentTime);
+            gain.gain.linearRampToValueAtTime(1, audioCtx.currentTime + 0.05);
+            gain.gain.setValueAtTime(1, audioCtx.currentTime + 1.5 - 0.05);
+            gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 1.5);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(audioCtx.currentTime);
+            osc.stop(audioCtx.currentTime + 1.5);
+          }
+        }
+      }
+    }
+    setAdzanAlarmCountdown(activeCountdown);
+
+    // Iqomah Alarm Logic
+    if (displayMode === 'IQAMAH_COUNTDOWN') {
+      const iqomahAlarmTime = prayerConfig?.iqomahAlarmTime !== undefined ? prayerConfig.iqomahAlarmTime : 10;
+      const iqomahAlarmEnd = prayerConfig?.iqomahAlarmEnd !== undefined ? prayerConfig.iqomahAlarmEnd : 0;
+      
+      if (iqamahTimeRemaining > 0 && iqamahTimeRemaining <= iqomahAlarmTime && iqamahTimeRemaining >= iqomahAlarmEnd) {
+        activeIqomahCountdown = { prayerName: activeCurrentPrayer, secondsRemaining: iqamahTimeRemaining };
+        const sound = prayerConfig?.iqomahAlarmSound || 'beep';
+        if (iqamahTimeRemaining === iqomahAlarmTime && sound && sound !== 'none' && !previewIqomahAlarm) {
+            const audioCtx = window.audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+            window.audioCtx = audioCtx;
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(900, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0, audioCtx.currentTime);
+            gain.gain.linearRampToValueAtTime(1, audioCtx.currentTime + 0.05);
+            gain.gain.setValueAtTime(1, audioCtx.currentTime + 0.3 - 0.05);
+            gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.3);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(audioCtx.currentTime);
+            osc.stop(audioCtx.currentTime + 0.3);
+        }
+      }
+    }
+    setIqomahAlarmCountdown(activeIqomahCountdown);
+
 
     for (let prayer of prayers) {
       if (prayer.time && currentHourMin === prayer.time) {
@@ -1091,8 +1192,54 @@ export default function TvDisplay() {
 
   return (
     <div onDoubleClick={requestFullscreen} className="tv-display bg-black w-screen h-screen overflow-hidden font-sans flex flex-col cursor-default">
-      <div className="flex-1 relative overflow-hidden">
-        {renderMainContent()}
+      {/* Outer flex container fills remaining height after footer */}
+      <div 
+        className="flex-1 w-full relative overflow-hidden bg-black"
+        style={{ containerType: 'size' }}
+      >
+          {renderMainContent()}
+
+          {/* Adzan Alarm Overlay */}
+          {(adzanAlarmCountdown !== null || previewAdzanAlarm) && (
+            <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md animate-fade-in">
+              <div className="flex flex-col items-center justify-center text-center">
+                <h2 className="text-[3cqw] text-[#00ccff] font-bold tracking-[0.3em] uppercase mb-[1cqh] drop-shadow-[0_2px_10px_rgba(0,204,255,0.6)] animate-pulse">
+                  {adzanAlarmCountdown?.prayerName === 'SHALAT JUMAT' ? 'WAKTU ADZAN' : 'WAKTU ADZAN SHALAT'}
+                </h2>
+                <h1 className="text-[8cqw] font-extrabold uppercase tracking-[0.2em] text-transparent bg-clip-text bg-gradient-to-b from-[#ffffff] to-[#a0a0a0] drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)] leading-none mb-[6cqh] pl-[0.2em]">
+                  {adzanAlarmCountdown?.prayerName || 'SUBUH'}
+                </h1>
+                <div className="relative w-[25cqw] h-[25cqw] flex flex-col items-center justify-center mx-auto">
+                  <div className="absolute inset-0 rounded-full border-[1cqw] border-[#00ccff] shadow-[0_0_60px_rgba(0,204,255,0.8)] bg-black/60 animate-pulse"></div>
+                  <span className="relative z-10 text-[#00ccff] text-[12cqw] font-extrabold font-mono leading-none drop-shadow-[0_0_20px_rgba(0,204,255,1)]">
+                    {adzanAlarmCountdown?.secondsRemaining || '10'}
+                  </span>
+                  <span className="relative z-10 text-white/60 text-[1.5cqw] uppercase tracking-widest mt-2 font-bold">Detik</span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Iqomah Alarm Overlay */}
+          {(iqomahAlarmCountdown !== null || previewIqomahAlarm) && (
+            <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md animate-fade-in">
+              <div className="flex flex-col items-center justify-center text-center">
+                <h2 className="text-[3cqw] text-[#55ff77] font-bold tracking-[0.3em] uppercase mb-[1cqh] drop-shadow-[0_2px_10px_rgba(85,255,119,0.6)] animate-pulse">
+                  WAKTU IQOMAH SHALAT
+                </h2>
+                <h1 className="text-[8cqw] font-extrabold uppercase tracking-[0.2em] text-transparent bg-clip-text bg-gradient-to-b from-[#ffffff] to-[#a0a0a0] drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)] leading-none mb-[6cqh] pl-[0.2em]">
+                  {iqomahAlarmCountdown?.prayerName || 'SUBUH'}
+                </h1>
+                <div className="relative w-[25cqw] h-[25cqw] flex flex-col items-center justify-center mx-auto">
+                  <div className="absolute inset-0 rounded-full border-[1cqw] border-[#33ff55] shadow-[0_0_60px_rgba(51,255,85,0.8)] bg-black/60 animate-pulse"></div>
+                  <span className="relative z-10 text-[#33ff55] text-[12cqw] font-extrabold font-mono leading-none drop-shadow-[0_0_20px_rgba(51,255,85,1)]">
+                    {iqomahAlarmCountdown?.secondsRemaining || '10'}
+                  </span>
+                  <span className="relative z-10 text-white/60 text-[1.5cqw] uppercase tracking-widest mt-2 font-bold">Detik</span>
+                </div>
+              </div>
+            </div>
+          )}
       </div>
 
       {shouldShowRunningText && (

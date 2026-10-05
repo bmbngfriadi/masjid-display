@@ -245,7 +245,7 @@ export default function Announcements() {
             <input 
               type="range" 
               min="5" 
-              max="60" 
+              max="200" 
               value={displaySetting.runningTextSpeed || 25} 
               onChange={(e) => updateSpeed(parseInt(e.target.value))}
               className="w-full accent-[var(--primary-500)]" 

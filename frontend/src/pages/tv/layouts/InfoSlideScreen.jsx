@@ -11,8 +11,8 @@ export default function InfoSlideScreen({ displaySetting }) {
          style={{ animation: 'screenFadeIn 1.5s ease-out forwards' }}>
       
       {/* Animated glowing orbs for dynamic blue theme */}
-      <div className="absolute top-[-20%] left-[-10%] w-[60vw] h-[60vw] bg-blue-500/10 rounded-full blur-[120px] animate-pulse" style={{ animationDuration: '8s' }}></div>
-      <div className="absolute bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] bg-cyan-400/10 rounded-full blur-[100px] animate-pulse" style={{ animationDuration: '12s', animationDelay: '2s' }}></div>
+      <div className="absolute top-[-20%] left-[-10%] w-[60cqw] h-[60cqw] bg-blue-500/10 rounded-full blur-[120px] animate-pulse" style={{ animationDuration: '8s' }}></div>
+      <div className="absolute bottom-[-10%] right-[-10%] w-[50cqw] h-[50cqw] bg-cyan-400/10 rounded-full blur-[100px] animate-pulse" style={{ animationDuration: '12s', animationDelay: '2s' }}></div>
       <div className="absolute inset-0 opacity-10 bg-[url('/masjid/mosque_bg.png')] bg-cover bg-center mix-blend-overlay"></div>
       
       <div className="relative z-10 w-full h-full flex flex-col bg-slate-900/40 backdrop-blur-2xl rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.5)] overflow-hidden border border-blue-500/20">
