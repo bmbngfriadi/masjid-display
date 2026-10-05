@@ -431,7 +431,89 @@ export default function TvDisplay() {
           }
         }, 1000);
       });
-      socket.on('preview:iqomah_alarm', () => {
+      
+        socket.on('preview:full_flow', () => {
+           let count = 10;
+           setPreviewAdzanAlarm(10);
+           try {
+             const audioCtx = window.audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+             window.audioCtx = audioCtx;
+             if (audioCtx.state === 'suspended') audioCtx.resume();
+             const osc = audioCtx.createOscillator();
+             const gain = audioCtx.createGain();
+             osc.type = 'sine';
+             osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+             gain.gain.setValueAtTime(0, audioCtx.currentTime);
+             gain.gain.linearRampToValueAtTime(1, audioCtx.currentTime + 0.05);
+             gain.gain.setValueAtTime(1, audioCtx.currentTime + 1.5 - 0.05);
+             gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 1.5);
+             osc.connect(gain);
+             gain.connect(audioCtx.destination);
+             osc.start(audioCtx.currentTime);
+             osc.stop(audioCtx.currentTime + 1.5);
+           } catch(e) {}
+           
+           const adzanAlarmIntv = setInterval(() => {
+             count--;
+             if (count <= 0) {
+               clearInterval(adzanAlarmIntv);
+               setPreviewAdzanAlarm(null);
+               
+               // Trigger Adzan Screen
+               handlePreviewAdzan(true);
+               setTimeout(() => {
+                 handlePreviewAdzan(false);
+                 
+                 // Trigger Iqomah Alarm
+                 let countIq = 10;
+                 setPreviewIqomahAlarm(10);
+                 try {
+                   const audioCtx = window.audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+                   if (audioCtx.state === 'suspended') audioCtx.resume();
+                   const osc = audioCtx.createOscillator();
+                   const gain = audioCtx.createGain();
+                   osc.type = 'sine';
+                   osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+                   gain.gain.setValueAtTime(0, audioCtx.currentTime);
+                   gain.gain.linearRampToValueAtTime(1, audioCtx.currentTime + 0.05);
+                   gain.gain.setValueAtTime(1, audioCtx.currentTime + 1.5 - 0.05);
+                   gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 1.5);
+                   osc.connect(gain);
+                   gain.connect(audioCtx.destination);
+                   osc.start(audioCtx.currentTime);
+                   osc.stop(audioCtx.currentTime + 1.5);
+                 } catch(e) {}
+                 
+                 const iqAlarmIntv = setInterval(() => {
+                   countIq--;
+                   if (countIq <= 0) {
+                     clearInterval(iqAlarmIntv);
+                     setPreviewIqomahAlarm(null);
+                     
+                     // Trigger Iqomah Countdown Screen
+                     handlePreviewIqomah(true);
+                     setTimeout(() => {
+                        handlePreviewIqomah(false);
+                        
+                        // Trigger Sholat Screen
+                        handlePreviewSholat(true);
+                        setTimeout(() => {
+                           handlePreviewSholat(false);
+                        }, 15000);
+                     }, 15000);
+                   } else {
+                     setPreviewIqomahAlarm(countIq);
+                   }
+                 }, 1000);
+                 
+               }, 15000);
+             } else {
+               setPreviewAdzanAlarm(count);
+             }
+           }, 1000);
+        });
+
+        socket.on('preview:iqomah_alarm', () => {
         let count = 10;
         setPreviewIqomahAlarm(10);
         try {
@@ -477,6 +559,7 @@ export default function TvDisplay() {
         socket.off('device:refresh', handleHardRefresh);
         socket.off('preview:adzan_alarm');
         socket.off('preview:iqomah_alarm');
+          socket.off('preview:full_flow');
       };
     }
   }, [socket]);
