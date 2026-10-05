@@ -474,143 +474,65 @@ export default function TvDisplay() {
         }, 1000);
       });
 
-        socket.on('preview:full_flow', () => {
-           let count = 10;
-           setPreviewAdzanAlarm(10);
-           
-           const playAdzanBeep = () => {
-             try {
-               const audioCtx = window.audioCtx || new (window.AudioContext || window.webkitAudioContext)();
-               window.audioCtx = audioCtx;
-               if (audioCtx.state === 'suspended') audioCtx.resume();
-               const osc = audioCtx.createOscillator();
-               const gain = audioCtx.createGain();
-               osc.type = 'sine';
-               osc.frequency.setValueAtTime(800, audioCtx.currentTime);
-               gain.gain.setValueAtTime(0, audioCtx.currentTime);
-               gain.gain.linearRampToValueAtTime(1, audioCtx.currentTime + 0.05);
-               gain.gain.setValueAtTime(1, audioCtx.currentTime + 0.5 - 0.05);
-               gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.5);
-               osc.connect(gain);
-               gain.connect(audioCtx.destination);
-               osc.start(audioCtx.currentTime);
-               osc.stop(audioCtx.currentTime + 0.5);
-             } catch(e) {}
-           };
-           
-           playAdzanBeep();
-           
-           const adzanAlarmIntv = setInterval(() => {
-             count--;
-             if (count <= 0) {
-               clearInterval(adzanAlarmIntv);
-               setPreviewAdzanAlarm(null);
-               
-               // Trigger Adzan Screen
-               setDisplayMode('ADHAN');
-               setTimeout(() => {
-                 setDisplayMode('NORMAL');
-                 
-                 // Trigger Iqomah Alarm
-                 let countIq = 10;
-                 setPreviewIqomahAlarm(10);
-                 
-                 const playIqomahBeep = () => {
-                   try {
-                     const audioCtx = window.audioCtx || new (window.AudioContext || window.webkitAudioContext)();
-                     if (audioCtx.state === 'suspended') audioCtx.resume();
-                     const osc = audioCtx.createOscillator();
-                     const gain = audioCtx.createGain();
-                     osc.type = 'sine';
-                     osc.frequency.setValueAtTime(600, audioCtx.currentTime);
-                     gain.gain.setValueAtTime(0, audioCtx.currentTime);
-                     gain.gain.linearRampToValueAtTime(1, audioCtx.currentTime + 0.05);
-                     gain.gain.setValueAtTime(1, audioCtx.currentTime + 0.5 - 0.05);
-                     gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.5);
-                     osc.connect(gain);
-                     gain.connect(audioCtx.destination);
-                     osc.start(audioCtx.currentTime);
-                     osc.stop(audioCtx.currentTime + 0.5);
-                   } catch(e) {}
-                 };
-                 
-                 playIqomahBeep();
-                 
-                 const iqAlarmIntv = setInterval(() => {
-                   countIq--;
-                   if (countIq <= 0) {
-                     clearInterval(iqAlarmIntv);
-                     setPreviewIqomahAlarm(null);
-                     
-                     // Trigger Iqomah Countdown Screen
-                     setDisplayMode('IQAMAH_COUNTDOWN');
-                     setTimeout(() => {
-                        setDisplayMode('NORMAL');
-                        
-                        // Trigger Sholat Screen
-                        setDisplayMode('PRAYER');
-                        setTimeout(() => {
-                           setDisplayMode('NORMAL');
-                        }, 15000);
-                     }, 15000);
-                   } else {
-                     setPreviewIqomahAlarm(countIq);
-                     playIqomahBeep();
-                   }
-                 }, 1000);
-                 
-               }, 15000);
-             } else {
-               setPreviewAdzanAlarm(count);
-               playAdzanBeep();
-             }
-           }, 1000);
+                socket.on('preview:full_flow', () => {
+          let count = 10;
+          setPreviewAdzanAlarm(10);
+          
+          const playAdzanBeep = () => {
+            try {
+              const audioCtx = window.audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+              window.audioCtx = audioCtx;
+              if (audioCtx.state === 'suspended') audioCtx.resume();
+              const osc = audioCtx.createOscillator();
+              const gain = audioCtx.createGain();
+              osc.type = 'sine';
+              osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+              gain.gain.setValueAtTime(0, audioCtx.currentTime);
+              gain.gain.linearRampToValueAtTime(1, audioCtx.currentTime + 0.05);
+              gain.gain.setValueAtTime(1, audioCtx.currentTime + 0.5 - 0.05);
+              gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.5);
+              osc.connect(gain);
+              gain.connect(audioCtx.destination);
+              osc.start(audioCtx.currentTime);
+              osc.stop(audioCtx.currentTime + 0.5);
+            } catch(e) {}
+          };
+          
+          playAdzanBeep();
+          
+          const adzanAlarmIntv = setInterval(() => {
+            count--;
+            if (count <= 0) {
+              clearInterval(adzanAlarmIntv);
+              setPreviewAdzanAlarm(null);
+              
+              // Trigger Adzan Screen
+              setDisplayMode('ADHAN');
+              setTimeout(() => {
+                // Switch to Iqamah Countdown
+                setDisplayMode('IQAMAH_COUNTDOWN');
+                // Set to 15 seconds to simulate the countdown. 
+                // The real interval will tick this down to 10, trigger the alarm popup natively, then hit 0 and switch to PRAYER.
+                setIqamahTimeRemaining(15);
+                
+                // After 15s (Iqomah) + 15s (Prayer) = 30s, force back to NORMAL
+                setTimeout(() => {
+                  setDisplayMode('NORMAL');
+                }, 30000);
+                
+              }, 15000);
+            } else {
+              setPreviewAdzanAlarm(count);
+              playAdzanBeep();
+            }
+          }, 1000);
         });
-
-        socket.on('preview:iqomah_alarm', () => {
-        let count = 10;
-        setPreviewIqomahAlarm(10);
-        try {
-          const audioCtx = window.audioCtx || new (window.AudioContext || window.webkitAudioContext)();
-          window.audioCtx = audioCtx;
-          if (audioCtx.state === 'suspended') audioCtx.resume();
-          const osc = audioCtx.createOscillator();
-          const gain = audioCtx.createGain();
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(600, audioCtx.currentTime);
-          gain.gain.setValueAtTime(0, audioCtx.currentTime);
-          gain.gain.linearRampToValueAtTime(1, audioCtx.currentTime + 0.05);
-          gain.gain.setValueAtTime(1, audioCtx.currentTime + 1.5 - 0.05);
-          gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 1.5);
-          osc.connect(gain);
-          gain.connect(audioCtx.destination);
-          osc.start(audioCtx.currentTime);
-          osc.stop(audioCtx.currentTime + 1.5);
-        } catch(e) {}
         
-        const intv = setInterval(() => {
-          count--;
-          if (count <= 0) {
-            clearInterval(intv);
-            setPreviewIqomahAlarm(null);
-          } else {
-            setPreviewIqomahAlarm(count);
-          }
-        }, 1000);
-      });
-      
-      return () => {
-        socket.off('display:update_mode', handleModeUpdate);
-        socket.off('content:updated', handleContentUpdate);
-        socket.off('DISPLAY_SETTING_UPDATED', handleDisplaySettingUpdate);
-        socket.off('preview:friday', handlePreviewFriday);
-        socket.off('preview:adzan_jumat', handlePreviewAdzanJumat);
-        socket.off('preview:iqomah_jumat', handlePreviewIqomahJumat);
-        socket.off('preview:sholat_jumat', handlePreviewSholatJumat);
-        socket.off('preview:iqomah', handlePreviewIqomah);
-        socket.off('preview:adzan', handlePreviewAdzan);
-        socket.off('preview:sholat', handlePreviewSholat);
-        socket.off('device:refresh', handleHardRefresh);
+        return () => {
+          socket.off('display:update_mode', handleModeUpdate);
+          socket.off('preview:adzan', handlePreviewAdzan);
+          socket.off('preview:sholat', handlePreviewSholat);
+          socket.off('device:refresh', handleHardRefresh);
         socket.off('preview:adzan_alarm');
         socket.off('preview:iqomah_alarm');
           socket.off('preview:full_flow');
