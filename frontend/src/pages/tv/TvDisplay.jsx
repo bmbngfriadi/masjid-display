@@ -435,23 +435,28 @@ export default function TvDisplay() {
         socket.on('preview:full_flow', () => {
            let count = 10;
            setPreviewAdzanAlarm(10);
-           try {
-             const audioCtx = window.audioCtx || new (window.AudioContext || window.webkitAudioContext)();
-             window.audioCtx = audioCtx;
-             if (audioCtx.state === 'suspended') audioCtx.resume();
-             const osc = audioCtx.createOscillator();
-             const gain = audioCtx.createGain();
-             osc.type = 'sine';
-             osc.frequency.setValueAtTime(800, audioCtx.currentTime);
-             gain.gain.setValueAtTime(0, audioCtx.currentTime);
-             gain.gain.linearRampToValueAtTime(1, audioCtx.currentTime + 0.05);
-             gain.gain.setValueAtTime(1, audioCtx.currentTime + 1.5 - 0.05);
-             gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 1.5);
-             osc.connect(gain);
-             gain.connect(audioCtx.destination);
-             osc.start(audioCtx.currentTime);
-             osc.stop(audioCtx.currentTime + 1.5);
-           } catch(e) {}
+           
+           const playAdzanBeep = () => {
+             try {
+               const audioCtx = window.audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+               window.audioCtx = audioCtx;
+               if (audioCtx.state === 'suspended') audioCtx.resume();
+               const osc = audioCtx.createOscillator();
+               const gain = audioCtx.createGain();
+               osc.type = 'sine';
+               osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+               gain.gain.setValueAtTime(0, audioCtx.currentTime);
+               gain.gain.linearRampToValueAtTime(1, audioCtx.currentTime + 0.05);
+               gain.gain.setValueAtTime(1, audioCtx.currentTime + 0.5 - 0.05);
+               gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.5);
+               osc.connect(gain);
+               gain.connect(audioCtx.destination);
+               osc.start(audioCtx.currentTime);
+               osc.stop(audioCtx.currentTime + 0.5);
+             } catch(e) {}
+           };
+           
+           playAdzanBeep();
            
            const adzanAlarmIntv = setInterval(() => {
              count--;
@@ -467,22 +472,27 @@ export default function TvDisplay() {
                  // Trigger Iqomah Alarm
                  let countIq = 10;
                  setPreviewIqomahAlarm(10);
-                 try {
-                   const audioCtx = window.audioCtx || new (window.AudioContext || window.webkitAudioContext)();
-                   if (audioCtx.state === 'suspended') audioCtx.resume();
-                   const osc = audioCtx.createOscillator();
-                   const gain = audioCtx.createGain();
-                   osc.type = 'sine';
-                   osc.frequency.setValueAtTime(600, audioCtx.currentTime);
-                   gain.gain.setValueAtTime(0, audioCtx.currentTime);
-                   gain.gain.linearRampToValueAtTime(1, audioCtx.currentTime + 0.05);
-                   gain.gain.setValueAtTime(1, audioCtx.currentTime + 1.5 - 0.05);
-                   gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 1.5);
-                   osc.connect(gain);
-                   gain.connect(audioCtx.destination);
-                   osc.start(audioCtx.currentTime);
-                   osc.stop(audioCtx.currentTime + 1.5);
-                 } catch(e) {}
+                 
+                 const playIqomahBeep = () => {
+                   try {
+                     const audioCtx = window.audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+                     if (audioCtx.state === 'suspended') audioCtx.resume();
+                     const osc = audioCtx.createOscillator();
+                     const gain = audioCtx.createGain();
+                     osc.type = 'sine';
+                     osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+                     gain.gain.setValueAtTime(0, audioCtx.currentTime);
+                     gain.gain.linearRampToValueAtTime(1, audioCtx.currentTime + 0.05);
+                     gain.gain.setValueAtTime(1, audioCtx.currentTime + 0.5 - 0.05);
+                     gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.5);
+                     osc.connect(gain);
+                     gain.connect(audioCtx.destination);
+                     osc.start(audioCtx.currentTime);
+                     osc.stop(audioCtx.currentTime + 0.5);
+                   } catch(e) {}
+                 };
+                 
+                 playIqomahBeep();
                  
                  const iqAlarmIntv = setInterval(() => {
                    countIq--;
@@ -503,12 +513,14 @@ export default function TvDisplay() {
                      }, 15000);
                    } else {
                      setPreviewIqomahAlarm(countIq);
+                     playIqomahBeep();
                    }
                  }, 1000);
                  
                }, 15000);
              } else {
                setPreviewAdzanAlarm(count);
+               playAdzanBeep();
              }
            }, 1000);
         });
@@ -622,22 +634,24 @@ export default function TvDisplay() {
         if (diffSeconds > 0 && diffSeconds <= alarmTime && diffSeconds >= alarmEnd) {
           activeCountdown = { prayerName: displayPrayerName, secondsRemaining: diffSeconds };
           // Play sound
-          if (diffSeconds === alarmTime && sound && sound !== 'none' && !previewAdzanAlarm) {
-            const audioCtx = window.audioCtx || new (window.AudioContext || window.webkitAudioContext)();
-            window.audioCtx = audioCtx;
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(800, audioCtx.currentTime);
-            gain.gain.setValueAtTime(0, audioCtx.currentTime);
-            gain.gain.linearRampToValueAtTime(1, audioCtx.currentTime + 0.05);
-            gain.gain.setValueAtTime(1, audioCtx.currentTime + 1.5 - 0.05);
-            gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 1.5);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start(audioCtx.currentTime);
-            osc.stop(audioCtx.currentTime + 1.5);
+          if (sound && sound !== 'none' && !previewAdzanAlarm) {
+            try {
+              const audioCtx = window.audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+              window.audioCtx = audioCtx;
+              if (audioCtx.state === 'suspended') audioCtx.resume();
+              const osc = audioCtx.createOscillator();
+              const gain = audioCtx.createGain();
+              osc.type = 'sine';
+              osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+              gain.gain.setValueAtTime(0, audioCtx.currentTime);
+              gain.gain.linearRampToValueAtTime(1, audioCtx.currentTime + 0.05);
+              gain.gain.setValueAtTime(1, audioCtx.currentTime + 0.5 - 0.05);
+              gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.5);
+              osc.connect(gain);
+              gain.connect(audioCtx.destination);
+              osc.start(audioCtx.currentTime);
+              osc.stop(audioCtx.currentTime + 0.5);
+            } catch(e) {}
           }
         }
       }
@@ -652,22 +666,24 @@ export default function TvDisplay() {
       if (iqamahTimeRemaining > 0 && iqamahTimeRemaining <= iqomahAlarmTime && iqamahTimeRemaining >= iqomahAlarmEnd) {
         activeIqomahCountdown = { prayerName: activeCurrentPrayer, secondsRemaining: iqamahTimeRemaining };
         const sound = prayerConfig?.iqomahAlarmSound || 'beep';
-        if (iqamahTimeRemaining === iqomahAlarmTime && sound && sound !== 'none' && !previewIqomahAlarm) {
+        if (sound && sound !== 'none' && !previewIqomahAlarm) {
+          try {
             const audioCtx = window.audioCtx || new (window.AudioContext || window.webkitAudioContext)();
             window.audioCtx = audioCtx;
             if (audioCtx.state === 'suspended') audioCtx.resume();
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
             osc.type = 'sine';
-            osc.frequency.setValueAtTime(900, audioCtx.currentTime);
+            osc.frequency.setValueAtTime(600, audioCtx.currentTime);
             gain.gain.setValueAtTime(0, audioCtx.currentTime);
             gain.gain.linearRampToValueAtTime(1, audioCtx.currentTime + 0.05);
-            gain.gain.setValueAtTime(1, audioCtx.currentTime + 0.3 - 0.05);
-            gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.3);
+            gain.gain.setValueAtTime(1, audioCtx.currentTime + 0.5 - 0.05);
+            gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.5);
             osc.connect(gain);
             gain.connect(audioCtx.destination);
             osc.start(audioCtx.currentTime);
-            osc.stop(audioCtx.currentTime + 0.3);
+            osc.stop(audioCtx.currentTime + 0.5);
+          } catch(e) {}
         }
       }
     }
