@@ -400,27 +400,31 @@ export default function TvDisplay() {
       socket.on('preview:adzan', handlePreviewAdzan);
       socket.on('preview:sholat', handlePreviewSholat);
       socket.on('device:refresh', handleHardRefresh);
-      socket.on('preview:adzan_alarm', () => {
+            socket.on('preview:adzan_alarm', () => {
         let count = 10;
         setPreviewAdzanAlarm(10);
-        try {
-          const audioCtx = window.audioCtx || new (window.AudioContext || window.webkitAudioContext)();
-          window.audioCtx = audioCtx;
-          if (audioCtx.state === 'suspended') audioCtx.resume();
-          const osc = audioCtx.createOscillator();
-          const gain = audioCtx.createGain();
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(800, audioCtx.currentTime);
-          gain.gain.setValueAtTime(0, audioCtx.currentTime);
-          gain.gain.linearRampToValueAtTime(1, audioCtx.currentTime + 0.05);
-          gain.gain.setValueAtTime(1, audioCtx.currentTime + 1.5 - 0.05);
-          gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 1.5);
-          osc.connect(gain);
-          gain.connect(audioCtx.destination);
-          osc.start(audioCtx.currentTime);
-          osc.stop(audioCtx.currentTime + 1.5);
-        } catch(e) {}
         
+        const playBeep = () => {
+          try {
+            const audioCtx = window.audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+            window.audioCtx = audioCtx;
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0, audioCtx.currentTime);
+            gain.gain.linearRampToValueAtTime(1, audioCtx.currentTime + 0.05);
+            gain.gain.setValueAtTime(1, audioCtx.currentTime + 0.5 - 0.05);
+            gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.5);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(audioCtx.currentTime);
+            osc.stop(audioCtx.currentTime + 0.5);
+          } catch(e) {}
+        };
+        
+        playBeep();
         const intv = setInterval(() => {
           count--;
           if (count <= 0) {
@@ -428,10 +432,48 @@ export default function TvDisplay() {
             setPreviewAdzanAlarm(null);
           } else {
             setPreviewAdzanAlarm(count);
+            playBeep();
           }
         }, 1000);
       });
-      
+
+      socket.on('preview:iqomah_alarm', () => {
+        let count = 10;
+        setPreviewIqomahAlarm(10);
+        
+        const playBeep = () => {
+          try {
+            const audioCtx = window.audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+            window.audioCtx = audioCtx;
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0, audioCtx.currentTime);
+            gain.gain.linearRampToValueAtTime(1, audioCtx.currentTime + 0.05);
+            gain.gain.setValueAtTime(1, audioCtx.currentTime + 0.5 - 0.05);
+            gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.5);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(audioCtx.currentTime);
+            osc.stop(audioCtx.currentTime + 0.5);
+          } catch(e) {}
+        };
+        
+        playBeep();
+        const intv = setInterval(() => {
+          count--;
+          if (count <= 0) {
+            clearInterval(intv);
+            setPreviewIqomahAlarm(null);
+          } else {
+            setPreviewIqomahAlarm(count);
+            playBeep();
+          }
+        }, 1000);
+      });
+
         socket.on('preview:full_flow', () => {
            let count = 10;
            setPreviewAdzanAlarm(10);
