@@ -1140,9 +1140,11 @@ export default function TvDisplay() {
               <div className="absolute right-[-10%] w-[80vw] h-[80vw] max-h-[120vh] max-w-[120vh] rounded-full bg-blue-900/20 border border-blue-400/20 shadow-[0_0_100px_rgba(59,130,246,0.2)] animate-pulse"></div>
               
               <div className="absolute bottom-16 left-16 flex flex-col items-start z-10">
-                <span className="text-gray-400 text-[2.5vw] tracking-[0.4em] uppercase mb-[1vh] font-medium">WAKTU ADZAN</span>
+                <span className="text-gray-400 text-[2.5vw] tracking-[0.4em] uppercase mb-[1vh] font-medium">
+                    {activeCurrentPrayer === 'SHALAT JUMAT' ? 'WAKTU ADZAN' : 'WAKTU ADZAN SHALAT'}
+                  </span>
                 <span className="text-transparent bg-clip-text bg-gradient-to-b from-[#f3e7b1] via-[#d6a94f] to-[#aa771c] text-[12vw] font-extrabold tracking-[0.15em] leading-none mb-[2vh] drop-shadow-lg pl-[0.15em]">
-                  {activeCurrentPrayer || 'ADZAN'}
+                  {activeCurrentPrayer || 'SUBUH'}
                 </span>
                 <div className="flex items-center justify-center gap-[1vw] text-white text-[6vw] font-bold font-mono drop-shadow-md">
                   {(getPrayerTimeByName(activeCurrentPrayer) || currentTime).split('').map((c, i) => (
@@ -1178,9 +1180,11 @@ export default function TvDisplay() {
               }
             `}</style>
             <div className="relative z-10 flex flex-col items-center">
-              <h2 className="text-[3vw] text-white mb-[1vh] font-medium tracking-[0.4em]">WAKTU ADZAN</h2>
+              <h2 className="text-[3vw] text-white mb-[1vh] font-medium tracking-[0.4em]">
+                  {activeCurrentPrayer === 'SHALAT JUMAT' ? 'WAKTU ADZAN' : 'WAKTU ADZAN SHALAT'}
+                </h2>
               <h1 className="text-[14vw] font-extrabold uppercase tracking-[0.15em] text-transparent bg-clip-text bg-gradient-to-b from-[#f3e7b1] via-[#d6a94f] to-[#aa771c] drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)] leading-none mb-[4vh] pl-[0.15em]">
-                {activeCurrentPrayer || 'ADZAN'}
+                {activeCurrentPrayer || 'SUBUH'}
               </h1>
               
               {/* Golden Pill */}
