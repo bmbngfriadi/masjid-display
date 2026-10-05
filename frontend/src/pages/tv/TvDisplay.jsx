@@ -623,7 +623,7 @@ export default function TvDisplay() {
     setAdzanAlarmCountdown(activeCountdown);
 
     // Iqomah Alarm Logic
-    if (displayMode === 'IQAMAH_COUNTDOWN') {
+    if (displayMode === 'IQAMAH_COUNTDOWN' && prayerConfig?.iqomahAlarmEnabled !== false) {
       const iqomahAlarmTime = prayerConfig?.iqomahAlarmTime !== undefined ? prayerConfig.iqomahAlarmTime : 10;
       const iqomahAlarmEnd = prayerConfig?.iqomahAlarmEnd !== undefined ? prayerConfig.iqomahAlarmEnd : 0;
       
@@ -691,7 +691,7 @@ export default function TvDisplay() {
         }
       }
     }
-  }, [time, displayMode, prayerTimes, prayerConfig]);
+  }, [time, displayMode, prayerTimes, prayerConfig, iqamahTimeRemaining]);
 
   // Handle adzan duration timeout
   useEffect(() => {
