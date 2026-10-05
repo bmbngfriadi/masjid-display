@@ -507,9 +507,9 @@ export default function TvDisplay() {
                setPreviewAdzanAlarm(null);
                
                // Trigger Adzan Screen
-               handlePreviewAdzan(true);
+               setDisplayMode('ADHAN');
                setTimeout(() => {
-                 handlePreviewAdzan(false);
+                 setDisplayMode('NORMAL');
                  
                  // Trigger Iqomah Alarm
                  let countIq = 10;
@@ -543,14 +543,14 @@ export default function TvDisplay() {
                      setPreviewIqomahAlarm(null);
                      
                      // Trigger Iqomah Countdown Screen
-                     handlePreviewIqomah(true);
+                     setDisplayMode('IQAMAH_COUNTDOWN');
                      setTimeout(() => {
-                        handlePreviewIqomah(false);
+                        setDisplayMode('NORMAL');
                         
                         // Trigger Sholat Screen
-                        handlePreviewSholat(true);
+                        setDisplayMode('PRAYER');
                         setTimeout(() => {
-                           handlePreviewSholat(false);
+                           setDisplayMode('NORMAL');
                         }, 15000);
                      }, 15000);
                    } else {
