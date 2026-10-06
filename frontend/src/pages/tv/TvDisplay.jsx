@@ -1051,6 +1051,11 @@ export default function TvDisplay() {
     shouldShowRunningText = displaySetting?.runningTextSholatEnabled === true;
   }
 
+  // Hide running text when any alarm popup is active so it becomes full screen
+  if (adzanAlarmCountdown !== null || previewAdzanAlarm !== null || iqomahAlarmCountdown !== null || previewIqomahAlarm !== null) {
+    shouldShowRunningText = false;
+  }
+
   const renderMainContent = () => {
     switch(activeDisplayMode) {
       case 'ADHAN': {
