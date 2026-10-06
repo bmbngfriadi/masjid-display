@@ -250,12 +250,12 @@ export default function AdzanScreenConfig() {
           <h2 className="page-title">Adzan Screen</h2>
           <p className="text-[var(--text-secondary)]">Atur tampilan dan audio layar TV saat waktu adzan tiba.</p>
         </div>
-        <div className="flex items-center gap-3 mt-4 md:mt-0">
-          <div className="flex gap-2">
+        <div className="flex flex-col xl:flex-row items-center gap-3 w-full xl:w-auto mt-4 xl:mt-0">
+          <div className="flex flex-col sm:flex-row gap-2 w-full xl:w-auto">
             <button
               type="button"
               onClick={handlePreviewAlarm}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl font-semibold bg-red-100 text-red-700 hover:bg-red-200 dark:bg-red-900/40 dark:text-red-400 dark:hover:bg-red-900/60 transition-all border border-red-200 dark:border-red-800"
+              className="w-full flex justify-center items-center gap-2 px-4 py-2 rounded-xl font-semibold bg-red-100 text-red-700 hover:bg-red-200 dark:bg-red-900/40 dark:text-red-400 dark:hover:bg-red-900/60 transition-all border border-red-200 dark:border-red-800"
               title="Preview Peringatan Overlay di TV"
             >
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
@@ -264,7 +264,7 @@ export default function AdzanScreenConfig() {
             <button
               type="button"
               onClick={handlePreview}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl font-semibold bg-emerald-100 text-emerald-700 hover:bg-emerald-200 dark:bg-emerald-900/40 dark:text-emerald-400 dark:hover:bg-emerald-900/60 transition-all border border-emerald-200 dark:border-emerald-800"
+              className="w-full flex justify-center items-center gap-2 px-4 py-2 rounded-xl font-semibold bg-emerald-100 text-emerald-700 hover:bg-emerald-200 dark:bg-emerald-900/40 dark:text-emerald-400 dark:hover:bg-emerald-900/60 transition-all border border-emerald-200 dark:border-emerald-800"
             >
               <MonitorPlay size={18} />
               Test Preview TV (30s)
@@ -272,7 +272,7 @@ export default function AdzanScreenConfig() {
             <button
               type="button"
               onClick={handlePreviewFullFlow}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl font-semibold bg-blue-100 text-blue-700 hover:bg-blue-200 dark:bg-blue-900/40 dark:text-blue-400 dark:hover:bg-blue-900/60 transition-all border border-blue-200 dark:border-blue-800"
+              className="w-full flex justify-center items-center gap-2 px-4 py-2 rounded-xl font-semibold bg-blue-100 text-blue-700 hover:bg-blue-200 dark:bg-blue-900/40 dark:text-blue-400 dark:hover:bg-blue-900/60 transition-all border border-blue-200 dark:border-blue-800"
               title="Simulasi 45 detik: Adzan -> Iqomah -> Sholat"
             >
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
@@ -282,7 +282,7 @@ export default function AdzanScreenConfig() {
           <button
             onClick={handleSubmit}
             disabled={saving}
-            className="btn-primary shadow-lg shadow-[var(--primary-500)]/30"
+            className="w-full xl:w-auto btn-primary flex justify-center items-center shadow-lg shadow-[var(--primary-500)]/30"
           >
             {saving ? (
               <>

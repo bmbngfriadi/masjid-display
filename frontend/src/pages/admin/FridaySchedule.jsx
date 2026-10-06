@@ -409,11 +409,11 @@ export default function FridaySchedule() {
           <h1 className="text-2xl font-bold text-[var(--text-primary)] tracking-tight">Pengaturan Sholat Jumat</h1>
           <p className="text-[var(--text-secondary)] mt-1">Kelola petugas, keuangan, dan informasi khusus untuk hari Jumat.</p>
         </div>
-        <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+        <div className="flex flex-col xl:flex-row gap-3 w-full xl:w-auto">
           <button 
             onClick={handlePreview} 
             disabled={previewing || saving}
-            className="btn-outline w-full md:w-auto"
+            className="btn-outline w-full xl:w-auto"
           >
             {previewing ? (
               <div className="w-5 h-5 border-2 border-[var(--primary-500)] border-t-transparent rounded-full animate-spin"></div>
@@ -425,7 +425,7 @@ export default function FridaySchedule() {
           <button 
             onClick={handleSave} 
             disabled={saving || previewing}
-            className="btn-primary w-full md:w-auto h-14 md:h-auto px-6 shadow-lg shadow-primary-500/30 flex items-center justify-center"
+            className="btn-primary w-full xl:w-auto h-14 xl:h-auto px-6 shadow-lg shadow-primary-500/30 flex items-center justify-center"
           >
             {saving ? (
               <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>

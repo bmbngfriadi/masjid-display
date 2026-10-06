@@ -111,7 +111,7 @@ export default function PrayerTimeConfig() {
 
   return (
     <div className="w-full pb-12">
-      <div className="page-header sticky top-4 z-40 bg-[var(--bg-color)]/80 backdrop-blur-md p-4 -mx-4 rounded-b-2xl border-b border-[var(--border-color)]">
+      <div className="page-header flex flex-col md:flex-row md:items-center justify-between sticky top-4 z-40 bg-[var(--bg-color)]/80 backdrop-blur-md p-4 -mx-4 rounded-b-2xl border-b border-[var(--border-color)]">
         <div>
           <h2 className="page-title">Waktu Sholat</h2>
           <p className="text-[var(--text-secondary)]">Konfigurasi jadwal sholat, jeda iqamah, dan pengaturan mode khusus.</p>
@@ -119,7 +119,7 @@ export default function PrayerTimeConfig() {
         <button
           onClick={handleSave}
           disabled={saving}
-          className="btn-primary mt-4 md:mt-0 shadow-lg shadow-[var(--primary-500)]/30"
+          className="btn-primary w-full md:w-auto mt-4 md:mt-0 shadow-lg shadow-[var(--primary-500)]/30"
         >
           <Save size={18} />
           {saving ? 'Menyimpan...' : 'Simpan Pengaturan'}

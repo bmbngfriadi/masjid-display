@@ -161,11 +161,11 @@ export default function SholatScreenConfig() {
           <h2 className="page-title">Sholat Screen</h2>
           <p className="text-[var(--text-secondary)]">Atur durasi dan pesan yang tampil saat sholat sedang berlangsung.</p>
         </div>
-        <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto mt-4 md:mt-0">
+        <div className="flex flex-col xl:flex-row gap-3 w-full xl:w-auto mt-4 xl:mt-0">
           <button 
             onClick={handlePreview} 
             disabled={previewing || saving}
-            className="btn-outline w-full md:w-auto bg-transparent border-2 border-[var(--primary-500)] text-[var(--primary-600)] hover:bg-[var(--primary-50)] dark:text-[var(--primary-400)] dark:hover:bg-[var(--primary-900)]/30 rounded-xl px-6 py-2.5 font-semibold transition-all flex items-center justify-center"
+            className="w-full xl:w-auto btn-outline bg-transparent border-2 border-[var(--primary-500)] text-[var(--primary-600)] hover:bg-[var(--primary-50)] dark:text-[var(--primary-400)] dark:hover:bg-[var(--primary-900)]/30 rounded-xl px-6 py-2.5 font-semibold transition-all flex items-center justify-center"
           >
             {previewing ? (
               <div className="w-5 h-5 border-2 border-[var(--primary-500)] border-t-transparent rounded-full animate-spin"></div>
@@ -180,17 +180,17 @@ export default function SholatScreenConfig() {
           <button
             type="button"
             onClick={handlePreviewFullFlow}
-            className="flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl font-semibold bg-blue-100 text-blue-700 hover:bg-blue-200 dark:bg-blue-900/40 dark:text-blue-400 dark:hover:bg-blue-900/60 transition-all border border-blue-200 dark:border-blue-800"
+            className="w-full xl:w-auto flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl font-semibold bg-blue-100 text-blue-700 hover:bg-blue-200 dark:bg-blue-900/40 dark:text-blue-400 dark:hover:bg-blue-900/60 transition-all border border-blue-200 dark:border-blue-800"
             title="Simulasi 45 detik: Adzan -> Iqomah -> Sholat"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-            <span className="hidden lg:inline">Simulasi Full Flow</span>
+            <span>Simulasi Full Flow</span>
           </button>
           
           <button
             onClick={handleSubmit}
             disabled={saving || previewing}
-            className="btn-primary shadow-lg shadow-[var(--primary-500)]/30 flex items-center justify-center px-6 py-2.5 rounded-xl text-white font-semibold"
+            className="w-full xl:w-auto btn-primary shadow-lg shadow-[var(--primary-500)]/30 flex items-center justify-center px-6 py-2.5 rounded-xl text-white font-semibold"
           >
             {saving ? (
               <>
