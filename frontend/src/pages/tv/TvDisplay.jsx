@@ -808,7 +808,7 @@ export default function TvDisplay() {
     if (activeDisplayMode === 'IQAMAH_COUNTDOWN' && iqamahTimeRemaining >= 0) {
       interval = setInterval(() => {
         setIqamahTimeRemaining(prev => {
-          if (prev <= 0) {
+          if (prev <= 1) {
             if (!previewIqomahJumat) {
               const isJumat = activeCurrentPrayer === 'SHOLAT JUMAT';
               if (isJumat && prayerConfig?.jumatSholatEnabled === false) {
