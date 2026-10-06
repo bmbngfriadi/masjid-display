@@ -1342,7 +1342,7 @@ export default function TvDisplay() {
                 <div className="relative w-[25vw] h-[25vw] flex flex-col items-center justify-center mx-auto">
                   <div className="absolute inset-0 rounded-full border-[1vw] border-[#00ccff] shadow-[0_0_60px_rgba(0,204,255,0.8)] bg-black/60 animate-pulse"></div>
                   <span className="relative z-10 text-[#00ccff] text-[12vw] font-extrabold font-mono leading-none drop-shadow-[0_0_20px_rgba(0,204,255,1)]">
-                    {adzanAlarmCountdown?.secondsRemaining || previewAdzanAlarm || '10'}
+                    {adzanAlarmCountdown?.secondsRemaining !== undefined ? adzanAlarmCountdown.secondsRemaining : (previewAdzanAlarm ?? '10')}
                   </span>
                   <span className="relative z-10 text-white/60 text-[1.5vw] uppercase tracking-widest mt-2 font-bold">Detik</span>
                 </div>
@@ -1363,7 +1363,7 @@ export default function TvDisplay() {
                 <div className="relative w-[25vw] h-[25vw] flex flex-col items-center justify-center mx-auto">
                   <div className="absolute inset-0 rounded-full border-[1vw] border-[#33ff55] shadow-[0_0_60px_rgba(51,255,85,0.8)] bg-black/60 animate-pulse"></div>
                   <span className="relative z-10 text-[#33ff55] text-[12vw] font-extrabold font-mono leading-none drop-shadow-[0_0_20px_rgba(51,255,85,1)]">
-                    {iqomahAlarmCountdown?.secondsRemaining || previewIqomahAlarm || '10'}
+                    {iqomahAlarmCountdown?.secondsRemaining !== undefined ? iqomahAlarmCountdown.secondsRemaining : (previewIqomahAlarm ?? '10')}
                   </span>
                   <span className="relative z-10 text-white/60 text-[1.5vw] uppercase tracking-widest mt-2 font-bold">Detik</span>
                 </div>
