@@ -675,7 +675,7 @@ export default function TvDisplay() {
         
         if (!isAlarmEnabled) alarmTime = -1;
         
-        if (diffSeconds > 0 && diffSeconds <= alarmTime && diffSeconds >= alarmEnd) {
+        if (diffSeconds >= 0 && diffSeconds <= alarmTime && diffSeconds >= alarmEnd) {
           activeCountdown = { prayerName: displayPrayerName, secondsRemaining: diffSeconds };
           // Play sound
           if (sound && sound !== 'none' && !previewAdzanAlarm) {
@@ -748,7 +748,7 @@ export default function TvDisplay() {
       const iqomahAlarmTime = prayerConfig?.iqomahAlarmTime !== undefined ? prayerConfig.iqomahAlarmTime : 10;
       const iqomahAlarmEnd = prayerConfig?.iqomahAlarmEnd !== undefined ? prayerConfig.iqomahAlarmEnd : 0;
       
-      if (iqamahTimeRemaining > 0 && iqamahTimeRemaining <= iqomahAlarmTime && iqamahTimeRemaining >= iqomahAlarmEnd) {
+      if (iqamahTimeRemaining >= 0 && iqamahTimeRemaining <= iqomahAlarmTime && iqamahTimeRemaining >= iqomahAlarmEnd) {
         activeIqomahCountdown = { prayerName: activeCurrentPrayer, secondsRemaining: iqamahTimeRemaining };
         const sound = prayerConfig?.iqomahAlarmSound || 'beep';
         if (sound && sound !== 'none' && !previewIqomahAlarm) {
@@ -805,10 +805,10 @@ export default function TvDisplay() {
   // Handle iqamah countdown
   useEffect(() => {
     let interval;
-    if (activeDisplayMode === 'IQAMAH_COUNTDOWN' && iqamahTimeRemaining > 0) {
+    if (activeDisplayMode === 'IQAMAH_COUNTDOWN' && iqamahTimeRemaining >= 0) {
       interval = setInterval(() => {
         setIqamahTimeRemaining(prev => {
-          if (prev <= 1) {
+          if (prev <= 0) {
             if (!previewIqomahJumat) {
               const isJumat = activeCurrentPrayer === 'SHOLAT JUMAT';
               if (isJumat && prayerConfig?.jumatSholatEnabled === false) {
