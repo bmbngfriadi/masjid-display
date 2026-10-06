@@ -157,7 +157,7 @@ function JumatLayout2({ mosqueProfile, fridayInfo, formatRupiah }) {
       </div>
       
       <div className="text-center mt-[4cqh] mb-[6cqh] shrink-0">
-        <div className="inline-block bg-[var(--primary-500)] text-white px-[4cqw] py-[1.5cqh] rounded-full text-[4cqh] font-bold tracking-widest uppercase shadow-lg">Shalat Jumat</div>
+        <div className="inline-block bg-[var(--primary-500)] text-white px-[4cqw] py-[1.5cqh] rounded-full text-[4cqh] font-bold tracking-widest uppercase shadow-lg">Sholat Jumat</div>
       </div>
       
       <div className="flex-1 min-h-0 grid grid-cols-2 gap-[6cqw] max-w-[90cqw] mx-auto w-full">
@@ -320,7 +320,7 @@ function JumatLayout5({ mosqueProfile, time, fridayInfo, formatRupiah, prayerTim
           <LogoArea mosqueProfile={mosqueProfile} className="w-[14cqh] h-[14cqh]" />
           <div className="min-w-0 flex flex-col justify-center">
             <div className="flex items-center gap-[1cqw] mb-[0.5cqh]">
-              <h2 className="text-[3cqh] text-[var(--primary-500)] font-bold tracking-widest uppercase">Informasi Shalat Jumat</h2>
+              <h2 className="text-[3cqh] text-[var(--primary-500)] font-bold tracking-widest uppercase">Informasi Sholat Jumat</h2>
               {prayerTimes?.dhuhr && (
                 <div className="bg-[var(--primary-600)]/80 text-white px-[1cqw] py-[0.3cqh] rounded-full text-[2cqh] font-bold tracking-wider border border-[var(--primary-500)]/50">
                   Adzan: {prayerTimes.dhuhr}
@@ -395,7 +395,7 @@ function JumatLayout6({ mosqueProfile, fridayInfo, formatRupiah }) {
       
       <div className="flex-1 min-h-0 flex flex-col gap-[4cqh]">
         <div className="flex-1 min-h-0 bg-slate-800/80 rounded-[4cqh] border-4 border-slate-600 flex flex-col items-center justify-center p-[4cqh] shadow-2xl min-w-0">
-           <h3 className="text-[3.5cqh] text-slate-400 uppercase font-black tracking-[0.3em] mb-[2cqh]">Khatib Shalat Jumat</h3>
+           <h3 className="text-[3.5cqh] text-slate-400 uppercase font-black tracking-[0.3em] mb-[2cqh]">Khatib Sholat Jumat</h3>
            <p className="text-[10cqh] leading-none font-black text-white text-center drop-shadow-2xl break-words leading-tight drop-shadow-md w-full px-[2cqw]">{fridayInfo?.khatib || '-'}</p>
         </div>
         
@@ -539,7 +539,7 @@ function JumatLayout10({ mosqueProfile, fridayInfo, formatRupiah, currentHijri }
             </div>
          </div>
          <div className="px-[3cqw] py-[2cqh] bg-[var(--primary-600)] text-white font-black text-[3.5cqh] rounded-[2cqh] tracking-[0.2em] shadow-[0_0_3cqh_rgba(16,185,129,0.4)] shrink-0">
-            SHALAT JUMAT
+            SHOLAT JUMAT
          </div>
       </div>
 

@@ -117,7 +117,7 @@ model PrayerTimeConfig {
   jumatIqomahEnabled       Boolean @default(true)
   jumatIqomahBackground    String  @default("1")
   jumatIqomahBackgroundUrl String?
-  jumatIqomahMessage       String  @default("Luruskan dan rapatkan shaf untuk shalat Jumat")
+  jumatIqomahMessage       String  @default("Luruskan dan rapatkan shaf untuk sholat Jumat")
   jumatAdzanDuration       Int     @default(4)
   jumatIqomahDuration      Int     @default(10)
   jumatSholatEnabled       Boolean @default(true)
@@ -136,7 +136,7 @@ model PrayerTimeConfig {
 
   iqomahBackground    String  @default("1")
   iqomahBackgroundUrl String?
-  iqomahMessage       String  @default("Luruskan dan rapatkan shaf untuk kesempurnaan shalat")
+  iqomahMessage       String  @default("Luruskan dan rapatkan shaf untuk kesempurnaan sholat")
   iqomahAlarmEnabled  Boolean @default(false)
   iqomahAlarmSound    String  @default("beep")
   iqomahAlarmTime     Int     @default(10)

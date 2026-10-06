@@ -79,7 +79,7 @@ export default function AdminLayout() {
     { name: 'Dashboard', path: '/admin/dashboard', icon: LayoutDashboard, show: true },
     { name: 'Profil Masjid', path: '/admin/profile', icon: Building2, show: currentUser?.role === 'SUPER_ADMIN' || currentUser?.canManageProfile },
     { name: 'Waktu Sholat', path: '/admin/prayer-config', icon: Clock, show: currentUser?.role === 'SUPER_ADMIN' || currentUser?.canManagePrayerTimes },
-    { name: 'Shalat Jumat', path: '/admin/friday', icon: CalendarDays, show: currentUser?.role === 'SUPER_ADMIN' || currentUser?.canManageFridaySchedule },
+    { name: 'Sholat Jumat', path: '/admin/friday', icon: CalendarDays, show: currentUser?.role === 'SUPER_ADMIN' || currentUser?.canManageFridaySchedule },
     { name: 'Adzan Screen', path: '/admin/adzan-screen', icon: MonitorSmartphone, show: currentUser?.role === 'SUPER_ADMIN' || currentUser?.canManageAdzanScreen },
     { name: 'Iqomah Screen', path: '/admin/iqomah-screen', icon: MonitorSmartphone, show: currentUser?.role === 'SUPER_ADMIN' || currentUser?.canManageIqomahScreen },
     { name: 'Sholat Screen', path: '/admin/sholat-screen', icon: MonitorSmartphone, show: currentUser?.role === 'SUPER_ADMIN' || currentUser?.canManageSholatScreen },

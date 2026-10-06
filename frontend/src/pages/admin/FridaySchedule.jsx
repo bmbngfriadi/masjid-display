@@ -33,7 +33,7 @@ export default function FridaySchedule() {
   const [jumatIqomahEnabled, setJumatIqomahEnabled] = useState(true);
   const [jumatIqomahBackground, setJumatIqomahBackground] = useState('1');
   const [jumatIqomahBackgroundUrl, setJumatIqomahBackgroundUrl] = useState('');
-  const [jumatIqomahMessage, setJumatIqomahMessage] = useState('Luruskan dan rapatkan shaf untuk shalat Jumat');
+  const [jumatIqomahMessage, setJumatIqomahMessage] = useState('Luruskan dan rapatkan shaf untuk sholat Jumat');
   const [jumatIqomahDuration, setJumatIqomahDuration] = useState(10);
   const [jumatSholatEnabled, setJumatSholatEnabled] = useState(true);
   
@@ -85,7 +85,7 @@ export default function FridaySchedule() {
       setJumatIqomahEnabled(resPrayer.data.jumatIqomahEnabled !== false);
       setJumatIqomahBackground(resPrayer.data.jumatIqomahBackground || '1');
       setJumatIqomahBackgroundUrl(resPrayer.data.jumatIqomahBackgroundUrl || '');
-      setJumatIqomahMessage(resPrayer.data.jumatIqomahMessage || 'Luruskan dan rapatkan shaf untuk shalat Jumat');
+      setJumatIqomahMessage(resPrayer.data.jumatIqomahMessage || 'Luruskan dan rapatkan shaf untuk sholat Jumat');
       setJumatIqomahDuration(resPrayer.data.jumatIqomahDuration ?? 10);
       setJumatSholatEnabled(resPrayer.data.jumatSholatEnabled !== false);
       
@@ -265,7 +265,7 @@ export default function FridaySchedule() {
       }, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      showAlert({ title: 'Preview Berjalan', message: 'Preview Shalat Jumat sedang ditampilkan di TV selama 30 detik.', type: 'info' });
+      showAlert({ title: 'Simulasi Penuh Berjalan', message: 'Simulasi Full Flow (Jumat) sedang ditampilkan di TV.', type: 'info' });
     } catch (err) {
       showAlert({ title: 'Gagal', message: 'Gagal mengirim perintah preview ke TV.', type: 'error' });
       console.error(err);
@@ -406,7 +406,7 @@ export default function FridaySchedule() {
     <div className="max-w-4xl mx-auto animate-slide-up pb-12">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-[var(--text-primary)] tracking-tight">Pengaturan Shalat Jumat</h1>
+          <h1 className="text-2xl font-bold text-[var(--text-primary)] tracking-tight">Pengaturan Sholat Jumat</h1>
           <p className="text-[var(--text-secondary)] mt-1">Kelola petugas, keuangan, dan informasi khusus untuk hari Jumat.</p>
         </div>
         <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
@@ -418,7 +418,7 @@ export default function FridaySchedule() {
             {previewing ? (
               <div className="w-5 h-5 border-2 border-[var(--primary-500)] border-t-transparent rounded-full animate-spin"></div>
             ) : (
-              'Preview di TV (30 Detik)'
+              'Simulasi Full Flow (Jumat)'
             )}
           </button>
           
@@ -442,12 +442,12 @@ export default function FridaySchedule() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Kolom Kiri: Petugas & Khutbah */}
         <div className="space-y-6">
-          {/* Status Shalat Jumat */}
+          {/* Status Sholat Jumat */}
           <div className="glass-card p-6 flex flex-col gap-4">
             <div className="flex items-center justify-between cursor-pointer hover:bg-white/5 p-2 rounded-xl transition-colors" onClick={() => setJumatMode(!jumatMode)}>
               <div>
-                <h3 className="text-lg font-bold text-[var(--text-primary)] mb-1">Status Shalat Jumat</h3>
-                <p className="text-sm text-[var(--text-secondary)]">Aktifkan mode Layout Khusus Shalat Jumat.</p>
+                <h3 className="text-lg font-bold text-[var(--text-primary)] mb-1">Status Sholat Jumat</h3>
+                <p className="text-sm text-[var(--text-secondary)]">Aktifkan mode Layout Khusus Sholat Jumat.</p>
               </div>
               <div className={`w-12 h-6 shrink-0 rounded-full p-1 transition-colors duration-300 ${jumatMode ? 'bg-[var(--primary-500)]' : 'bg-slate-300 dark:bg-slate-700'}`}>
                 <div className={`bg-white w-4 h-4 rounded-full shadow-sm transform transition-transform duration-300 ${jumatMode ? 'translate-x-6' : 'translate-x-0'}`}></div>
@@ -478,7 +478,7 @@ export default function FridaySchedule() {
           </div>
 
           <div className="glass-card p-6">
-            <h3 className="text-lg font-bold text-[var(--text-primary)] mb-4">Pilih Tampilan (Layout) Shalat Jumat</h3>
+            <h3 className="text-lg font-bold text-[var(--text-primary)] mb-4">Pilih Tampilan (Layout) Sholat Jumat</h3>
             <div className="grid grid-cols-1 gap-4">
               {[
                 { id: 'jumat_1', name: 'Signature (Default)', desc: 'Desain elegan bawaan dengan ornamen khas.' },
@@ -565,7 +565,7 @@ export default function FridaySchedule() {
                        )}
                        {layout.id === 'jumat_5' && (
                           <div className="w-full h-full flex flex-col p-2">
-                             <div className="text-[10px] text-emerald-400 font-bold border-b border-white/20 pb-1 mb-2">SHALAT JUMAT</div>
+                             <div className="text-[10px] text-emerald-400 font-bold border-b border-white/20 pb-1 mb-2">SHOLAT JUMAT</div>
                              <div className="flex gap-2">
                                 <div className="w-1/2 flex flex-col gap-1">
                                    <div className="w-full h-4 bg-white/20 rounded"></div>
@@ -625,7 +625,7 @@ export default function FridaySchedule() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">Imam Shalat</label>
+                <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">Imam Sholat</label>
                 <input 
                   type="text" 
                   name="imam" 
@@ -659,7 +659,7 @@ export default function FridaySchedule() {
               <div className="flex items-center justify-between cursor-pointer" onClick={() => setJumatAdzanEnabled(!jumatAdzanEnabled)}>
                 <div>
                   <h3 className="text-base font-bold text-[var(--text-primary)] mb-1">Tampilkan Layar Adzan Jumat</h3>
-                  <p className="text-xs text-[var(--text-secondary)]">Ubah layar TV menjadi mode Adzan saat waktu shalat Jumat tiba.</p>
+                  <p className="text-xs text-[var(--text-secondary)]">Ubah layar TV menjadi mode Adzan saat waktu sholat Jumat tiba.</p>
                 </div>
                 <div className={`w-12 h-6 shrink-0 rounded-full p-1 transition-colors duration-300 ${jumatAdzanEnabled ? 'bg-[var(--primary-500)]' : 'bg-slate-300 dark:bg-slate-700'}`}>
                   <div className={`bg-white w-4 h-4 rounded-full shadow-sm transform transition-transform duration-300 ${jumatAdzanEnabled ? 'translate-x-6' : 'translate-x-0'}`}></div>
@@ -776,7 +776,7 @@ export default function FridaySchedule() {
                     <img src={jumatAdzanBackgroundUrl || "/masjid/adzan_bg_dark.png"} className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-luminosity" alt="Dark Mosque" />
                     <div className="relative z-10 flex flex-col items-center scale-75 origin-center">
                       <span className="text-white text-xs mb-1">WAKTU ADZAN</span>
-                      <span className="text-transparent bg-clip-text bg-gradient-to-b from-[#f3e7b1] via-[#d6a94f] to-[#aa771c] text-4xl font-extrabold tracking-widest leading-none mb-4">SHALAT JUMAT</span>
+                      <span className="text-transparent bg-clip-text bg-gradient-to-b from-[#f3e7b1] via-[#d6a94f] to-[#aa771c] text-4xl font-extrabold tracking-widest leading-none mb-4">SHOLAT JUMAT</span>
                       <div className="w-48 h-8 bg-gradient-to-b from-[#e6c97a] to-[#b38531] rounded-full border-2 border-[#f0d892] flex items-center justify-center relative overflow-hidden">
                         <div className="absolute left-0 top-0 bottom-0 w-1/3 bg-blue-500 rounded-l-full"></div>
                         <span className="relative z-10 text-white font-bold text-lg font-mono">11:58</span>
@@ -800,7 +800,7 @@ export default function FridaySchedule() {
                     <div className="absolute w-[80%] h-[80%] right-[-10%] rounded-full bg-blue-900/30 border border-blue-400/20"></div>
                     <div className="absolute bottom-4 left-4 flex flex-col items-start scale-75 origin-bottom-left">
                       <span className="text-gray-400 text-[10px] tracking-widest uppercase mb-1">WAKTU ADZAN</span>
-                      <span className="text-transparent bg-clip-text bg-gradient-to-b from-[#f3e7b1] via-[#d6a94f] to-[#aa771c] text-3xl font-extrabold tracking-widest leading-none mb-1">SHALAT JUMAT</span>
+                      <span className="text-transparent bg-clip-text bg-gradient-to-b from-[#f3e7b1] via-[#d6a94f] to-[#aa771c] text-3xl font-extrabold tracking-widest leading-none mb-1">SHOLAT JUMAT</span>
                       <span className="text-white text-xl font-bold font-mono">11:58</span>
                     </div>
                     <div className="absolute bottom-6 right-4 w-1/3 h-1 bg-gray-700/80 rounded-full overflow-hidden">
@@ -866,7 +866,7 @@ export default function FridaySchedule() {
                   type="text" 
                   value={jumatIqomahMessage} 
                   onChange={(e) => setJumatIqomahMessage(e.target.value)} 
-                  placeholder="Luruskan dan rapatkan shaf untuk shalat Jumat"
+                  placeholder="Luruskan dan rapatkan shaf untuk sholat Jumat"
                   className="form-control" 
                 />
               </div>
@@ -926,7 +926,7 @@ export default function FridaySchedule() {
                             <div className="relative z-10 text-xl font-bold font-mono text-[#fff19a]">03:58</div>
                           </div>
                           <div className="text-white font-bold text-[8px] uppercase bg-black/40 px-2 py-1 rounded-full border border-white/20 max-w-[90%] truncate">
-                            {jumatIqomahMessage || "Luruskan dan rapatkan shaf untuk shalat Jumat"}
+                            {jumatIqomahMessage || "Luruskan dan rapatkan shaf untuk sholat Jumat"}
                           </div>
                         </div>
                       ) : (
@@ -934,7 +934,7 @@ export default function FridaySchedule() {
                           <h3 className="text-[#967d3e] text-base font-bold tracking-[0.2em] uppercase mb-1 drop-shadow-md">IQAMAH</h3>
                           <div className={`text-4xl font-extrabold tracking-tighter mb-2 font-mono ${bg.id === '3' ? 'text-white' : 'text-[#102a43]'}`}>03:58</div>
                           <div className="bg-[#fcf8e3] text-[#785b28] border border-[#d4b97a] px-3 py-1 rounded-full text-[8px] font-bold max-w-[80%] truncate">
-                            {jumatIqomahMessage || "Luruskan dan rapatkan shaf untuk shalat Jumat"}
+                            {jumatIqomahMessage || "Luruskan dan rapatkan shaf untuk sholat Jumat"}
                           </div>
                         </div>
                       )}
@@ -987,7 +987,7 @@ export default function FridaySchedule() {
                 <img src="/masjid/adzan_bg_dark.png" className="absolute inset-0 w-full h-full object-cover opacity-20 mix-blend-luminosity grayscale" alt="Background" />
                 <div className="relative z-10 flex flex-col items-center scale-50 origin-center">
                   <h2 className="text-2xl text-gray-500 mb-2 font-medium tracking-[0.3em] uppercase drop-shadow-md">SHOLAT SEDANG BERLANGSUNG</h2>
-                  <h1 className="text-[5rem] font-extrabold uppercase tracking-widest text-transparent bg-clip-text bg-gradient-to-b from-[#f3e7b1] via-[#d6a94f] to-[#aa771c] drop-shadow-[0_5px_10px_rgba(0,0,0,0.8)] opacity-90 leading-none mb-6">SHALAT JUMAT</h1>
+                  <h1 className="text-[5rem] font-extrabold uppercase tracking-widest text-transparent bg-clip-text bg-gradient-to-b from-[#f3e7b1] via-[#d6a94f] to-[#aa771c] drop-shadow-[0_5px_10px_rgba(0,0,0,0.8)] opacity-90 leading-none mb-6">SHOLAT JUMAT</h1>
                   <div className="relative w-[16rem] h-2 rounded-full overflow-hidden bg-gray-800/80 border border-gray-600/50 shadow-[0_2px_5px_rgba(0,0,0,0.5)] mb-4">
                     <div className="absolute left-0 top-0 bottom-0 bg-gradient-to-r from-gray-500 to-gray-400 shadow-[0_0_5px_rgba(255,255,255,0.2)] w-1/3"></div>
                   </div>
@@ -1111,7 +1111,7 @@ export default function FridaySchedule() {
             <div className="flex items-center justify-between cursor-pointer hover:bg-white/5 p-2 -mx-2 rounded-xl transition-colors mb-6" onClick={() => setJumatRunningTextEnabled(!jumatRunningTextEnabled)}>
               <div>
                 <h3 className="text-sm font-bold text-[var(--text-primary)] mb-1">Status Teks Berjalan Khusus Jumat</h3>
-                <p className="text-xs text-[var(--text-secondary)]">Tampilkan atau sembunyikan teks berjalan di layar TV saat Shalat Jumat.</p>
+                <p className="text-xs text-[var(--text-secondary)]">Tampilkan atau sembunyikan teks berjalan di layar TV saat Sholat Jumat.</p>
               </div>
               <div className={`w-10 h-5 shrink-0 rounded-full p-1 transition-colors duration-300 ${jumatRunningTextEnabled ? 'bg-[var(--primary-500)]' : 'bg-slate-300 dark:bg-slate-700'}`}>
                 <div className={`bg-white w-3 h-3 rounded-full shadow-sm transform transition-transform duration-300 ${jumatRunningTextEnabled ? 'translate-x-5' : 'translate-x-0'}`}></div>
@@ -1170,7 +1170,7 @@ export default function FridaySchedule() {
                   style={{ backgroundColor: displaySetting?.runningTextColor || '#FBBF24' }}
                 ></span>
               </div>
-              <p className="text-xs text-[var(--text-secondary)] mb-4">Pilih warna teks berjalan khusus untuk Shalat Jumat.</p>
+              <p className="text-xs text-[var(--text-secondary)] mb-4">Pilih warna teks berjalan khusus untuk Sholat Jumat.</p>
               <div className="flex items-center gap-3">
                 <input 
                   type="color" 

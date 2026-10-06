@@ -7,7 +7,7 @@ export default function IqomahScreenConfig() {
   const { showAlert } = useDialog();
   const [config, setConfig] = useState({
     iqomahBackground: '1',
-    iqomahMessage: 'Luruskan dan rapatkan shaf untuk kesempurnaan shalat',
+    iqomahMessage: 'Luruskan dan rapatkan shaf untuk kesempurnaan sholat',
     iqomahAlarmEnabled: false,
     iqomahAlarmSound: 'beep',
     iqomahAlarmTime: 10,
@@ -358,7 +358,7 @@ export default function IqomahScreenConfig() {
                       <div className="relative z-10 text-3xl font-bold font-mono tracking-widest text-[#fff19a] drop-shadow-md">03:58</div>
                     </div>
                     <div className="text-white font-bold text-[10px] tracking-widest uppercase drop-shadow-md bg-black/40 px-3 py-1 rounded-full border border-white/20 max-w-[90%] truncate">
-                      {config.iqomahMessage || "Luruskan dan rapatkan shaf untuk kesempurnaan shalat"}
+                      {config.iqomahMessage || "Luruskan dan rapatkan shaf untuk kesempurnaan sholat"}
                     </div>
                   </div>
                 ) : (
@@ -366,7 +366,7 @@ export default function IqomahScreenConfig() {
                     <h3 className="text-[#967d3e] text-lg font-bold tracking-[0.2em] uppercase mb-1 drop-shadow-md">IQAMAH</h3>
                     <div className={`text-7xl font-extrabold tracking-tighter leading-none mb-4 drop-shadow-lg font-mono ${bg.id === '3' ? 'text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]' : 'text-[#102a43]'}`}>03:58</div>
                     <div className="bg-[#fcf8e3] text-[#785b28] border-2 border-[#d4b97a] px-6 py-1.5 rounded-full text-[10px] font-bold shadow-md max-w-[80%] truncate text-center">
-                      {config.iqomahMessage || "Luruskan dan rapatkan shaf untuk kesempurnaan shalat"}
+                      {config.iqomahMessage || "Luruskan dan rapatkan shaf untuk kesempurnaan sholat"}
                     </div>
                   </div>
                 )}

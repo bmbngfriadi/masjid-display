@@ -17,8 +17,6 @@ export default function AdzanScreenConfig() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState({ text: '', type: '' });
-  const audioRef = useRef(null);
-  const [isPlaying, setIsPlaying] = useState(false);
   const [imagePreview, setImagePreview] = useState(null);
 
   useEffect(() => {
@@ -51,23 +49,6 @@ export default function AdzanScreenConfig() {
     }));
   };
 
-  const togglePlay = () => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
-      } else {
-        // Mock audio path, replace with actual if needed
-        audioRef.current.src = `/masjid/audio/${config.adzanAudio}`;
-        audioRef.current.play().catch(e => console.log('Audio play failed', e));
-      }
-      setIsPlaying(!isPlaying);
-    }
-  };
-
-  const handleAudioEnded = () => {
-    setIsPlaying(false);
-  };
 
   const handleFileUpload = async (e) => {
     const file = e.target.files[0];
@@ -448,47 +429,7 @@ export default function AdzanScreenConfig() {
               </div>
             </div>
 
-            {/* Section: Audio */}
-            <div className="glass-card p-6 md:p-8">
-              <h2 className="text-lg font-bold text-[var(--text-primary)] border-b border-[var(--border-color)] pb-3 mb-5">
-                Pengaturan Audio
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">Pilih Suara Adzan</label>
-                  <p className="text-xs text-[var(--text-secondary)]/80 mb-2">Suara ini akan diputar otomatis saat waktu adzan tiba.</p>
-                  <div className="flex gap-2">
-                    <select
-                      name="adzanAudio"
-                      value={config.adzanAudio}
-                      onChange={handleChange}
-                      className="form-control flex-1"
-                    >
-                      <option value="adzan-makkah.mp3">Adzan Makkah</option>
-                      <option value="adzan-madinah.mp3">Adzan Madinah</option>
-                      <option value="adzan-nusantara.mp3">Adzan Nusantara</option>
-                      <option value="beep.mp3">Hanya Beep Pendek</option>
-                      <option value="none">Tidak Ada Suara (Mute)</option>
-                    </select>
-                    <button
-                      type="button"
-                      onClick={togglePlay}
-                      className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center justify-center ${
-                        isPlaying 
-                          ? 'bg-red-100 text-red-600 hover:bg-red-200 dark:bg-red-900/30 dark:text-red-400'
-                          : 'bg-blue-100 text-blue-600 hover:bg-blue-200 dark:bg-blue-900/30 dark:text-blue-400'
-                      }`}
-                    >
-                      {isPlaying ? (
-                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8 7a1 1 0 00-1 1v4a1 1 0 001 1h4a1 1 0 001-1V8a1 1 0 00-1-1H8z" clipRule="evenodd"></path></svg>
-                      ) : (
-                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd"></path></svg>
-                      )}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
+
 
             {/* Section: Pengingat Suara Adzan */}
             <div className="glass-card p-6 md:p-8">
@@ -577,8 +518,6 @@ export default function AdzanScreenConfig() {
         </div>
       </div>
       
-      {/* Hidden audio element for preview */}
-      <audio ref={audioRef} onEnded={handleAudioEnded} className="hidden" />
     </div>
   );
 }

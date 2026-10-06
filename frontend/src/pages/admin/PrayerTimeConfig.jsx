@@ -47,17 +47,9 @@ export default function PrayerTimeConfig() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [cities, setCities] = useState([]);
-  const [isPlayingSound, setIsPlayingSound] = useState(false);
-  const audioRef = useRef(null);
-
   useEffect(() => {
     fetchConfig();
     fetchCities();
-    return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-      }
-    }
   }, []);
 
   const fetchCities = async () => {
@@ -109,45 +101,6 @@ export default function PrayerTimeConfig() {
     setConfig(prev => ({ ...prev, [field]: value }));
   };
 
-  const previewSound = () => {
-    if (isPlayingSound) {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
-      }
-      setIsPlayingSound(false);
-      return;
-    }
-
-    if (!config.alarmSound || config.alarmSound === 'none') {
-      return;
-    }
-
-    let url = '';
-    if (config.alarmSound === 'beep') {
-      url = 'https://actions.google.com/sounds/v1/alarms/beep_short.ogg';
-    } else if (config.alarmSound === 'adhan_makkah') {
-      url = 'https://download.quranicaudio.com/adhan/makkah.mp3';
-    } else if (config.alarmSound === 'adhan_madinah') {
-      url = 'https://download.quranicaudio.com/adhan/madinah.mp3';
-    }
-
-    if (url) {
-      if (audioRef.current) {
-        audioRef.current.pause();
-      }
-      const audio = new Audio(url);
-      audioRef.current = audio;
-      setIsPlayingSound(true);
-      audio.play().catch(e => {
-        console.error("Audio play failed:", e);
-        setIsPlayingSound(false);
-      });
-      audio.onended = () => {
-        setIsPlayingSound(false);
-      };
-    }
-  };
 
   if (loading) return (
     <div className="p-8 text-center text-[var(--text-secondary)] font-medium flex items-center justify-center gap-3">
@@ -289,87 +242,6 @@ export default function PrayerTimeConfig() {
           </div>
         </div>
 
-        {/* Section 2: Manual Corrections */}
-        <div className="glass-card p-6">
-          <div className="flex items-center gap-3 mb-6 pb-4 border-b border-[var(--border-color)]">
-            <Settings className="text-[var(--primary-500)]" />
-            <div>
-              <h3 className="text-lg font-bold text-[var(--text-primary)]">Manual Corrections</h3>
-              <p className="text-sm text-[var(--text-secondary)]">Adjust each prayer time by adding or subtracting the time if necessary (in minutes).</p>
-            </div>
-          </div>
-          
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            {['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'].map(prayer => (
-              <div key={prayer} className="form-group">
-                <label className="form-label capitalize">{prayer}</label>
-                <input
-                  type="number"
-                  value={config[`${prayer}Offset`]}
-                  onChange={(e) => handleChange(`${prayer}Offset`, parseInt(e.target.value))}
-                  className="form-control"
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Section 4: Special Modes */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          
-
-          {/* Ramadan */}
-          <div className="glass-card p-6 flex flex-col justify-between cursor-pointer hover:border-[var(--primary-500)] transition-colors" onClick={() => handleChange('ramadanMode', !config.ramadanMode)}>
-            <div>
-              <div className="flex items-center gap-2 mb-1">
-                <h3 className="text-lg font-bold text-[var(--text-primary)]">Ramadan</h3>
-                <Moon size={18} className="text-[var(--primary-500)]" />
-              </div>
-              <p className="text-sm text-[var(--text-secondary)] mb-6">Enable Imsak time display and Taraweeh khusyuk screens during Ramadan month.</p>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="font-semibold text-[var(--text-primary)]">Status</span>
-              <div className={`w-12 h-6 shrink-0 rounded-full p-1 transition-colors duration-300 ${config.ramadanMode ? 'bg-[var(--primary-500)]' : 'bg-slate-300 dark:bg-slate-700'}`}>
-                <div className={`bg-white w-4 h-4 rounded-full shadow-sm transform transition-transform duration-300 ${config.ramadanMode ? 'translate-x-6' : 'translate-x-0'}`}></div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-        {/* Section 5: Prayer Alarm Sound */}
-        <div className="glass-card p-6">
-          <div className="flex items-center gap-3 mb-6 pb-4 border-b border-[var(--border-color)]">
-            <Volume2 className="text-[var(--primary-500)]" />
-            <div>
-              <h3 className="text-lg font-bold text-[var(--text-primary)]">Prayer Alarm Sound</h3>
-              <p className="text-sm text-[var(--text-secondary)]">Select the alarm sound that will play during azan and iqamah time.</p>
-            </div>
-          </div>
-          
-          <div className="flex items-end gap-3 max-w-md">
-            <div className="form-group flex-1 mb-0">
-              <select
-                value={config.alarmSound}
-                onChange={(e) => handleChange('alarmSound', e.target.value)}
-                className="form-control"
-              >
-                <option value="none">Silent (No Sound)</option>
-                <option value="beep">Beep Alert (Standard)</option>
-                <option value="adhan_makkah">Full Adhan (Makkah)</option>
-                <option value="adhan_madinah">Full Adhan (Madinah)</option>
-              </select>
-            </div>
-            <button 
-              onClick={previewSound}
-              disabled={config.alarmSound === 'none'}
-              className="bg-[var(--primary-500)] text-white p-3 rounded-xl hover:bg-[var(--primary-600)] transition-colors disabled:opacity-50 flex-shrink-0 flex items-center justify-center w-12 h-12 shadow-sm"
-              title="Preview Sound"
-            >
-              {isPlayingSound ? <Square size={18} fill="currentColor" /> : <Play size={18} fill="currentColor" />}
-            </button>
-          </div>
-        </div>
 
       </div>
     </div>
